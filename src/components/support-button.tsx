@@ -25,7 +25,7 @@ export default function SupportButton() {
 	const account = useActiveAccount();
 
 	const isMobile = useBreakpointValue({ base: true, md: false });
-	const label = "Click to Support moStard";
+	const label = "Click to support the dev";
 	const [tabIndex, setTabIndex] = useState(0);
 
 	const paymentDetailsRef = useRef(null);
@@ -120,8 +120,8 @@ export default function SupportButton() {
 									{tabIndex === 0 && (
 										<TipModalContents
 											pubkey="dbe0b6bc5f455a547da4b2644846aaf88f466543604130d8fa662625c1eade8f"
-											address="85kUEzPzBopaXUJ5dL19J6deh5md6YZDZLUUpv63wXdCiRo3pPwrAJHAKAsSo4BgKQBpcs5hSth23hEFr5mmNxRxMeDY1Ng"
-											description="If you are enjoying this app, consider supporting the developer! Every little bit helps. Thanks!"
+											address="883nEtA4WKewhvYVMhQfPEqN6MMvrgNR2UNmGd4aw46K9CM8x52BovowaR8kCmf3FzAMndydTL682thK7YsCrwKKL8RRfsQy"
+											description="If you are enjoying this app, consider supporting the developer!"
 										/>
 									)}
 								</TabPanel>

@@ -1,6 +1,8 @@
 identifier: moStard
 maintainers:
-  - npub1saessfmtu5xwnwh60e0rwnj0e067npv6yxgc7d96algqqart056s5gkuqh
+  - npub1hs5244d3vle3m5muvmvvjh2qp3jprkpjwhk393gy7cykt50eamrq8f5rx4
 relays:
-  - wss://relay.mostard.org/
+  - wss://relay.damus.io/
   - wss://nos.lol/
+  - wss://relay.primal.net/
+  - wss://relay.ditto.pub/

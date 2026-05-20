@@ -1,4 +1,4 @@
-import { ISigner } from "applesauce-signers";
+import { Nip07Interface } from "applesauce-signers";
 import { NostrSignerPlugin } from "nostr-signer-capacitor-plugin";
 import { EventTemplate, getEventHash, nip19, NostrEvent, UnsignedEvent, verifyEvent } from "nostr-tools";
 
@@ -7,7 +7,7 @@ type Permission = {
   kind?: number;
 };
 
-export default class AndroidNativeSigner implements ISigner {
+export default class AndroidNativeSigner implements Nip07Interface {
   packageName: string;
   connected = false;
 

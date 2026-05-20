@@ -3,6 +3,7 @@ import { addSeenRelay } from "applesauce-core/helpers";
 import { includeSingletonTag, setContent } from "applesauce-factory/operations/event";
 import { useActiveAccount, useEventFactory } from "applesauce-react/hooks";
 import { useRef, useState } from "react";
+import { lastValueFrom } from "rxjs";
 import { useForm } from "react-hook-form";
 
 import InsertGifButton from "../../../components/gif/insert-gif-button";
@@ -49,7 +50,7 @@ export default function RelayChatMessageForm({
     addSeenRelay(signed, relay);
 
     setLoadingMessage("Signing...");
-    const result = await pool.relay(relay).publish(signed);
+    const result = await lastValueFrom(pool.relay(relay).publish(signed));
 
     if (result.ok) eventStore.add(signed);
     toast({ status: result.ok ? "success" : "error", title: result.message || "Message sent", position: "top" });

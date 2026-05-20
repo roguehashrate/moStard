@@ -41,7 +41,6 @@ export default function EventReactionButtons({
 							addReaction({
 								shortcode: group.emoji,
 								url: group.url,
-								id: group.url,
 							}).finally(() => setLoading(undefined));
 						} else {
 							addReaction(group.emoji).finally(() => setLoading(undefined));

@@ -63,7 +63,9 @@ export default function UserReportsTab() {
   return (
     <IntersectionObserverProvider callback={callback}>
       <VerticalPageLayout>
-        {events?.map((report) => <ReportEvent key={report.id} report={report} />)}
+        {events?.map((report) => (
+          <ReportEvent key={report.id} report={report} />
+        ))}
 
         <TimelineActionAndStatus loader={loader} />
       </VerticalPageLayout>

@@ -46,54 +46,30 @@ export default function SettingsView() {
     <SimpleParentView title="Settings" path="/settings">
       {account && (
         <>
-          <SimpleNavItem
-            to="/settings/accounts"
-            leftIcon={<UserAvatar size="xs" pubkey={account.pubkey} />}
-          >
+          <SimpleNavItem to="/settings/accounts" leftIcon={<UserAvatar size="xs" pubkey={account.pubkey} />}>
             Accounts
           </SimpleNavItem>
-          <SimpleNavItem
-            to="/settings/profile"
-            leftIcon={<User01 boxSize={5} />}
-          >
+          <SimpleNavItem to="/settings/profile" leftIcon={<User01 boxSize={5} />}>
             Profile
           </SimpleNavItem>
-          <SimpleNavItem
-            to="/settings/mailboxes"
-            leftIcon={<Mail02 boxSize={5} />}
-          >
+          <SimpleNavItem to="/settings/mailboxes" leftIcon={<Mail02 boxSize={5} />}>
             Mailboxes
           </SimpleNavItem>
-          <SimpleNavItem
-            to="/settings/media-servers"
-            leftIcon={<Image01 boxSize={5} />}
-          >
+          <SimpleNavItem to="/settings/media-servers" leftIcon={<Image01 boxSize={5} />}>
             Media Servers
           </SimpleNavItem>
-          <SimpleNavItem
-            to="/settings/identity"
-            leftIcon={<VerifiedIcon boxSize={5} />}
-          >
+          <SimpleNavItem to="/settings/identity" leftIcon={<VerifiedIcon boxSize={5} />}>
             DNS Identity
           </SimpleNavItem>
-          <SimpleNavItem
-            to="/settings/messages"
-            leftIcon={<Mail02 boxSize={5} />}
-          >
+          <SimpleNavItem to="/settings/messages" leftIcon={<Mail02 boxSize={5} />}>
             Messages
           </SimpleNavItem>
-          <SimpleNavItem
-            to="/settings/mutes"
-            leftIcon={<MuteIcon boxSize={5} />}
-          >
+          <SimpleNavItem to="/settings/mutes" leftIcon={<MuteIcon boxSize={5} />}>
             Mutes
           </SimpleNavItem>
         </>
       )}
-      <SimpleNavItem
-        to="/settings/social-graph"
-        leftIcon={<Share07 boxSize={5} />}
-      >
+      <SimpleNavItem to="/settings/social-graph" leftIcon={<Share07 boxSize={5} />}>
         Social Graph
       </SimpleNavItem>
 
@@ -101,39 +77,24 @@ export default function SettingsView() {
       <SimpleNavItem to="/settings/relays" leftIcon={<RelayIcon boxSize={5} />}>
         Relays
       </SimpleNavItem>
-      <SimpleNavItem
-        to="/settings/search"
-        leftIcon={<SearchIcon boxSize={5} />}
-      >
+      <SimpleNavItem to="/settings/search" leftIcon={<SearchIcon boxSize={5} />}>
         Search
       </SimpleNavItem>
-      <SimpleNavItem
-        to="/settings/authentication"
-        leftIcon={<CheckCircleBroken boxSize={5} />}
-      >
+      <SimpleNavItem to="/settings/authentication" leftIcon={<CheckCircleBroken boxSize={5} />}>
         Authentication
       </SimpleNavItem>
 
       <DividerHeader title="App" />
-      <SimpleNavItem
-        to="/settings/display"
-        leftIcon={<AppearanceIcon boxSize={5} />}
-      >
+      <SimpleNavItem to="/settings/display" leftIcon={<AppearanceIcon boxSize={5} />}>
         Display
       </SimpleNavItem>
-      <SimpleNavItem
-        to="/settings/content"
-        leftIcon={<FilterFunnel02 boxSize={5} />}
-      >
+      <SimpleNavItem to="/settings/content" leftIcon={<FilterFunnel02 boxSize={5} />}>
         Content Policies
       </SimpleNavItem>
       <SimpleNavItem to="/settings/post" leftIcon={<NotesIcon boxSize={5} />}>
         Posts
       </SimpleNavItem>
-      <SimpleNavItem
-        to="/settings/monero"
-        leftIcon={<MoneroWhiteIcon boxSize={5} />}
-      >
+      <SimpleNavItem to="/settings/monero" leftIcon={<MoneroWhiteIcon boxSize={5} />}>
         Monero
       </SimpleNavItem>
       <SimpleNavItem to="/settings/privacy" leftIcon={<SpyIcon boxSize={5} />}>
@@ -142,31 +103,22 @@ export default function SettingsView() {
       <SimpleNavItem to="/settings/cache" leftIcon={<Database01 boxSize={5} />}>
         Event Cache
       </SimpleNavItem>
-      <SimpleNavItem
-        to="/settings/performance"
-        leftIcon={<CpuChip01 boxSize={5} />}
-      >
+      <SimpleNavItem to="/settings/performance" leftIcon={<CpuChip01 boxSize={5} />}>
         Performance
       </SimpleNavItem>
 
       <DividerHeader title="Debug" />
       {IS_SERVICE_WORKER_SUPPORTED && (
-        <SimpleNavItem
-          to="/settings/background-worker"
-          leftIcon={<CpuChip01 boxSize={5} />}
-        >
+        <SimpleNavItem to="/settings/background-worker" leftIcon={<CpuChip01 boxSize={5} />}>
           Background Worker
         </SimpleNavItem>
       )}
-      <SimpleNavItem
-        to="/relays/cache/database"
-        leftIcon={<DatabaseIcon boxSize={5} />}
-      >
+      <SimpleNavItem to="/relays/cache/database" leftIcon={<DatabaseIcon boxSize={5} />}>
         Database Tools
       </SimpleNavItem>
 
       <Flex alignItems="center">
-        <Link isExternal href="https://github.com/mostard-org/mostard">
+        <Link isExternal href="https://github.com/roguehashrate/moStard">
           <GithubIcon /> Github
         </Link>
         <Spacer />

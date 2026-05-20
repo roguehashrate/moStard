@@ -55,8 +55,8 @@ export default function useAppSettings() {
     [localSettings, syncedSettings],
   );
 
-	return {
-		...settings,
-		updateSettings,
-	};
+  return {
+    ...settings,
+    updateSettings,
+  };
 }

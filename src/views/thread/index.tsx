@@ -1,11 +1,4 @@
-import {
-	Box,
-	Heading,
-	Link,
-	LinkBox,
-	Spinner,
-	useDisclosure,
-} from "@chakra-ui/react";
+import { Box, Heading, Link, LinkBox, Spinner, useDisclosure } from "@chakra-ui/react";
 import { getNip10References } from "applesauce-core/helpers";
 import { type Thread, ThreadModel } from "applesauce-core/models";
 import { useEventModel } from "applesauce-react/hooks";
@@ -35,171 +28,138 @@ import { ExpandableToggleButton } from "../notifications/components/notification
 import ThreadPost from "./components/thread-post";
 
 function ParentNote({ note, level = 0 }: { note: NostrEvent; level?: number }) {
-	const ref = useEventIntersectionRef(note);
-	const more = useDisclosure({ defaultIsOpen: level < 2 });
+  const ref = useEventIntersectionRef(note);
+  const more = useDisclosure({ defaultIsOpen: level < 2 });
 
-	return (
-		<LinkBox
-			gap="2"
-			overflow="hidden"
-			p="2"
-			flexShrink={0}
-			borderWidth="0 2px 0 2px"
-			rounded="none"
-			borderColor="var(--chakra-colors-chakra-border-color)"
-			ref={ref}
-			role="article"
-		>
-			<ExpandableToggleButton
-				toggle={more}
-				aria-label={more.isOpen ? "Collapse post" : "Expand post"}
-				size="sm"
-				float="right"
-			/>
-			<Box float="left" mr="2">
-				<UserAvatarLink
-					pubkey={note.pubkey}
-					size="xs"
-					mr="2"
-					aria-label="avatar"
-				/>
-				<UserLink pubkey={note.pubkey} fontWeight="bold" mr="1" />
-				<UserDnsIdentityIcon pubkey={note.pubkey} mr="2" />
-				<Link
-					as={RouterLink}
-					to={`/n/${getSharableEventAddress(note)}`}
-					aria-label={`Posted at ${new Date(note.created_at * 1000).toLocaleString()}`}
-				>
-					<Timestamp timestamp={note.created_at} />
-				</Link>
-			</Box>
-			{more.isOpen ? (
-				<ContentSettingsProvider blurMedia={false}>
-					<br />
-					<TextNoteContents event={note} aria-expanded="true" />
-				</ContentSettingsProvider>
-			) : (
-				<Link
-					as={RouterLink}
-					to={`/n/${getSharableEventAddress(note)}`}
-					noOfLines={1}
-					fontStyle="italic"
-					aria-expanded="false"
-				>
-					{note.content}
-				</Link>
-			)}
-		</LinkBox>
-	);
+  return (
+    <LinkBox
+      gap="2"
+      overflow="hidden"
+      p="2"
+      flexShrink={0}
+      borderWidth="0 2px 0 2px"
+      rounded="none"
+      borderColor="var(--chakra-colors-chakra-border-color)"
+      ref={ref}
+      role="article"
+    >
+      <ExpandableToggleButton
+        toggle={more}
+        aria-label={more.isOpen ? "Collapse post" : "Expand post"}
+        size="sm"
+        float="right"
+      />
+      <Box float="left" mr="2">
+        <UserAvatarLink pubkey={note.pubkey} size="xs" mr="2" aria-label="avatar" />
+        <UserLink pubkey={note.pubkey} fontWeight="bold" mr="1" />
+        <UserDnsIdentityIcon pubkey={note.pubkey} mr="2" />
+        <Link
+          as={RouterLink}
+          to={`/n/${getSharableEventAddress(note)}`}
+          aria-label={`Posted at ${new Date(note.created_at * 1000).toLocaleString()}`}
+        >
+          <Timestamp timestamp={note.created_at} />
+        </Link>
+      </Box>
+      {more.isOpen ? (
+        <ContentSettingsProvider blurMedia={false}>
+          <br />
+          <TextNoteContents event={note} aria-expanded="true" />
+        </ContentSettingsProvider>
+      ) : (
+        <Link
+          as={RouterLink}
+          to={`/n/${getSharableEventAddress(note)}`}
+          noOfLines={1}
+          fontStyle="italic"
+          aria-expanded="false"
+        >
+          {note.content}
+        </Link>
+      )}
+    </LinkBox>
+  );
 }
 
-function Parents({
-	pointer,
-	thread,
-}: { pointer: EventPointer; thread: Thread }) {
-	const posts: ReactNode[] = [];
+function Parents({ pointer, thread }: { pointer: EventPointer; thread: Thread }) {
+  const posts: ReactNode[] = [];
 
-	let level = 0;
-	let cursor: EventPointer | undefined = pointer;
-	while (cursor) {
-		const post = thread.all.get(cursor.id);
+  let level = 0;
+  let cursor: EventPointer | undefined = pointer;
+  while (cursor) {
+    const post = thread.all.get(cursor.id);
 
-		if (post) {
-			posts.unshift(
-				<ParentNote note={post.event} key={post.event.id} level={level} />,
-			);
-			// attempt to walk up the "e" reply tree
-			cursor = getNip10References(post.event).reply?.e;
-			level++;
-		} else {
-			// failed to find parent post, append loading and done
-			posts.unshift(
-				<LoadingNostrLink
-					link={{ type: "nevent", data: cursor }}
-					key={cursor.id}
-				/>,
-			);
-			cursor = undefined;
-		}
-	}
+    if (post) {
+      posts.unshift(<ParentNote note={post.event} key={post.event.id} level={level} />);
+      // attempt to walk up the "e" reply tree
+      cursor = getNip10References(post.event).reply?.e;
+      level++;
+    } else {
+      // failed to find parent post, append loading and done
+      posts.unshift(<LoadingNostrLink link={{ type: "nevent", data: cursor }} key={cursor.id} />);
+      cursor = undefined;
+    }
+  }
 
-	return <>{posts}</>;
+  return <>{posts}</>;
 }
 
-function ThreadPage({
-	thread,
-	rootPointer,
-	focusId,
-}: {
-	thread: Thread;
-	rootPointer: EventPointer;
-	focusId: string;
-}) {
-	const isRoot = rootPointer.id === focusId;
+function ThreadPage({ thread, rootPointer, focusId }: { thread: Thread; rootPointer: EventPointer; focusId: string }) {
+  const isRoot = rootPointer.id === focusId;
 
-	const focusedPost = thread.all.get(focusId);
-	if (isRoot && thread.root) {
-		return <ThreadPost post={thread.root} initShowReplies focusId={focusId} />;
-	}
+  const focusedPost = thread.all.get(focusId);
+  if (isRoot && thread.root) {
+    return <ThreadPost post={thread.root} initShowReplies focusId={focusId} />;
+  }
 
-	if (!focusedPost) return null;
+  if (!focusedPost) return null;
 
-	const parentPosts = [];
-	if (focusedPost.parent) {
-		let p = focusedPost;
-		while (p.parent) {
-			// @ts-ignore
-			parentPosts.unshift(p.parent);
-			p = p.parent;
-		}
-	}
+  const parentPosts = [];
+  if (focusedPost.parent) {
+    let p = focusedPost;
+    while (p.parent) {
+      // @ts-ignore
+      parentPosts.unshift(p.parent);
+      p = p.parent;
+    }
+  }
 
-	const parent = getNip10References(focusedPost.event).reply?.e;
+  const parent = getNip10References(focusedPost.event).reply?.e;
 
-	return (
-		<>
-			{parent && <Parents pointer={parent} thread={thread} />}
-			<ThreadPost post={focusedPost} initShowReplies focusId={focusId} />
-		</>
-	);
+  return (
+    <>
+      {parent && <Parents pointer={parent} thread={thread} />}
+      <ThreadPost post={focusedPost} initShowReplies focusId={focusId} />
+    </>
+  );
 }
 
 export default function ThreadView() {
-	const pointer = useParamsEventPointer("id");
-	const readRelays = useReadRelays(pointer.relays);
+  const pointer = useParamsEventPointer("id");
+  const readRelays = useReadRelays(pointer.relays);
 
-	const focusedEvent = useSingleEvent(pointer);
-	const { rootPointer, timeline } = useThreadTimelineLoader(
-		focusedEvent,
-		readRelays,
-	);
-	const thread = useEventModel(
-		ThreadModel,
-		rootPointer ? [rootPointer] : undefined,
-	);
+  const focusedEvent = useSingleEvent(pointer);
+  const { rootPointer, timeline } = useThreadTimelineLoader(focusedEvent, readRelays);
+  const thread = useEventModel(ThreadModel, rootPointer ? [rootPointer] : undefined);
 
-	const callback = useTimelineCurserIntersectionCallback(timeline);
+  const callback = useTimelineCurserIntersectionCallback(timeline);
 
-	const maxWidth = useMaxPageWidth("6xl");
-	return (
-		<VerticalPageLayout maxW={maxWidth} mx="auto" w="full">
-			{!focusedEvent && (
-				<>
-					<Heading my="4">
-						<Spinner /> Loading note
-					</Heading>
-					<LoadingNostrLink link={{ type: "nevent", data: pointer }} />
-				</>
-			)}
-			<IntersectionObserverProvider callback={callback}>
-				{thread && focusedEvent && rootPointer && (
-					<ThreadPage
-						thread={thread}
-						rootPointer={rootPointer}
-						focusId={focusedEvent.id}
-					/>
-				)}
-			</IntersectionObserverProvider>
-		</VerticalPageLayout>
-	);
+  const maxWidth = useMaxPageWidth("6xl");
+  return (
+    <VerticalPageLayout maxW={maxWidth} mx="auto" w="full">
+      {!focusedEvent && (
+        <>
+          <Heading my="4">
+            <Spinner /> Loading note
+          </Heading>
+          <LoadingNostrLink link={{ type: "nevent", data: pointer }} />
+        </>
+      )}
+      <IntersectionObserverProvider callback={callback}>
+        {thread && focusedEvent && rootPointer && (
+          <ThreadPage thread={thread} rootPointer={rootPointer} focusId={focusedEvent.id} />
+        )}
+      </IntersectionObserverProvider>
+    </VerticalPageLayout>
+  );
 }

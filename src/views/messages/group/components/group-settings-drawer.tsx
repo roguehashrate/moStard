@@ -12,7 +12,7 @@ import {
   Heading,
   Link,
   Text,
-  VStack
+  VStack,
 } from "@chakra-ui/react";
 import { getConversationParticipants } from "applesauce-core/helpers";
 import { useActiveAccount, useEventModel } from "applesauce-react/hooks";

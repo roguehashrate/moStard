@@ -64,12 +64,7 @@ export default function TenorGifIconButton({
   return (
     <Popover isLazy isOpen={isOpen} onOpen={open.on} onClose={open.off}>
       <PopoverTrigger>
-        <IconButton
-          icon={<Clapperboard boxSize={5} />}
-          aria-label="Add Gif"
-          title="Add Gif"
-          {...props}
-        />
+        <IconButton icon={<Clapperboard boxSize={5} />} aria-label="Add Gif" title="Add Gif" {...props} />
       </PopoverTrigger>
       {portal ? (
         <Portal>

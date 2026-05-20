@@ -1,10 +1,5 @@
 import { ChakraProvider, localStorageManager } from "@chakra-ui/react";
-import {
-	AccountsProvider,
-	ActionsProvider,
-	EventStoreProvider,
-	FactoryProvider,
-} from "applesauce-react/providers";
+import { AccountsProvider, ActionsProvider, EventStoreProvider, FactoryProvider } from "applesauce-react/providers";
 import { useMemo, type ReactNode } from "react";
 
 import useAppSettings from "../../hooks/use-user-app-settings";
@@ -18,31 +13,31 @@ import { UserEmojiProvider } from "./emoji-provider";
 import PublishProvider from "./publish-provider";
 
 function ThemeProviders({ children }: { children: React.ReactNode }) {
-	const { theme: themeName, primaryColor } = useAppSettings();
-	const theme = useMemo(() => buildTheme(themeName), [themeName, primaryColor]);
+  const { theme: themeName, primaryColor } = useAppSettings();
+  const theme = useMemo(() => buildTheme(themeName), [themeName, primaryColor]);
 
-	return (
-		<ChakraProvider theme={theme} colorModeManager={localStorageManager}>
-			<BreakpointProvider>{children}</BreakpointProvider>
-		</ChakraProvider>
-	);
+  return (
+    <ChakraProvider theme={theme} colorModeManager={localStorageManager}>
+      <BreakpointProvider>{children}</BreakpointProvider>
+    </ChakraProvider>
+  );
 }
 
 // Top level providers, should be render as close to the root as possible
 export const GlobalProviders = ({ children }: { children: ReactNode }) => {
-	return (
-		<EventStoreProvider eventStore={eventStore}>
-			<AccountsProvider manager={accounts}>
-				<ActionsProvider actionHub={actions}>
-					<FactoryProvider factory={factory}>
-						<ThemeProviders>
-							<PublishProvider>
-								<UserEmojiProvider>{children}</UserEmojiProvider>
-							</PublishProvider>
-						</ThemeProviders>
-					</FactoryProvider>
-				</ActionsProvider>
-			</AccountsProvider>
-		</EventStoreProvider>
-	);
+  return (
+    <EventStoreProvider eventStore={eventStore}>
+      <AccountsProvider manager={accounts}>
+        <ActionsProvider actionHub={actions}>
+          <FactoryProvider factory={factory}>
+            <ThemeProviders>
+              <PublishProvider>
+                <UserEmojiProvider>{children}</UserEmojiProvider>
+              </PublishProvider>
+            </ThemeProviders>
+          </FactoryProvider>
+        </ActionsProvider>
+      </AccountsProvider>
+    </EventStoreProvider>
+  );
 };

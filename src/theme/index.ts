@@ -6,43 +6,39 @@ import { drawerTheme } from "./drawer";
 import { containerTheme } from "./container";
 
 function pallet(colors: string[]) {
-	return [50, 100, 200, 300, 400, 500, 600, 700, 800, 900].reduce(
-		(pallet, key, i) => ({ ...pallet, [key]: colors[i] }),
-		{},
-	);
+  return [50, 100, 200, 300, 400, 500, 600, 700, 800, 900].reduce(
+    (pallet, key, i) => ({ ...pallet, [key]: colors[i] }),
+    {},
+  );
 }
 
 function getTheme(name: string) {
-	if (name === "default") return defaultTheme;
-	return {};
+  if (name === "default") return defaultTheme;
+  return {};
 }
 
 export default function buildTheme(themeName: string) {
-	const theme = extendTheme(getTheme(themeName), {
-		config: {
-			initialColorMode: "system",
-			useSystemColorMode: true,
-		},
-		colors: {
-			primary: pallet(
-				chroma
-					.scale([chroma("#ff6600").brighten(1), chroma("#ff6600").darken(1)])
-					.colors(10),
-			),
-		},
-		components: {
-			Container: containerTheme,
-			Drawer: drawerTheme,
-		},
-		semanticTokens: {
-			colors: {
-				"card-hover-overlay": {
-					_light: "blackAlpha.50",
-					_dark: "whiteAlpha.50",
-				},
-			},
-		},
-	} as DeepPartial<Theme>);
+  const theme = extendTheme(getTheme(themeName), {
+    config: {
+      initialColorMode: "system",
+      useSystemColorMode: true,
+    },
+    colors: {
+      primary: pallet(chroma.scale([chroma("#ff6600").brighten(1), chroma("#ff6600").darken(1)]).colors(10)),
+    },
+    components: {
+      Container: containerTheme,
+      Drawer: drawerTheme,
+    },
+    semanticTokens: {
+      colors: {
+        "card-hover-overlay": {
+          _light: "blackAlpha.50",
+          _dark: "whiteAlpha.50",
+        },
+      },
+    },
+  } as DeepPartial<Theme>);
 
-	return theme;
+  return theme;
 }

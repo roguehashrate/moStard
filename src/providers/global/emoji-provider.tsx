@@ -9,7 +9,7 @@ import { getPackCordsFromFavorites } from "../../helpers/nostr/emoji-packs";
 const EmojiContext = createContext<Emoji[]>([]);
 
 export function useContextEmojis() {
-	return useContext(EmojiContext);
+  return useContext(EmojiContext);
 }
 
 export function UserEmojiProvider({ children, pubkey }: PropsWithChildren & { pubkey?: string }) {
@@ -19,18 +19,11 @@ export function UserEmojiProvider({ children, pubkey }: PropsWithChildren & { pu
   const favoritePacks = useReplaceableEvents(favoriteList && getPackCordsFromFavorites(favoriteList));
   const emojis = favoritePacks.map((pack) => getEmojis(pack)).flat();
 
-	return <EmojiProvider emojis={emojis}>{children}</EmojiProvider>;
+  return <EmojiProvider emojis={emojis}>{children}</EmojiProvider>;
 }
 
-export default function EmojiProvider({
-	children,
-	emojis,
-}: PropsWithChildren & { emojis: Emoji[] }) {
-	const parent = useContext(EmojiContext);
+export default function EmojiProvider({ children, emojis }: PropsWithChildren & { emojis: Emoji[] }) {
+  const parent = useContext(EmojiContext);
 
-	return (
-		<EmojiContext.Provider value={[...parent, ...emojis]}>
-			{children}
-		</EmojiContext.Provider>
-	);
+  return <EmojiContext.Provider value={[...parent, ...emojis]}>{children}</EmojiContext.Provider>;
 }

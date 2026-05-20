@@ -12,37 +12,35 @@ import { useBreakpointValue } from "../../../providers/global/breakpoint-provide
 import UserName from "../../../components/user/user-name";
 
 export default function Header({ pubkey }: { pubkey: string }) {
-	const navigate = useNavigate();
+  const navigate = useNavigate();
 
-	const account = useActiveAccount();
-	const isSelf = pubkey === account?.pubkey;
+  const account = useActiveAccount();
+  const isSelf = pubkey === account?.pubkey;
 
-	const showExtraButtons = useBreakpointValue({ base: false, sm: true });
+  const showExtraButtons = useBreakpointValue({ base: false, sm: true });
 
-	return (
-		<Flex direction="column" gap="2" px="2" pt="2">
-			<Flex gap="2" alignItems="center">
-				<UserAvatar pubkey={pubkey} size="sm" noProxy mr="2" />
-				<Heading size="md" isTruncated>
-					<UserName pubkey={pubkey} />
-				</Heading>
-				<UserDnsIdentity pubkey={pubkey} onlyIcon />
-				<Spacer />
-				{isSelf && !(account instanceof ReadonlyAccount) && (
-					<IconButton
-						icon={<EditIcon />}
-						aria-label="Edit profile"
-						title="Edit profile"
-						size="sm"
-						colorScheme="primary"
-						onClick={() => navigate("/profile")}
-					/>
-				)}
-				{showExtraButtons && !isSelf && (
-					<UserFollowButton pubkey={pubkey} size="sm" />
-				)}
-				<UserProfileMenu pubkey={pubkey} aria-label="More Options" size="sm" />
-			</Flex>
-		</Flex>
-	);
+  return (
+    <Flex direction="column" gap="2" px="2" pt="2">
+      <Flex gap="2" alignItems="center">
+        <UserAvatar pubkey={pubkey} size="sm" noProxy mr="2" />
+        <Heading size="md" isTruncated>
+          <UserName pubkey={pubkey} />
+        </Heading>
+        <UserDnsIdentity pubkey={pubkey} onlyIcon />
+        <Spacer />
+        {isSelf && !(account instanceof ReadonlyAccount) && (
+          <IconButton
+            icon={<EditIcon />}
+            aria-label="Edit profile"
+            title="Edit profile"
+            size="sm"
+            colorScheme="primary"
+            onClick={() => navigate("/profile")}
+          />
+        )}
+        {showExtraButtons && !isSelf && <UserFollowButton pubkey={pubkey} size="sm" />}
+        <UserProfileMenu pubkey={pubkey} aria-label="More Options" size="sm" />
+      </Flex>
+    </Flex>
+  );
 }

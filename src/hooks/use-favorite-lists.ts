@@ -11,19 +11,17 @@ export default function useFavoriteLists(pubkey?: string) {
   const account = useActiveAccount();
   const key = pubkey || account?.pubkey;
 
-	const favoriteList = useReplaceableEvent(
-		key
-			? {
-					kind: kinds.Application,
-					pubkey: key,
-					identifier: FAVORITE_LISTS_IDENTIFIER,
-				}
-			: undefined,
-	);
+  const favoriteList = useReplaceableEvent(
+    key
+      ? {
+          kind: kinds.Application,
+          pubkey: key,
+          identifier: FAVORITE_LISTS_IDENTIFIER,
+        }
+      : undefined,
+  );
 
-	const lists = useReplaceableEvents(
-		favoriteList ? getAddressPointersFromList(favoriteList) : [],
-	);
+  const lists = useReplaceableEvents(favoriteList ? getAddressPointersFromList(favoriteList) : []);
 
-	return { lists, list: favoriteList };
+  return { lists, list: favoriteList };
 }

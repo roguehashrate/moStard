@@ -30,7 +30,9 @@ function CorrectionsPage() {
       </Flex>
 
       <IntersectionObserverProvider callback={callback}>
-        {corrections?.map((correction) => <CorrectionCard correction={correction} key={correction.id} />)}
+        {corrections?.map((correction) => (
+          <CorrectionCard correction={correction} key={correction.id} />
+        ))}
       </IntersectionObserverProvider>
     </VerticalPageLayout>
   );

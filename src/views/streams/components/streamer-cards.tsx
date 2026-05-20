@@ -49,5 +49,11 @@ export default function StreamerCards({ pubkey, ...props }: Omit<CardProps, "chi
 
   const cards = useEventModel(StreamCardsQuery, [{ pubkey, relays: contextRelays }]);
 
-  return <>{cards?.map((card) => <StreamerCard key={getEventUID(card)} card={card} {...props} />)}</>;
+  return (
+    <>
+      {cards?.map((card) => (
+        <StreamerCard key={getEventUID(card)} card={card} {...props} />
+      ))}
+    </>
+  );
 }

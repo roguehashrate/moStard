@@ -23,43 +23,43 @@ import ProfileSettingsView from "./profile";
 import PerformanceSettings from "./performance";
 
 export default [
-	{
-		element: <SettingsView />,
-		children: [
-			{ index: true, Component: DisplaySettings },
-			{ path: "display", Component: DisplaySettings },
-			{
-				path: "accounts",
-				element: (
-					<RequireActiveAccount>
-						<AccountSettings />
-					</RequireActiveAccount>
-				),
-			},
-			{
-				path: "profile",
-				element: (
-					<RequireActiveAccount>
-						<ProfileSettingsView />
-					</RequireActiveAccount>
-				),
-			},
-			{ path: "mailboxes", Component: MailboxesView },
-			{ path: "identity", Component: DnsIdentityView },
-			{ path: "authentication", Component: AuthenticationSettingsView },
-			{ path: "media-servers", Component: MediaServersView },
-			{ path: "search", Component: SearchSettings },
-			{ path: "relays", Component: AppRelaysView },
-			{ path: "social-graph", Component: SocialGraphView },
-			{ path: "mutes", Component: MutesSettings },
-			{ path: "content", Component: ContentPoliciesSettings },
-			{ path: "performance", Component: PerformanceSettings },
-			{ path: "cache", Component: CacheRelayView },
-			{ path: "post", Component: PostSettings },
-			{ path: "privacy", Component: PrivacySettings },
-			{ path: "monero", Component: MoneroSettings },
-			{ path: "messages", Component: MessagesSettings },
-			{ path: "background-worker", Component: BackgroundWorkerSettings },
-		],
-	},
+  {
+    element: <SettingsView />,
+    children: [
+      { index: true, Component: DisplaySettings },
+      { path: "display", Component: DisplaySettings },
+      {
+        path: "accounts",
+        element: (
+          <RequireActiveAccount>
+            <AccountSettings />
+          </RequireActiveAccount>
+        ),
+      },
+      {
+        path: "profile",
+        element: (
+          <RequireActiveAccount>
+            <ProfileSettingsView />
+          </RequireActiveAccount>
+        ),
+      },
+      { path: "mailboxes", Component: MailboxesView },
+      { path: "identity", Component: DnsIdentityView },
+      { path: "authentication", Component: AuthenticationSettingsView },
+      { path: "media-servers", Component: MediaServersView },
+      { path: "search", Component: SearchSettings },
+      { path: "relays", Component: AppRelaysView },
+      { path: "social-graph", Component: SocialGraphView },
+      { path: "mutes", Component: MutesSettings },
+      { path: "content", Component: ContentPoliciesSettings },
+      { path: "performance", Component: PerformanceSettings },
+      { path: "cache", Component: CacheRelayView },
+      { path: "post", Component: PostSettings },
+      { path: "privacy", Component: PrivacySettings },
+      { path: "monero", Component: MoneroSettings },
+      { path: "messages", Component: MessagesSettings },
+      { path: "background-worker", Component: BackgroundWorkerSettings },
+    ],
+  },
 ] satisfies RouteObject[];

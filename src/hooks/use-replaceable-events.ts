@@ -3,29 +3,22 @@ import type { NostrEvent } from "nostr-tools";
 
 import hash_sum from "hash-sum";
 import { combineLatest, map, of } from "rxjs";
-import {
-	type CustomAddressPointer,
-	parseCoordinate,
-} from "../helpers/nostr/event";
+import { type CustomAddressPointer, parseCoordinate } from "../helpers/nostr/event";
 import { AddressableQuery } from "../models";
 
-export default function useReplaceableEvents(
-	coordinates: string[] | CustomAddressPointer[] | undefined,
-): NostrEvent[] {
-	const eventStore = useEventStore();
+export default function useReplaceableEvents(coordinates: string[] | CustomAddressPointer[] | undefined): NostrEvent[] {
+  const eventStore = useEventStore();
 
-	return (
-		useObservableMemo(() => {
-			if (!coordinates) return of([]);
+  return (
+    useObservableMemo(() => {
+      if (!coordinates) return of([]);
 
-			const models = coordinates
-				.map((str) => (typeof str === "string" ? parseCoordinate(str) : str))
-				.filter((c) => c !== null)
-				.map((cord) => eventStore.model(AddressableQuery, cord));
+      const models = coordinates
+        .map((str) => (typeof str === "string" ? parseCoordinate(str) : str))
+        .filter((c) => c !== null)
+        .map((cord) => eventStore.model(AddressableQuery, cord));
 
-			return combineLatest(models).pipe(
-				map((events) => events.filter((e) => e !== undefined)),
-			);
-		}, [hash_sum(coordinates), eventStore]) ?? []
-	);
+      return combineLatest(models).pipe(map((events) => events.filter((e) => e !== undefined)));
+    }, [hash_sum(coordinates), eventStore]) ?? []
+  );
 }

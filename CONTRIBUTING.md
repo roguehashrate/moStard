@@ -10,7 +10,7 @@ Thank you for considering contributing to the project! I welcome contributions f
 - Checkout the `master` branch `git checkout master`
 - Create a new branch for your feature `git checkout -b new-feature`
 - Start making changes and fixing things
-- Open a pull request [here](https://github.com/mostard-org/mostard)
+- Open a pull request [here](https://github.com/roguehashrate/moStard)
 - Wait for feedback. it might take me a while to look at it
 
 ## Guidelines

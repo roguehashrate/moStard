@@ -41,7 +41,9 @@ export default function UserTracksTab() {
     <IntersectionObserverProvider callback={callback}>
       <VerticalPageLayout>
         <SimpleGrid columns={{ base: 1, xl: 2 }} spacing="4">
-          {tracks?.map((track) => <Track key={getEventUID(track)} track={track} />)}
+          {tracks?.map((track) => (
+            <Track key={getEventUID(track)} track={track} />
+          ))}
         </SimpleGrid>
       </VerticalPageLayout>
     </IntersectionObserverProvider>

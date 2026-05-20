@@ -25,17 +25,8 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import {
-  type Emoji,
-  getEventPointerFromQTag,
-  processTags,
-} from "applesauce-core/helpers";
-import {
-  useActiveAccount,
-  useEventFactory,
-  useEventStore,
-  useObservableEagerState,
-} from "applesauce-react/hooks";
+import { type Emoji, getEventPointerFromQTag, processTags } from "applesauce-core/helpers";
+import { useActiveAccount, useEventFactory, useEventStore, useObservableEagerState } from "applesauce-react/hooks";
 import type { UnsignedEvent } from "nostr-tools";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -43,15 +34,10 @@ import { useThrottle } from "react-use";
 
 import useCacheForm from "../../hooks/use-cache-form";
 import useLocalStorageDisclosure from "../../hooks/use-localstorage-disclosure";
-import useTextAreaUploadFile, {
-  useTextAreaInsertTextWithForm,
-} from "../../hooks/use-textarea-upload-file";
+import useTextAreaUploadFile, { useTextAreaInsertTextWithForm } from "../../hooks/use-textarea-upload-file";
 import useAppSettings from "../../hooks/use-user-app-settings";
 import { useContextEmojis } from "../../providers/global/emoji-provider";
-import {
-  type PublishLogEntry,
-  usePublishEvent,
-} from "../../providers/global/publish-provider";
+import { type PublishLogEntry, usePublishEvent } from "../../providers/global/publish-provider";
 import { ContentSettingsProvider } from "../../providers/local/content-settings";
 import localSettings from "../../services/preferences";
 import InsertImageButton from "../../views/new/note/insert-image-button";
@@ -84,10 +70,7 @@ export default function PostModal({
   const publish = usePublishEvent();
   const { noteDifficulty } = useAppSettings();
   const addClientTag = useObservableEagerState(localSettings.addClientTag);
-  const promptAddClientTag = useLocalStorageDisclosure(
-    "prompt-add-client-tag",
-    true,
-  );
+  const promptAddClientTag = useLocalStorageDisclosure("prompt-add-client-tag", true);
   const [miningTarget, setMiningTarget] = useState(0);
   const [publishEntry, setPublishEntry] = useState<PublishLogEntry>();
   const emojis = useContextEmojis();
@@ -96,15 +79,7 @@ export default function PostModal({
 
   const factory = useEventFactory();
   const [draft, setDraft] = useState<UnsignedEvent>();
-  const {
-    getValues,
-    setValue,
-    watch,
-    register,
-    handleSubmit,
-    formState,
-    reset,
-  } = useForm<FormValues>({
+  const { getValues, setValue, watch, register, handleSubmit, formState, reset } = useForm<FormValues>({
     defaultValues: {
       content: initContent,
       nsfw: false,
@@ -137,21 +112,13 @@ export default function PostModal({
   };
 
   const textAreaRef = useRef<RefType | null>(null);
-  const insertText = useTextAreaInsertTextWithForm(
-    textAreaRef,
-    getValues,
-    setValue,
-  );
+  const insertText = useTextAreaInsertTextWithForm(textAreaRef, getValues, setValue);
   const { onPaste } = useTextAreaUploadFile(insertText);
 
   const publishPost = async (unsigned: UnsignedEvent) => {
     // Broadcast quoted events
-    const pointers = processTags(unsigned.tags, (t) =>
-      t[0] === "q" ? getEventPointerFromQTag(t) : undefined,
-    );
-    const events = pointers
-      .map((p) => eventStore.getEvent(p.id))
-      .filter((t) => !!t);
+    const pointers = processTags(unsigned.tags, (t) => (t[0] === "q" ? getEventPointerFromQTag(t) : undefined));
+    const events = pointers.map((p) => eventStore.getEvent(p.id)).filter((t) => !!t);
     for (const event of events) publish("Broadcast event", event);
 
     // Publish the note
@@ -170,12 +137,7 @@ export default function PostModal({
   const renderBody = () => {
     if (publishEntry) {
       return (
-        <ModalBody
-          display="flex"
-          flexDirection="column"
-          padding={["2", "2", "4"]}
-          gap="2"
-        >
+        <ModalBody display="flex" flexDirection="column" padding={["2", "2", "4"]} gap="2">
           <PublishLogEntryDetails entry={publishEntry} />
           <Button onClick={onClose} mt="2" ml="auto">
             Close
@@ -186,12 +148,7 @@ export default function PostModal({
 
     if (miningTarget && draft) {
       return (
-        <ModalBody
-          display="flex"
-          flexDirection="column"
-          padding={["2", "2", "4"]}
-          gap="2"
-        >
+        <ModalBody display="flex" flexDirection="column" padding={["2", "2", "4"]} gap="2">
           <MinePOW
             draft={draft}
             targetPOW={miningTarget}
@@ -206,12 +163,7 @@ export default function PostModal({
     // TODO: wrap this in a form
     return (
       <>
-        <ModalBody
-          display="flex"
-          flexDirection="column"
-          padding={["2", "2", "4"]}
-          gap="2"
-        >
+        <ModalBody display="flex" flexDirection="column" padding={["2", "2", "4"]} gap="2">
           <MagicTextArea
             autoFocus
             mb="2"
@@ -245,16 +197,11 @@ export default function PostModal({
           )}
           <Flex gap="2" alignItems="center" justifyContent="flex-end">
             <Flex mr="auto" gap="2">
-              <InsertImageButton
-                onUploaded={insertText}
-                aria-label="Upload image"
-              />
+              <InsertImageButton onUploaded={insertText} aria-label="Upload image" />
               <InsertGifButton onSelectURL={insertText} aria-label="Add gif" />
               <Button
                 variant="link"
-                rightIcon={
-                  moreOptions.isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />
-                }
+                rightIcon={moreOptions.isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
                 onClick={moreOptions.onToggle}
               >
                 More Options
@@ -279,17 +226,11 @@ export default function PostModal({
                 <Flex gap="2" direction="column">
                   <Switch {...register("nsfw")}>NSFW</Switch>
                   {getValues().nsfw && (
-                    <Input
-                      {...register("nsfwReason", { required: true })}
-                      placeholder="Reason"
-                      isRequired
-                    />
+                    <Input {...register("nsfwReason", { required: true })} placeholder="Reason" isRequired />
                   )}
                 </Flex>
                 <FormControl>
-                  <FormLabel>
-                    POW Difficulty ({getValues().difficulty})
-                  </FormLabel>
+                  <FormLabel>POW Difficulty ({getValues().difficulty})</FormLabel>
                   <Slider
                     aria-label="difficulty"
                     value={getValues("difficulty")}
@@ -305,10 +246,7 @@ export default function PostModal({
                   </Slider>
                   <FormHelperText>
                     The number of leading 0's in the event id. see{" "}
-                    <Link
-                      href="https://github.com/nostr-protocol/nips/blob/master/13.md"
-                      isExternal
-                    >
+                    <Link href="https://github.com/nostr-protocol/nips/blob/master/13.md" isExternal>
                       NIP-13
                     </Link>
                   </FormHelperText>
@@ -319,29 +257,18 @@ export default function PostModal({
         </ModalBody>
 
         {!addClientTag && promptAddClientTag.isOpen && (
-          <Alert
-            status="info"
-            whiteSpace="pre-wrap"
-            flexDirection={{ base: "column", lg: "row" }}
-          >
+          <Alert status="info" whiteSpace="pre-wrap" flexDirection={{ base: "column", lg: "row" }}>
             <AlertIcon hideBelow="lg" />
             <Text>
               Enable{" "}
-              <Link
-                isExternal
-                href="https://github.com/nostr-protocol/nips/blob/master/89.md#client-tag"
-              >
+              <Link isExternal href="https://github.com/nostr-protocol/nips/blob/master/89.md#client-tag">
                 NIP-89
               </Link>{" "}
-              client tags and let other users know what app you're using to
-              write notes
+              client tags and let other users know what app you're using to write notes
             </Text>
             <ButtonGroup ml="auto" size="sm" variant="ghost">
               <Button onClick={promptAddClientTag.onClose}>Close</Button>
-              <Button
-                colorScheme="primary"
-                onClick={() => localSettings.addClientTag.next(true)}
-              >
+              <Button colorScheme="primary" onClick={() => localSettings.addClientTag.next(true)}>
                 Enable
               </Button>
             </ButtonGroup>

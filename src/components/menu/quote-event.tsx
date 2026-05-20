@@ -8,23 +8,23 @@ import { getSharableEventAddress } from "../../services/relay-hints";
 import { QuoteIcon } from "../icons";
 
 export default function QuoteEventMenuItem({ event }: { event: NostrEvent }) {
-	const toast = useToast();
-	const address = useMemo(() => getSharableEventAddress(event), [event]);
-	const metadata = useUserProfile(event.pubkey);
-	const { openModal } = useContext(PostModalContext);
+  const toast = useToast();
+  const address = useMemo(() => getSharableEventAddress(event), [event]);
+  const metadata = useUserProfile(event.pubkey);
+  const { openModal } = useContext(PostModalContext);
 
-	const share = useCallback(async () => {
-		let content = "";
+  const share = useCallback(async () => {
+    let content = "";
 
-		content += "\nnostr:" + address;
-		openModal({ cacheFormKey: null, initContent: content });
-	}, [metadata, event, toast, address]);
+    content += "\nnostr:" + address;
+    openModal({ cacheFormKey: null, initContent: content });
+  }, [metadata, event, toast, address]);
 
-	return (
-		address && (
-			<MenuItem onClick={share} icon={<QuoteIcon />}>
-				Quote Event
-			</MenuItem>
-		)
-	);
+  return (
+    address && (
+      <MenuItem onClick={share} icon={<QuoteIcon />}>
+        Quote Event
+      </MenuItem>
+    )
+  );
 }

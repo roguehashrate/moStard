@@ -1,13 +1,4 @@
-import {
-	Card,
-	CardProps,
-	Flex,
-	Heading,
-	Link,
-	LinkBox,
-	SimpleGrid,
-	Text,
-} from "@chakra-ui/react";
+import { Card, CardProps, Flex, Heading, Link, LinkBox, SimpleGrid, Text } from "@chakra-ui/react";
 import { getEventUID, getRelaysFromList } from "applesauce-core/helpers";
 import { kinds, NostrEvent } from "nostr-tools";
 import { useCallback, useMemo } from "react";
@@ -35,170 +26,143 @@ import DVMCard from "./dvm-feed/components/dvm-card";
 import RelayFavicon from "../../components/relay-favicon";
 
 function DVMFeeds() {
-	const readRelays = useReadRelays();
-	const eventFilter = useCallback((event: NostrEvent) => {
-		return !event.tags.some((t) => t[0] === "web");
-	}, []);
-	const { loader, timeline: DVMs } = useTimelineLoader(
-		"content-discovery-dvms",
-		readRelays,
-		{
-			kinds: [kinds.Handlerinformation],
-			"#k": [String(DVM_CONTENT_DISCOVERY_JOB_KIND)],
-		},
-		{ eventFilter },
-	);
-	const callback = useTimelineCurserIntersectionCallback(loader);
+  const readRelays = useReadRelays();
+  const eventFilter = useCallback((event: NostrEvent) => {
+    return !event.tags.some((t) => t[0] === "web");
+  }, []);
+  const { loader, timeline: DVMs } = useTimelineLoader(
+    "content-discovery-dvms",
+    readRelays,
+    {
+      kinds: [kinds.Handlerinformation],
+      "#k": [String(DVM_CONTENT_DISCOVERY_JOB_KIND)],
+    },
+    { eventFilter },
+  );
+  const callback = useTimelineCurserIntersectionCallback(loader);
 
-	const { feeds: favoriteFeeds, favorites } = useFavoriteFeeds();
+  const { feeds: favoriteFeeds, favorites } = useFavoriteFeeds();
 
-	return (
-		<>
-			{favoriteFeeds.length > 0 && (
-				<>
-					<Heading size="md" mt="4">
-						Favorite Feeds
-					</Heading>
-					<SimpleGrid
-						columns={{ base: 1, md: 1, lg: 2, xl: 3, "2xl": 4 }}
-						spacing="2"
-					>
-						{favoriteFeeds.map((feed) => (
-							<ErrorBoundary key={getEventUID(feed)} event={feed}>
-								<DVMCard dvm={feed} />
-							</ErrorBoundary>
-						))}
-					</SimpleGrid>
-				</>
-			)}
+  return (
+    <>
+      {favoriteFeeds.length > 0 && (
+        <>
+          <Heading size="md" mt="4">
+            Favorite Feeds
+          </Heading>
+          <SimpleGrid columns={{ base: 1, md: 1, lg: 2, xl: 3, "2xl": 4 }} spacing="2">
+            {favoriteFeeds.map((feed) => (
+              <ErrorBoundary key={getEventUID(feed)} event={feed}>
+                <DVMCard dvm={feed} />
+              </ErrorBoundary>
+            ))}
+          </SimpleGrid>
+        </>
+      )}
 
-			<Heading size="md" mt="4">
-				DVM Feeds
-			</Heading>
-			<Text>
-				Learn more about data vending machines here:{" "}
-				<Link
-					href="https://www.data-vending-machines.org/"
-					isExternal
-					color="blue.500"
-				>
-					https://www.data-vending-machines.org/
-				</Link>
-			</Text>
-			<IntersectionObserverProvider callback={callback}>
-				<SimpleGrid
-					columns={{ base: 1, md: 1, lg: 2, xl: 3, "2xl": 4 }}
-					spacing="2"
-				>
-					{DVMs.filter(
-						(feed) => !favorites || !isEventInList(favorites, feed),
-					).map((feed) => (
-						<ErrorBoundary key={getEventUID(feed)} event={feed}>
-							<DVMCard dvm={feed} />
-						</ErrorBoundary>
-					))}
-				</SimpleGrid>
-			</IntersectionObserverProvider>
-		</>
-	);
+      <Heading size="md" mt="4">
+        DVM Feeds
+      </Heading>
+      <Text>
+        Learn more about data vending machines here:{" "}
+        <Link href="https://www.data-vending-machines.org/" isExternal color="blue.500">
+          https://www.data-vending-machines.org/
+        </Link>
+      </Text>
+      <IntersectionObserverProvider callback={callback}>
+        <SimpleGrid columns={{ base: 1, md: 1, lg: 2, xl: 3, "2xl": 4 }} spacing="2">
+          {DVMs.filter((feed) => !favorites || !isEventInList(favorites, feed)).map((feed) => (
+            <ErrorBoundary key={getEventUID(feed)} event={feed}>
+              <DVMCard dvm={feed} />
+            </ErrorBoundary>
+          ))}
+        </SimpleGrid>
+      </IntersectionObserverProvider>
+    </>
+  );
 }
 
-function RelayFeedCard({
-	relay,
-	...props
-}: { relay: string } & Omit<CardProps, "children">) {
-	const { info } = useRelayInfo(relay);
+function RelayFeedCard({ relay, ...props }: { relay: string } & Omit<CardProps, "children">) {
+  const { info } = useRelayInfo(relay);
 
-	return (
-		<Card as={LinkBox} display="block" p="4" {...props}>
-			<Flex gap="2" float="right" zIndex={1}>
-				{/* Favorite button goes here */}
-			</Flex>
-			<RelayFavicon relay={relay} float="left" mr="4" mb="2" />
-			<Heading size="md">
-				<HoverLinkOverlay
-					as={RouterLink}
-					to={`/discovery/relay/${encodeURIComponent(relay)}`}
-				>
-					{new URL(relay).hostname}
-				</HoverLinkOverlay>
-			</Heading>
-			<Text noOfLines={2}>{info?.description}</Text>
-		</Card>
-	);
+  return (
+    <Card as={LinkBox} display="block" p="4" {...props}>
+      <Flex gap="2" float="right" zIndex={1}>
+        {/* Favorite button goes here */}
+      </Flex>
+      <RelayFavicon relay={relay} float="left" mr="4" mb="2" />
+      <Heading size="md">
+        <HoverLinkOverlay as={RouterLink} to={`/discovery/relay/${encodeURIComponent(relay)}`}>
+          {new URL(relay).hostname}
+        </HoverLinkOverlay>
+      </Heading>
+      <Text noOfLines={2}>{info?.description}</Text>
+    </Card>
+  );
 }
 
 function FavoriteRelays() {
-	const account = useActiveAccount()!;
-	const favorites = useAddressableEvent({
-		kind: 10012,
-		pubkey: account.pubkey,
-	});
-	const relays = useMemo(
-		() => favorites && getRelaysFromList(favorites),
-		[favorites],
-	);
+  const account = useActiveAccount()!;
+  const favorites = useAddressableEvent({
+    kind: 10012,
+    pubkey: account.pubkey,
+  });
+  const relays = useMemo(() => favorites && getRelaysFromList(favorites), [favorites]);
 
-	if (!relays) return null;
+  if (!relays) return null;
 
-	return (
-		<>
-			<Heading size="md" mt="4">
-				Favorite Relays
-			</Heading>
+  return (
+    <>
+      <Heading size="md" mt="4">
+        Favorite Relays
+      </Heading>
 
-			<SimpleGrid
-				columns={{ base: 1, md: 1, lg: 2, xl: 3, "2xl": 4 }}
-				spacing="2"
-			>
-				{relays.map((relay) => (
-					<RelayFeedCard key={relay} relay={relay} />
-				))}
-			</SimpleGrid>
-		</>
-	);
+      <SimpleGrid columns={{ base: 1, md: 1, lg: 2, xl: 3, "2xl": 4 }} spacing="2">
+        {relays.map((relay) => (
+          <RelayFeedCard key={relay} relay={relay} />
+        ))}
+      </SimpleGrid>
+    </>
+  );
 }
 
 function DiscoveryHomePage() {
-	return (
-		<VerticalPageLayout>
-			<SimpleGrid
-				columns={{ base: 1, md: 1, lg: 2, xl: 3, "2xl": 4 }}
-				spacing="2"
-			>
-				<Card as={LinkBox} display="block" p="4">
-					<Telescope boxSize={16} float="left" ml="2" my="2" mr="6" />
-					<Flex direction="column">
-						<Heading size="md">
-							<HoverLinkOverlay as={RouterLink} to="/discovery/blindspot">
-								Blind spots
-							</HoverLinkOverlay>
-						</Heading>
-						<Text>What are other users seeing that you are not?</Text>
-					</Flex>
-				</Card>
-				<Card as={LinkBox} display="block" p="4">
-					<RelayIcon boxSize={16} float="left" ml="2" my="2" mr="6" />
-					<Flex direction="column">
-						<Heading size="md">
-							<HoverLinkOverlay as={RouterLink} to="/discovery/relays">
-								Relays
-							</HoverLinkOverlay>
-						</Heading>
-						<Text>See what notes are on relays and where they are</Text>
-					</Flex>
-				</Card>
-			</SimpleGrid>
-			<FavoriteRelays />
-			<DVMFeeds />
-		</VerticalPageLayout>
-	);
+  return (
+    <VerticalPageLayout>
+      <SimpleGrid columns={{ base: 1, md: 1, lg: 2, xl: 3, "2xl": 4 }} spacing="2">
+        <Card as={LinkBox} display="block" p="4">
+          <Telescope boxSize={16} float="left" ml="2" my="2" mr="6" />
+          <Flex direction="column">
+            <Heading size="md">
+              <HoverLinkOverlay as={RouterLink} to="/discovery/blindspot">
+                Blind spots
+              </HoverLinkOverlay>
+            </Heading>
+            <Text>What are other users seeing that you are not?</Text>
+          </Flex>
+        </Card>
+        <Card as={LinkBox} display="block" p="4">
+          <RelayIcon boxSize={16} float="left" ml="2" my="2" mr="6" />
+          <Flex direction="column">
+            <Heading size="md">
+              <HoverLinkOverlay as={RouterLink} to="/discovery/relays">
+                Relays
+              </HoverLinkOverlay>
+            </Heading>
+            <Text>See what notes are on relays and where they are</Text>
+          </Flex>
+        </Card>
+      </SimpleGrid>
+      <FavoriteRelays />
+      <DVMFeeds />
+    </VerticalPageLayout>
+  );
 }
 
 export default function DiscoveryHomeView() {
-	return (
-		<RequireActiveAccount>
-			<DiscoveryHomePage />
-		</RequireActiveAccount>
-	);
+  return (
+    <RequireActiveAccount>
+      <DiscoveryHomePage />
+    </RequireActiveAccount>
+  );
 }

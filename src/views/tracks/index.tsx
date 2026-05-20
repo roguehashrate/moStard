@@ -42,7 +42,9 @@ function TracksPage() {
         <PeopleListSelection />
       </Flex>
       <IntersectionObserverProvider callback={callback}>
-        {tracks?.map((track) => <TrackCard key={track.id} track={track} />)}
+        {tracks?.map((track) => (
+          <TrackCard key={track.id} track={track} />
+        ))}
       </IntersectionObserverProvider>
     </VerticalPageLayout>
   );

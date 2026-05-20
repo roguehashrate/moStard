@@ -30,7 +30,9 @@ function BadgesBrowsePage() {
         </Flex>
 
         <SimpleGrid columns={{ base: 1, sm: 2, md: 2, lg: 3, xl: 4 }} spacing="2">
-          {lists?.map((badge) => <BadgeCard key={getEventUID(badge)} badge={badge} />)}
+          {lists?.map((badge) => (
+            <BadgeCard key={getEventUID(badge)} badge={badge} />
+          ))}
         </SimpleGrid>
       </VerticalPageLayout>
     </IntersectionObserverProvider>

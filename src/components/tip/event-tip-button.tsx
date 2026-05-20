@@ -7,54 +7,49 @@ import useEventXMRAddress from "~/hooks/use-event-xmr-address";
 import MoneroWhite from "../icons/monero-white";
 
 export type NoteTipButtonProps = Omit<ButtonProps, "children"> & {
-	event: NostrEvent;
-	allowComment?: boolean;
-	showEventPreview?: boolean;
+  event: NostrEvent;
+  allowComment?: boolean;
+  showEventPreview?: boolean;
 };
 
-export default function EventTipButton({
-	event,
-	allowComment,
-	showEventPreview,
-	...props
-}: NoteTipButtonProps) {
-	const { address, isUserTip } = useEventXMRAddress(event);
-	const { isOpen, onOpen, onClose } = useDisclosure();
+export default function EventTipButton({ event, allowComment, showEventPreview, ...props }: NoteTipButtonProps) {
+  const { address, isUserTip } = useEventXMRAddress(event);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
-	const title = isUserTip ? "Tip User" : "Tip Note";
+  const title = isUserTip ? "Tip User" : "Tip Note";
 
-	return (
-		<>
-			<Button
-				m={0}
-				rightIcon={<MoneroWhite verticalAlign="sub" />}
-				aria-label={title}
-				title={title}
-				{...props}
-				onClick={onOpen}
-				isDisabled={!address}
-				sx={
-					address
-						? {}
-						: {
-								"& .chakra-button__icon": {
-									margin: "0 !important",
-								},
-							}
-				}
-			>
-				{address ? "Tip" : ""}
-			</Button>
+  return (
+    <>
+      <Button
+        m={0}
+        rightIcon={<MoneroWhite verticalAlign="sub" />}
+        aria-label={title}
+        title={title}
+        {...props}
+        onClick={onOpen}
+        isDisabled={!address}
+        sx={
+          address
+            ? {}
+            : {
+                "& .chakra-button__icon": {
+                  margin: "0 !important",
+                },
+              }
+        }
+      >
+        {address ? "Tip" : ""}
+      </Button>
 
-			{isOpen && (
-				<TipModal
-					isOpen={isOpen}
-					onClose={onClose}
-					event={event}
-					allowComment={allowComment}
-					showEmbed={showEventPreview}
-				/>
-			)}
-		</>
-	);
+      {isOpen && (
+        <TipModal
+          isOpen={isOpen}
+          onClose={onClose}
+          event={event}
+          allowComment={allowComment}
+          showEmbed={showEventPreview}
+        />
+      )}
+    </>
+  );
 }

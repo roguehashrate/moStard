@@ -31,7 +31,9 @@ export default function RelayReviews({ relay }: { relay: string }) {
   return (
     <Flex direction="column" gap="2">
       <IntersectionObserverProvider callback={callback}>
-        {reviews?.map((event) => <RelayReviewNote key={event.id} event={event} hideUrl />)}
+        {reviews?.map((event) => (
+          <RelayReviewNote key={event.id} event={event} hideUrl />
+        ))}
       </IntersectionObserverProvider>
     </Flex>
   );

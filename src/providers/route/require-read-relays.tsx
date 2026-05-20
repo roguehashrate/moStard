@@ -30,5 +30,5 @@ export default function RequireReadRelays({ children }: PropsWithChildren) {
       </>
     );
 
-	return children;
+  return children;
 }

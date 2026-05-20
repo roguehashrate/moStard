@@ -3,6 +3,9 @@ import "./polyfill";
 import { CAP_IS_WEB, IS_SERVICE_WORKER_SUPPORTED } from "./env";
 import { GlobalProviders } from "./providers/global";
 import { registerServiceWorker } from "./services/worker";
+import { Capacitor } from "@capacitor/core";
+
+document.body.classList.add(`platform-${Capacitor.getPlatform()}`);
 
 import "./services/debug-api";
 import "./services/lifecycle";
@@ -18,14 +21,11 @@ dayjs.extend(localizedFormat);
 
 // register nostr: protocol handler
 if (import.meta.env.PROD && CAP_IS_WEB) {
-	try {
-		navigator.registerProtocolHandler(
-			"web+nostr",
-			new URL("/l/%s", location.origin).toString(),
-		);
-	} catch (e) {
-		console.log("Failed to register handler");
-	}
+  try {
+    navigator.registerProtocolHandler("web+nostr", new URL("/l/%s", location.origin).toString());
+  } catch (e) {
+    console.log("Failed to register handler");
+  }
 }
 
 // mount react app
@@ -36,9 +36,9 @@ import { logger } from "./helpers/debug";
 logger("Rendering app");
 const root = document.getElementById("root")!;
 createRoot(root).render(
-	<GlobalProviders>
-		<App />
-	</GlobalProviders>,
+  <GlobalProviders>
+    <App />
+  </GlobalProviders>,
 );
 
 // Register service worker if supported

@@ -6,26 +6,24 @@ import { getAlpha3Codes, getName, registerLocale } from "i18n-iso-countries";
 import en from "i18n-iso-countries/langs/en.json";
 registerLocale(en);
 
-export default function CountyPicker({
-	...props
-}: Omit<SelectProps, "children">) {
-	const codes = useMemo(
-		() =>
-			Object.keys(getAlpha3Codes()).map((code) => ({
-				name: getName(code, "en"),
-				code,
-			})),
-		[],
-	);
+export default function CountyPicker({ ...props }: Omit<SelectProps, "children">) {
+  const codes = useMemo(
+    () =>
+      Object.keys(getAlpha3Codes()).map((code) => ({
+        name: getName(code, "en"),
+        code,
+      })),
+    [],
+  );
 
-	return (
-		<Select w="auto" {...props}>
-			<option value="">Any</option>
-			{codes.map(({ code, name }) => (
-				<option key={code} value={code}>
-					{name}
-				</option>
-			))}
-		</Select>
-	);
+  return (
+    <Select w="auto" {...props}>
+      <option value="">Any</option>
+      {codes.map(({ code, name }) => (
+        <option key={code} value={code}>
+          {name}
+        </option>
+      ))}
+    </Select>
+  );
 }

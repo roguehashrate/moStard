@@ -7,7 +7,7 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverTrigger,
-  Text
+  Text,
 } from "@chakra-ui/react";
 import { getSeenRelays } from "applesauce-core/helpers";
 import { NostrEvent } from "nostr-tools";

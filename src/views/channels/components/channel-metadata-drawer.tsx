@@ -51,7 +51,9 @@ function ChannelMembers({ channel, relays }: { channel: NostrEvent; relays: stri
   return (
     <IntersectionObserverProvider callback={callback}>
       <Flex gap="2" direction="column">
-        {userLists?.map((list) => <UserCard key={list.pubkey} pubkey={list.pubkey} />)}
+        {userLists?.map((list) => (
+          <UserCard key={list.pubkey} pubkey={list.pubkey} />
+        ))}
       </Flex>
     </IntersectionObserverProvider>
   );

@@ -53,85 +53,85 @@ const hashPath = window.location.hash.match(/^#(\/.+)/);
 if (hashPath) window.history.replaceState({}, "", hashPath[1]);
 
 const RootPage = () => {
-	return (
-		<RouteProviders>
-			<AppLayout />
-		</RouteProviders>
-	);
+  return (
+    <RouteProviders>
+      <AppLayout />
+    </RouteProviders>
+  );
 };
 
 const NoLayoutPage = () => {
-	return (
-		<RouteProviders>
-			<Outlet />
-		</RouteProviders>
-	);
+  return (
+    <RouteProviders>
+      <Outlet />
+    </RouteProviders>
+  );
 };
 
 const router = createBrowserRouter(
-	[
-		{ path: "*", Component: NoteFoundView },
-		{
-			path: "signin",
-			Component: NoLayoutPage,
-			children: signinRoutes,
-		},
-		{
-			path: "signup",
-			Component: NoLayoutPage,
-			children: signupRoutes,
-		},
-		{
-			Component: RootPage,
-			children: [
-				{ index: true, Component: HomeView },
-				{ path: "notes", Component: HomeView },
-				{ path: "new", children: newRoutes },
-				{ path: "messages", children: messagesRoutes },
-				{ path: "user/:pubkey", children: userRoutes },
-				{ path: "u/:pubkey", children: userRoutes },
-				{ path: "note/:id", Component: ThreadView },
-				{ path: "n/:id", Component: ThreadView },
-				{ path: "search", Component: SearchView },
-				{ path: "other-stuff", Component: OtherStuffView },
-				{ path: "settings", children: settingsRoutes },
-				{ path: "relays", children: relaysRoutes },
-				{ path: "notifications", Component: NotificationsView },
-				{ path: "pictures", children: picturesRoutes },
-				{ path: "streams", children: streamsRoutes },
-				{ path: "groups", children: groupsRoutes },
-				{ path: "relay-chat", children: relayChatRoutes },
-				{ path: "tools", children: toolsRoutes },
-				{ path: "discovery", children: discoveryRoutes },
-				{ path: "wiki", children: wikiRoutes },
-				{ path: "l/:link", Component: NostrLinkView },
-				{ path: "t/:hashtag", Component: HashTagView },
+  [
+    { path: "*", Component: NoteFoundView },
+    {
+      path: "signin",
+      Component: NoLayoutPage,
+      children: signinRoutes,
+    },
+    {
+      path: "signup",
+      Component: NoLayoutPage,
+      children: signupRoutes,
+    },
+    {
+      Component: RootPage,
+      children: [
+        { index: true, Component: HomeView },
+        { path: "notes", Component: HomeView },
+        { path: "new", children: newRoutes },
+        { path: "messages", children: messagesRoutes },
+        { path: "user/:pubkey", children: userRoutes },
+        { path: "u/:pubkey", children: userRoutes },
+        { path: "note/:id", Component: ThreadView },
+        { path: "n/:id", Component: ThreadView },
+        { path: "search", Component: SearchView },
+        { path: "other-stuff", Component: OtherStuffView },
+        { path: "settings", children: settingsRoutes },
+        { path: "relays", children: relaysRoutes },
+        { path: "notifications", Component: NotificationsView },
+        { path: "pictures", children: picturesRoutes },
+        { path: "streams", children: streamsRoutes },
+        { path: "groups", children: groupsRoutes },
+        { path: "relay-chat", children: relayChatRoutes },
+        { path: "tools", children: toolsRoutes },
+        { path: "discovery", children: discoveryRoutes },
+        { path: "wiki", children: wikiRoutes },
+        { path: "l/:link", Component: NostrLinkView },
+        { path: "t/:hashtag", Component: HashTagView },
 
-				// other stuff
-				{ path: "articles", children: articlesRoutes },
-				{ path: "bookmarks", children: bookmarksRoutes },
-				{ path: "lists", children: listsRoutes },
-				{ path: "files", children: filesRoutes },
-				{ path: "tracks", Component: TracksView },
-				{ path: "map", Component: MapView },
-				{ path: "videos", children: videosRoutes },
-				{ path: "torrents", children: torrentsRoutes },
-				{ path: "channels", children: channelsRoutes },
-				{ path: "badges", children: badgesRoutes },
-				{ path: "emojis", children: emojisRoutes },
-			],
-		},
-	],
-	{ future: { v7_relativeSplatPath: true } },
+        // other stuff
+        { path: "articles", children: articlesRoutes },
+        { path: "bookmarks", children: bookmarksRoutes },
+        { path: "lists", children: listsRoutes },
+        { path: "files", children: filesRoutes },
+        { path: "tracks", Component: TracksView },
+        { path: "map", Component: MapView },
+        { path: "videos", children: videosRoutes },
+        { path: "torrents", children: torrentsRoutes },
+        { path: "channels", children: channelsRoutes },
+        { path: "badges", children: badgesRoutes },
+        { path: "emojis", children: emojisRoutes },
+      ],
+    },
+  ],
+  { future: { v7_relativeSplatPath: true } },
 );
 
 export const App = () => (
-	<ErrorBoundary>
-		<GlobalStyles />
-		<TaskManagerProvider parentRouter={router}>
-			<Suspense fallback={<Spinner />}>
-				<RouterProvider router={router} />
-			</Suspense>
-		</TaskManagerProvider>
-	</ErrorBoundary>
+  <ErrorBoundary>
+    <GlobalStyles />
+    <TaskManagerProvider parentRouter={router}>
+      <Suspense fallback={<Spinner />}>
+        <RouterProvider router={router} />
+      </Suspense>
+    </TaskManagerProvider>
+  </ErrorBoundary>
 );

@@ -13,11 +13,7 @@ export type MenuIconButtonProps = IconButtonProps & {
   children: MenuListProps["children"];
 };
 
-export function DotsMenuButton({
-  children,
-  icon,
-  ...props
-}: MenuIconButtonProps) {
+export function DotsMenuButton({ children, icon, ...props }: MenuIconButtonProps) {
   return (
     <Menu isLazy>
       <MenuButton as={IconButton} icon={icon || <MoreIcon />} {...props} />

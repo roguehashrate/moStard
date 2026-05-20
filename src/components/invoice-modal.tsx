@@ -50,12 +50,7 @@ export function InvoiceModalContent({ address, amount, onPaid }: CommonProps) {
       {showQr.isOpen && <QrCodeSvg content={uri} xmrIcon />}
       <Flex gap="2">
         <Input value={uri} readOnly />
-        <CopyIconButton
-          value={uri}
-          aria-label="Copy Invoice"
-          variant="solid"
-          size="md"
-        />
+        <CopyIconButton value={uri} aria-label="Copy Invoice" variant="solid" size="md" />
       </Flex>
       <Flex gap="2">
         <Button

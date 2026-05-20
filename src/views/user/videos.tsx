@@ -24,7 +24,9 @@ export default function UserVideosTab() {
     <IntersectionObserverProvider callback={callback}>
       <VerticalPageLayout>
         <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4, xl: 5 }} spacing="4">
-          {videos?.map((video) => <VideoCard key={getEventUID(video)} video={video} />)}
+          {videos?.map((video) => (
+            <VideoCard key={getEventUID(video)} video={video} />
+          ))}
         </SimpleGrid>
       </VerticalPageLayout>
     </IntersectionObserverProvider>

@@ -1,15 +1,5 @@
-import {
-	Button,
-	ButtonGroup,
-	Flex,
-	Spinner,
-	useDisclosure,
-} from "@chakra-ui/react";
-import {
-	ChannelHiddenModel,
-	ChannelMessagesModel,
-	ChannelMutedModel,
-} from "applesauce-core/models";
+import { Button, ButtonGroup, Flex, Spinner, useDisclosure } from "@chakra-ui/react";
+import { ChannelHiddenModel, ChannelMessagesModel, ChannelMutedModel } from "applesauce-core/models";
 import { useEventModel } from "applesauce-react/hooks";
 import { kinds, type NostrEvent } from "nostr-tools";
 import { memo, useCallback, useMemo } from "react";
@@ -36,118 +26,98 @@ import ChannelMetadataDrawer from "./components/channel-metadata-drawer";
 import ChannelMessageForm from "./components/send-message-form";
 
 const ChannelChatLog = memo(({ channel }: { channel: NostrEvent }) => {
-	const messages = useEventModel(ChannelMessagesModel, [channel]) ?? [];
-	const mutes = useEventModel(ChannelMutedModel, [channel]);
-	const hidden = useEventModel(ChannelHiddenModel, [channel]);
+  const messages = useEventModel(ChannelMessagesModel, [channel]) ?? [];
+  const mutes = useEventModel(ChannelMutedModel, [channel]);
+  const hidden = useEventModel(ChannelHiddenModel, [channel]);
 
-	const filteredMessages = useMemo(
-		() =>
-			messages.filter((e) => {
-				if (mutes?.has(e.pubkey)) return false;
-				if (hidden?.has(e.id)) return false;
+  const filteredMessages = useMemo(
+    () =>
+      messages.filter((e) => {
+        if (mutes?.has(e.pubkey)) return false;
+        if (hidden?.has(e.id)) return false;
 
-				return !e.tags.some(
-					(t) => t[0] === "e" && t[1] !== channel.id && t[3] === "root",
-				);
-			}),
-		[messages.length, channel.id, hidden?.size, mutes?.size],
-	);
-	const grouped = useMemo(
-		() => groupMessages(filteredMessages),
-		[filteredMessages],
-	);
+        return !e.tags.some((t) => t[0] === "e" && t[1] !== channel.id && t[3] === "root");
+      }),
+    [messages.length, channel.id, hidden?.size, mutes?.size],
+  );
+  const grouped = useMemo(() => groupMessages(filteredMessages), [filteredMessages]);
 
-	return (
-		<>
-			{grouped.map((group) => (
-				<ChannelMessageBlock key={group[0].id} messages={group} reverse />
-			))}
-		</>
-	);
+  return (
+    <>
+      {grouped.map((group) => (
+        <ChannelMessageBlock key={group[0].id} messages={group} reverse />
+      ))}
+    </>
+  );
 });
 
 function ChannelPage({ channel }: { channel: NostrEvent }) {
-	const relays = useReadRelays();
-	const drawer = useDisclosure();
+  const relays = useReadRelays();
+  const drawer = useDisclosure();
 
-	const metadata = useChannelMetadata(channel, relays);
+  const metadata = useChannelMetadata(channel, relays);
 
-	const clientMuteFilter = useClientSideMuteFilter();
-	const eventFilter = useCallback(
-		(e: NostrEvent) => {
-			if (clientMuteFilter(e)) return false;
-			return true;
-		},
-		[clientMuteFilter],
-	);
-	const { loader, timeline } = useTimelineLoader(
-		`${truncateId(channel.id)}-chat-messages`,
-		relays,
-		{
-			kinds: [kinds.ChannelMessage],
-			"#e": [channel.id],
-		},
-		{ eventFilter },
-	);
-	const callback = useTimelineCurserIntersectionCallback(loader);
+  const clientMuteFilter = useClientSideMuteFilter();
+  const eventFilter = useCallback(
+    (e: NostrEvent) => {
+      if (clientMuteFilter(e)) return false;
+      return true;
+    },
+    [clientMuteFilter],
+  );
+  const { loader, timeline } = useTimelineLoader(
+    `${truncateId(channel.id)}-chat-messages`,
+    relays,
+    {
+      kinds: [kinds.ChannelMessage],
+      "#e": [channel.id],
+    },
+    { eventFilter },
+  );
+  const callback = useTimelineCurserIntersectionCallback(loader);
 
-	return (
-		<ThreadsProvider messages={timeline}>
-			<IntersectionObserverProvider callback={callback}>
-				<SimpleView
-					scroll={false}
-					flush
-					title={
-						<Flex gap="2" alignItems="center">
-							<ChannelImage channel={channel} w="10" rounded="md" />
-							{metadata?.name}
-						</Flex>
-					}
-					actions={
-						<ButtonGroup size="sm" ms="auto">
-							<ChannelJoinButton channel={channel} hideBelow="lg" />
-							<Button onClick={drawer.onOpen}>Channel Info</Button>
-							<ChannelMenu channel={channel} aria-label="More Options" />
-						</ButtonGroup>
-					}
-				>
-					<Flex
-						direction="column-reverse"
-						p="4"
-						gap={2}
-						flexGrow={1}
-						h={0}
-						overflowX="hidden"
-						overflowY="auto"
-					>
-						<ChannelChatLog channel={channel} />
-						<TimelineActionAndStatus loader={loader} />
-					</Flex>
+  return (
+    <ThreadsProvider messages={timeline}>
+      <IntersectionObserverProvider callback={callback}>
+        <SimpleView
+          scroll={false}
+          flush
+          title={
+            <Flex gap="2" alignItems="center">
+              <ChannelImage channel={channel} w="10" rounded="md" />
+              {metadata?.name}
+            </Flex>
+          }
+          actions={
+            <ButtonGroup size="sm" ms="auto">
+              <ChannelJoinButton channel={channel} hideBelow="lg" />
+              <Button onClick={drawer.onOpen}>Channel Info</Button>
+              <ChannelMenu channel={channel} aria-label="More Options" />
+            </ButtonGroup>
+          }
+        >
+          <Flex direction="column-reverse" p="4" gap={2} flexGrow={1} h={0} overflowX="hidden" overflowY="auto">
+            <ChannelChatLog channel={channel} />
+            <TimelineActionAndStatus loader={loader} />
+          </Flex>
 
-					<ChannelMessageForm channel={channel} px="2" pb="2" />
-				</SimpleView>
-				{drawer.isOpen && (
-					<ChannelMetadataDrawer
-						isOpen
-						onClose={drawer.onClose}
-						channel={channel}
-						size="lg"
-					/>
-				)}
-			</IntersectionObserverProvider>
-		</ThreadsProvider>
-	);
+          <ChannelMessageForm channel={channel} px="2" pb="2" />
+        </SimpleView>
+        {drawer.isOpen && <ChannelMetadataDrawer isOpen onClose={drawer.onClose} channel={channel} size="lg" />}
+      </IntersectionObserverProvider>
+    </ThreadsProvider>
+  );
 }
 
 export default function ChannelView() {
-	const pointer = useParamsEventPointer("id");
-	const channel = useSingleEvent(pointer);
+  const pointer = useParamsEventPointer("id");
+  const channel = useSingleEvent(pointer);
 
-	if (!channel) return <Spinner />;
+  if (!channel) return <Spinner />;
 
-	return (
-		<ErrorBoundary>
-			<ChannelPage channel={channel} />
-		</ErrorBoundary>
-	);
+  return (
+    <ErrorBoundary>
+      <ChannelPage channel={channel} />
+    </ErrorBoundary>
+  );
 }

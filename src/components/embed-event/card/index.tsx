@@ -6,10 +6,7 @@ import { lazy, Suspense } from "react";
 import { safeDecode } from "../../../helpers/nip19";
 import { LIST_KINDS, SET_KINDS } from "../../../helpers/nostr/lists";
 import { STEMSTR_TRACK_KIND } from "../../../helpers/nostr/stemstr";
-import {
-  TORRENT_COMMENT_KIND,
-  TORRENT_KIND,
-} from "../../../helpers/nostr/torrents";
+import { TORRENT_COMMENT_KIND, TORRENT_KIND } from "../../../helpers/nostr/torrents";
 import { FLARE_VIDEO_KIND } from "../../../helpers/nostr/video";
 import { WIKI_PAGE_KIND } from "../../../helpers/nostr/wiki";
 import useReplaceableEvent from "../../../hooks/use-replaceable-event";
@@ -39,10 +36,7 @@ const EmbeddedStreamMessage = lazy(() => import("./embedded-stream-message"));
 const EmbeddedStemstrTrack = lazy(() => import("./embedded-stemstr-track"));
 const EmbeddedFile = lazy(() => import("./embedded-file"));
 
-export function EmbedEventCard({
-  event,
-  ...cardProps
-}: Omit<CardProps, "children"> & { event: NostrEvent }) {
+export function EmbedEventCard({ event, ...cardProps }: Omit<CardProps, "children"> & { event: NostrEvent }) {
   const renderContent = () => {
     switch (event.kind) {
       case kinds.ShortTextNote:
@@ -82,12 +76,7 @@ export function EmbedEventCard({
         return <EmbeddedFile file={event} {...cardProps} />;
       case kinds.Handlerinformation:
         // if its a content DVM
-        if (
-          event.tags.some(
-            (t) =>
-              t[0] === "k" && t[1] === String(DVM_CONTENT_DISCOVERY_JOB_KIND),
-          )
-        )
+        if (event.tags.some((t) => t[0] === "k" && t[1] === String(DVM_CONTENT_DISCOVERY_JOB_KIND)))
           return <DVMCard dvm={event} />;
     }
 
@@ -105,8 +94,7 @@ export function EmbedEventPointerCard({
   pointer,
   ...props
 }: { pointer: DecodeResult | string } & Omit<CardProps, "children">) {
-  const parsedPointer =
-    typeof pointer === "string" ? safeDecode(pointer) : pointer;
+  const parsedPointer = typeof pointer === "string" ? safeDecode(pointer) : pointer;
   if (!parsedPointer) return null;
 
   pointer = parsedPointer;

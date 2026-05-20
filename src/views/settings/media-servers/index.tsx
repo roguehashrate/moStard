@@ -239,7 +239,9 @@ function MediaServersPage() {
       {(!servers || servers.length === 0) && mediaUploadService === "blossom" && <MissingServers />}
 
       <Flex direction="column" gap="2">
-        {servers?.map((server, i) => <ServerRow key={server.toString()} server={server} index={i} />)}
+        {servers?.map((server, i) => (
+          <ServerRow key={server.toString()} server={server} index={i} />
+        ))}
       </Flex>
 
       {mediaUploadService === "blossom" && <AddServerForm />}

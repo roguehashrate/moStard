@@ -38,7 +38,9 @@ export function PicturePostComments({ post }: { post: NostrEvent }) {
 
   return (
     <IntersectionObserverProvider callback={callback}>
-      {comments?.map((comment) => <Comment key={comment.id} comment={comment} />)}
+      {comments?.map((comment) => (
+        <Comment key={comment.id} comment={comment} />
+      ))}
     </IntersectionObserverProvider>
   );
 }

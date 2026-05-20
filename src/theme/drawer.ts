@@ -5,7 +5,7 @@ const { definePartsStyle, defineMultiStyleConfig } = createMultiStyleConfigHelpe
 const drawerBase = definePartsStyle({
   dialog: {
     paddingTop: "var(--safe-top)",
-    paddingBottom: "var(--safe-top)",
+    paddingBottom: "var(--safe-bottom)",
   },
   closeButton: {
     top: "calc(var(--chakra-space-2) + var(--safe-top))",

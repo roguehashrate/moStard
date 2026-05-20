@@ -11,14 +11,15 @@ export default function SimpleHeader({
 }: Omit<FlexProps, "title"> & { title?: ReactNode; icon?: ReactNode }) {
   return (
     <Flex
-      p="2"
+      px="2"
+      pb="2"
+      pt="calc(var(--chakra-space-2) + var(--safe-top))"
       borderBottom="1px solid var(--chakra-colors-chakra-border-color)"
       alignItems="center"
       gap="2"
-      minH="14"
+      minH="calc(var(--chakra-sizes-14) + var(--safe-top))"
       position="sticky"
-      top="var(--safe-top)"
-      mt="var(--safe-top)"
+      top="0"
       backgroundColor="var(--chakra-colors-chakra-body-bg)"
       zIndex="modal"
       {...props}

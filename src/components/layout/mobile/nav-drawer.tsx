@@ -20,17 +20,11 @@ import RelayConnectionButton from "../components/connections-button";
 import PublishLogButton from "../components/publish-log-button";
 import SupportButton from "~/components/support-button";
 
-export default function NavDrawer({
-  onClose,
-  ...props
-}: Omit<DrawerProps, "children">) {
+export default function NavDrawer({ onClose, ...props }: Omit<DrawerProps, "children">) {
   const account = useActiveAccount();
 
   const handleClickItem: MouseEventHandler = (e) => {
-    if (
-      e.target instanceof HTMLAnchorElement ||
-      e.target instanceof HTMLButtonElement
-    ) {
+    if (e.target instanceof HTMLAnchorElement || e.target instanceof HTMLButtonElement) {
       onClose();
     }
   };
@@ -64,14 +58,7 @@ export default function NavDrawer({
             </ButtonGroup>
           </DrawerBody>
 
-          <Flex
-            flexDirection="column"
-            px="4"
-            pt="4"
-            overflowY="auto"
-            overflowX="hidden"
-            gap="2"
-          >
+          <Flex flexDirection="column" px="4" pt="4" overflowY="auto" overflowX="hidden" gap="2">
             <SupportButton />
           </Flex>
         </CollapsedContext.Provider>

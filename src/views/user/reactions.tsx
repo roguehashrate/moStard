@@ -55,7 +55,9 @@ export default function UserReactionsTab() {
     <IntersectionObserverProvider callback={callback}>
       <ContentSettingsProvider blurMedia={false}>
         <VerticalPageLayout>
-          {reactions?.map((event) => <Reaction key={event.id} reaction={event} />)}
+          {reactions?.map((event) => (
+            <Reaction key={event.id} reaction={event} />
+          ))}
 
           <TimelineActionAndStatus loader={loader} />
         </VerticalPageLayout>

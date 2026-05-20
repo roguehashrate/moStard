@@ -15,7 +15,15 @@ const baseStyleDialog = defineStyle({
 });
 
 const baseStyle = definePartsStyle({
-  dialog: baseStyleDialog,
+  dialog: {
+    ...baseStyleDialog,
+    paddingTop: "var(--safe-top)",
+    paddingBottom: "var(--safe-bottom)",
+  },
+  closeButton: {
+    top: "calc(var(--chakra-space-2) + var(--safe-top))",
+    right: "calc(var(--chakra-space-3) + var(--safe-right))",
+  },
 });
 
 export const modalTheme = defineMultiStyleConfig({

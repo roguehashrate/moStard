@@ -10,6 +10,7 @@ import BookmarkEventButton from "../../../components/note/bookmark-button";
 import EventQuoteButton from "../../../components/note/event-quote-button";
 import NoteMenu from "../../../components/note/note-menu";
 import NotePublishedUsing from "../../../components/note/note-published-using";
+import EventTipButton from "../../../components/tip/event-tip-button";
 import EventShareButton from "../../../components/note/timeline-note/components/event-share-button";
 import NoteProxyLink from "../../../components/note/timeline-note/components/note-proxy-link";
 import NoteReactions from "../../../components/note/timeline-note/components/note-reactions";
@@ -115,6 +116,7 @@ function ThreadPost({ post, initShowReplies, focusId, level = -1 }: ThreadItemPr
         <IconButton aria-label="Reply" title="Reply" onClick={replyForm.onToggle} icon={<ReplyIcon />} />
         <EventShareButton event={post.event} />
         <EventQuoteButton event={post.event} />
+        <EventTipButton event={post.event} />
       </ButtonGroup>
       {!showReactionsOnNewLine && reactionButtons}
       <Spacer />

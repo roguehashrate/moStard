@@ -5,10 +5,16 @@ export type ReactionGroup = { emoji: string; url?: string; name?: string; count:
 export function groupReactions(reactions: NostrEvent[]) {
   const groups: Record<string, ReactionGroup> = {};
   for (const reactionEvent of reactions) {
-    const emoji = reactionEvent.content;
+    let emoji = reactionEvent.content;
     const emojiTag = reactionEvent.tags.find((t) => t[0] === "emoji");
-    const name = emojiTag?.[2];
+    const name = emojiTag?.[1];
     const url = emojiTag?.[2];
+
+    // For kind 30 events, strip wrapping colons from the content shortcode
+    if (reactionEvent.kind === 30) {
+      emoji = emoji.replace(/^:+|:+$/g, "");
+    }
+
     groups[emoji] = groups[emoji] || { emoji, url, name, count: 0, pubkeys: [] };
     groups[emoji].count++;
     if (!groups[emoji].pubkeys.includes(reactionEvent.pubkey)) {

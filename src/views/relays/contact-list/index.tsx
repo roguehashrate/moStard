@@ -1,4 +1,4 @@
-import { Button, Flex, Heading, Link, Spinner, Text } from "@chakra-ui/react";
+import { Button, Flex, Heading, Link, Spinner, Text, useDisclosure } from "@chakra-ui/react";
 import { useActiveAccount } from "applesauce-react/hooks";
 import { Link as RouterLink } from "react-router-dom";
 import { EventTemplate } from "nostr-tools";
@@ -11,17 +11,19 @@ import { useCallback, useState } from "react";
 import useUserContactList from "../../../hooks/use-user-contact-list";
 import { usePublishEvent } from "../../../providers/global/publish-provider";
 import SimpleView from "../../../components/layout/presets/simple-view";
+import ConfirmDialog from "../../../components/confirm-dialog";
 
 export default function ContactListRelaysView() {
   const account = useActiveAccount();
   const contacts = useUserContactList(account?.pubkey);
   const relays = useUserContactRelays(account?.pubkey);
   const publish = usePublishEvent();
+  const clearDialog = useDisclosure();
 
   const [loading, setLoading] = useState(false);
   const clearRelays = useCallback(async () => {
     if (!contacts) return;
-    if (confirm("Are you use you want to remove these relays? Other nostr apps might be effected") !== true) return;
+    clearDialog.onClose();
 
     const draft: EventTemplate = {
       kind: contacts.kind,
@@ -33,7 +35,7 @@ export default function ContactListRelaysView() {
     setLoading(true);
     await publish("Clear Relays", draft);
     setLoading(false);
-  }, [setLoading, contacts, publish]);
+  }, [setLoading, contacts, publish, clearDialog]);
 
   if (relays === undefined) return <Spinner />;
 
@@ -42,7 +44,7 @@ export default function ContactListRelaysView() {
       title="Contact list relays"
       actions={
         relays && (
-          <Button colorScheme="red" onClick={clearRelays} isLoading={loading} ml="auto" size="sm">
+          <Button colorScheme="red" onClick={clearDialog.onOpen} isLoading={loading} ml="auto" size="sm">
             Clear Relays
           </Button>
         )
@@ -88,6 +90,15 @@ export default function ContactListRelaysView() {
           ))}
         </>
       )}
+      <ConfirmDialog
+        isOpen={clearDialog.isOpen}
+        onClose={clearDialog.onClose}
+        onConfirm={clearRelays}
+        title="Clear contact list relays?"
+        description="Other Nostr apps may be affected if they rely on these relays. Are you sure you want to remove them?"
+        confirmText="Clear Relays"
+        colorScheme="red"
+      />
     </SimpleView>
   );
 }

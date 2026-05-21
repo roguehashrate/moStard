@@ -4,3 +4,5 @@ stats.html
 exe/bin
 build
 .env
+*.jks
+*.keystore

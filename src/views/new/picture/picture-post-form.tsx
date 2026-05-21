@@ -1,4 +1,5 @@
 import { Button, Flex, Input, Spacer, Switch, useDisclosure, useToast } from "@chakra-ui/react";
+import ConfirmDialog from "../../../components/confirm-dialog";
 import { useActiveAccount } from "applesauce-react/hooks";
 import { nanoid } from "nanoid";
 import { useForm } from "react-hook-form";
@@ -24,6 +25,7 @@ export default function PicturePostForm({ onSubmit }: { onSubmit: (values: FormV
   const account = useActiveAccount()!;
 
   const advanced = useDisclosure();
+  const clearDialog = useDisclosure();
 
   const { getValues, reset, formState, handleSubmit, setValue, watch, register } = useForm<FormValues>({
     mode: "all",
@@ -111,10 +113,22 @@ export default function PicturePostForm({ onSubmit }: { onSubmit: (values: FormV
           </Button>
           <Spacer />
           {formState.isDirty && (
-            <Button variant="ghost" onClick={() => confirm("Clear draft?") && reset()}>
+            <Button variant="ghost" onClick={clearDialog.onOpen}>
               Clear
             </Button>
           )}
+          <ConfirmDialog
+            isOpen={clearDialog.isOpen}
+            onClose={clearDialog.onClose}
+            onConfirm={() => {
+              reset();
+              clearDialog.onClose();
+            }}
+            title="Clear draft?"
+            description="This will clear all content and media you've added to this draft."
+            confirmText="Clear"
+            colorScheme="red"
+          />
           <Button type="submit" colorScheme="primary">
             Post
           </Button>

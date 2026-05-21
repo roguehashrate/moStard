@@ -1,4 +1,5 @@
 import { Box, Button, ButtonGroup, Divider, Flex, Heading, Text } from "@chakra-ui/react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PasswordSigner, SerialPortSigner, SimpleSigner } from "applesauce-signers";
 import { useAccountManager, useAccounts } from "applesauce-react/hooks";
@@ -13,6 +14,7 @@ import MigrateAccountToDevice from "./components/migrate-to-device";
 import SimpleView from "../../../components/layout/presets/simple-view";
 import RouterLink from "../../../components/router-link";
 import { IAccount } from "applesauce-accounts";
+import ConfirmDialog from "../../../components/confirm-dialog";
 
 function AccountBackup() {
   const account = useActiveAccount()!;
@@ -27,7 +29,7 @@ function AccountBackup() {
   );
 }
 
-function AccountCard({ account }: { account: IAccount }) {
+function AccountCard({ account, onRemove }: { account: IAccount; onRemove: (a: IAccount) => void }) {
   const manager = useAccountManager();
 
   return (
@@ -44,7 +46,7 @@ function AccountCard({ account }: { account: IAccount }) {
         <Button onClick={() => manager.setActive(account)} variant="ghost">
           Switch
         </Button>
-        <Button onClick={() => confirm("Remove account?") && manager.removeAccount(account)} colorScheme="red">
+        <Button onClick={() => onRemove(account)} colorScheme="red">
           Remove
         </Button>
       </ButtonGroup>
@@ -57,6 +59,7 @@ export default function AccountSettings() {
   const accounts = useAccounts();
   const manager = useAccountManager();
   const navigate = useNavigate();
+  const [removing, setRemoving] = useState<IAccount | null>(null);
 
   const signout = () => {
     if (manager.active) {
@@ -97,7 +100,7 @@ export default function AccountSettings() {
       {accounts
         .filter((a) => a.pubkey !== account.pubkey)
         .map((account) => (
-          <AccountCard key={account.id} account={account} />
+          <AccountCard key={account.id} account={account} onRemove={setRemoving} />
         ))}
       <Button
         colorScheme="primary"
@@ -112,6 +115,19 @@ export default function AccountSettings() {
       >
         Add Account
       </Button>
+
+      <ConfirmDialog
+        isOpen={removing !== null}
+        onClose={() => setRemoving(null)}
+        onConfirm={() => {
+          if (removing) manager.removeAccount(removing);
+          setRemoving(null);
+        }}
+        title="Remove account?"
+        description="This will remove the account from this device. Your keys will not be deleted if you have backed them up."
+        confirmText="Remove"
+        colorScheme="red"
+      />
     </SimpleView>
   );
 }

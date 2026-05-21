@@ -9,9 +9,16 @@ import { NoteLink } from "../../note/note-link";
 import Timestamp from "../../timestamp";
 import UserAvatarLink from "../../user/user-avatar-link";
 import UserLink from "../../user/user-link";
+import { getTagValue } from "applesauce-core/helpers";
 
 export default function EmbeddedReaction({ event, ...props }: Omit<CardProps, "children"> & { event: NostrEvent }) {
-  const pointer = nip25.getReactedEventPointer(event);
+  const isKind30 = event.kind === 30;
+
+  // Kind 7 uses nip25, kind 30 uses the "e" tag directly
+  const pointer = isKind30 ? { id: getTagValue(event, "e") || "" } : nip25.getReactedEventPointer(event);
+
+  // Kind 30 content is wrapped in colons, strip them for display
+  const emoji = isKind30 ? event.content.replace(/^:+|:+$/g, "") : event.content;
 
   return (
     <ContentSettingsProvider event={event}>
@@ -20,9 +27,9 @@ export default function EmbeddedReaction({ event, ...props }: Omit<CardProps, "c
           <UserAvatarLink pubkey={event.pubkey} size="xs" />
           <UserLink pubkey={event.pubkey} fontWeight="bold" isTruncated fontSize="lg" />
           <Text as="span">Reacted with</Text>
-          <ReactionIcon emoji={event.content} url={event.tags.find((t) => t[0] === "emoji")?.[1]} />
+          <ReactionIcon emoji={emoji} url={event.tags.find((t) => t[0] === "emoji")?.[2]} />
           <Text as="span">to</Text>
-          {pointer && <NoteLink noteId={pointer.id} />}
+          {pointer?.id && <NoteLink noteId={pointer.id} />}
           <Spacer />
           <Timestamp timestamp={event.created_at} />
           <DebugEventButton event={event} variant="ghost" size="xs" />

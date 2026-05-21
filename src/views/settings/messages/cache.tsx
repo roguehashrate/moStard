@@ -10,9 +10,11 @@ import {
   SimpleGrid,
   Switch,
   Text,
+  useDisclosure,
   useToast,
   VStack,
 } from "@chakra-ui/react";
+import ConfirmDialog from "../../../components/confirm-dialog";
 import { useObservableEagerState, useObservableState } from "applesauce-react/hooks";
 import { useCallback, useState } from "react";
 import { firstValueFrom } from "rxjs";
@@ -31,12 +33,11 @@ function formatBytes(bytes: number): string {
 function DecryptionCacheStats() {
   const stats = useObservableState(decryptionCacheStats$);
   const [clearing, setClearing] = useState(false);
+  const clearDialog = useDisclosure();
   const toast = useToast();
 
   const clearCache = useCallback(async () => {
-    if (!confirm("Are you sure you want to clear the message cache? This will remove all cached decrypted messages.")) {
-      return;
-    }
+    clearDialog.onClose();
 
     const cache = await firstValueFrom(decryptionCache$);
     if (!cache) return;
@@ -57,7 +58,7 @@ function DecryptionCacheStats() {
     } finally {
       setClearing(false);
     }
-  }, [toast]);
+  }, [toast, clearDialog]);
 
   if (!stats) return null;
 
@@ -99,9 +100,17 @@ function DecryptionCacheStats() {
             </>
           )}
 
-          <Button onClick={clearCache} isLoading={clearing} colorScheme="red" variant="outline" size="sm" me="auto">
+          <Button onClick={clearDialog.onOpen} isLoading={clearing} colorScheme="red" variant="outline" size="sm" me="auto">
             Clear Cache
           </Button>
+          <ConfirmDialog
+            isOpen={clearDialog.isOpen}
+            onClose={clearDialog.onClose}
+            onConfirm={clearCache}
+            title="Clear message cache?"
+            description="This will remove all cached decrypted messages. They will be re-decrypted when needed."
+            confirmText="Clear Cache"
+          />
         </SimpleGrid>
       ) : (
         <Text color="gray.500" fontSize="sm" fontStyle="italic">

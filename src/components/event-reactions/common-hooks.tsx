@@ -13,7 +13,7 @@ export function useAddReaction(event: NostrEvent, grouped: ReactionGroup[]) {
 
   return useCallback(
     async (emoji: string | Emoji = "+") => {
-      const group = grouped.find((g) => g.emoji === emoji);
+      const group = grouped.find((g) => g.emoji === (typeof emoji === "string" ? emoji : emoji.shortcode));
       if (account && group && group.pubkeys.includes(account?.pubkey)) return;
 
       const draft = await factory.reaction(event, emoji);

@@ -6,7 +6,9 @@ import {
   createTagValueLoader,
   createUserListsLoader,
 } from "applesauce-loaders/loaders";
-import { kinds } from "nostr-tools";
+import { getReplaceableAddress, getSeenRelays, isReplaceable, mergeRelaySets } from "applesauce-core/helpers";
+import { merge } from "rxjs";
+import { kinds, type NostrEvent } from "nostr-tools";
 import { cacheRequest } from "./event-cache";
 import { eventStore } from "./event-store";
 import localSettings from "./preferences";
@@ -42,6 +44,29 @@ export const reactionsLoader = createReactionsLoader(pool, {
   eventStore,
   extraRelays: localSettings.readRelays,
 });
+
+const reactionLoader30 = createTagValueLoader(pool, "e", {
+  kinds: [30],
+  cacheRequest,
+  eventStore,
+  extraRelays: localSettings.readRelays,
+});
+const addressableReactionLoader30 = createTagValueLoader(pool, "a", {
+  kinds: [30],
+  cacheRequest,
+  eventStore,
+  extraRelays: localSettings.readRelays,
+});
+
+/** Loads both kind 7 (NIP-25) and kind 30 (NIP-30) reactions */
+export function customReactionsLoader(event: NostrEvent, relays?: string[]) {
+  if (relays) relays = mergeRelaySets(relays, getSeenRelays(event));
+  const r0 = reactionsLoader(event, relays);
+  const r1 = isReplaceable(event.kind)
+    ? addressableReactionLoader30({ value: getReplaceableAddress(event), relays })
+    : reactionLoader30({ value: event.id, relays });
+  return merge(r0, r1);
+}
 
 export const userSetsLoader = createUserListsLoader(pool, {
   cacheRequest,

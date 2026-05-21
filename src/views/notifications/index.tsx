@@ -121,8 +121,8 @@ const NotificationsTimeline = memo(
 
     if (filtered.length === 0)
       return (
-        <Flex alignItems="center" justifyContent="center" minH="25vh" fontWeight="bold" fontSize="4xl">
-          Loading...
+        <Flex alignItems="center" justifyContent="center" minH="25vh" fontWeight="bold" fontSize="xl" opacity={0.5}>
+          No notifications
         </Flex>
       );
 

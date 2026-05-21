@@ -20,6 +20,7 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
+import ConfirmDialog from "../../../components/confirm-dialog";
 import { type Emoji, getEventPointerFromQTag, processTags } from "applesauce-core/helpers";
 import { useEventFactory, useObservableEagerState } from "applesauce-react/hooks";
 import type { UnsignedEvent } from "nostr-tools";
@@ -72,6 +73,7 @@ export default function ShortTextNoteForm({
   const [published, setPublished] = useState<PublishLogEntry>();
   const emojis = useContextEmojis();
   const advanced = useDisclosure();
+  const clearDialog = useDisclosure();
 
   const factory = useEventFactory();
   const [draft, setDraft] = useState<UnsignedEvent>();
@@ -205,10 +207,22 @@ export default function ShortTextNoteForm({
             More Options
           </Button>
           {formState.isDirty && (
-            <Button variant="ghost" onClick={() => confirm("Clear draft?") && reset()} ms="auto">
+            <Button variant="ghost" onClick={clearDialog.onOpen} ms="auto">
               Clear
             </Button>
           )}
+          <ConfirmDialog
+            isOpen={clearDialog.isOpen}
+            onClose={clearDialog.onClose}
+            onConfirm={() => {
+              reset();
+              clearDialog.onClose();
+            }}
+            title="Clear draft?"
+            description="This will clear all content you've written in this draft."
+            confirmText="Clear"
+            colorScheme="red"
+          />
           <Button
             colorScheme="primary"
             type="submit"

@@ -12,7 +12,9 @@ import {
   NumberInputField,
   NumberInputStepper,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react";
+import ConfirmDialog from "../../../../components/confirm-dialog";
 import { useObservableEagerState } from "applesauce-react/hooks";
 import { NostrEvent } from "nostr-tools";
 import { useCallback, useEffect, useState } from "react";
@@ -38,6 +40,7 @@ export default function WasmDatabasePage() {
 
   const [summary, setSummary] = useState<Record<string, number>>();
   const persistForDays = useObservableEagerState(localSettings.wasmPersistForDays);
+  const [deletingKind, setDeletingKind] = useState<string | null>(null);
 
   const total = summary ? Object.values(summary).reduce((t, v) => t + v, 0) : undefined;
 
@@ -79,16 +82,19 @@ export default function WasmDatabasePage() {
 
   const deleteKind = useCallback(
     async (kind: string) => {
-      if (!worker) return;
-
-      const k = parseInt(kind);
-      if (confirm(`Are you sure you want to delete all kind ${k} events?`)) {
-        await worker.delete(["REQ", "delete-" + k, { kinds: [k] }]);
-        refresh();
-      }
+      setDeletingKind(kind);
     },
-    [worker, refresh],
+    [],
   );
+
+  const confirmDeleteKind = useCallback(async () => {
+    if (!worker || !deletingKind) return;
+
+    const k = parseInt(deletingKind);
+    setDeletingKind(null);
+    await worker.delete(["REQ", "delete-" + k, { kinds: [k] }]);
+    refresh();
+  }, [worker, deletingKind, refresh]);
 
   const deleteDatabase = useAsyncAction(async () => {
     await eventCache.clear?.();
@@ -142,6 +148,16 @@ export default function WasmDatabasePage() {
           </>
         )}
       </Flex>
+
+      <ConfirmDialog
+        isOpen={deletingKind !== null}
+        onClose={() => setDeletingKind(null)}
+        onConfirm={confirmDeleteKind}
+        title={`Delete kind ${deletingKind} events?`}
+        description={`Are you sure you want to delete all kind ${deletingKind} events from the local database? This cannot be undone.`}
+        confirmText="Delete"
+        colorScheme="red"
+      />
     </>
   );
 }

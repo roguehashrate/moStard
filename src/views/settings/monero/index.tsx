@@ -28,7 +28,7 @@ export default function MoneroSettings() {
             autoComplete="off"
             {...register("customZapAmounts", {
               validate: (v) => {
-                if (!/^[\d,]*$/.test(v)) return "Must be a list of comma separated numbers";
+                if (!/^[\d.,]*$/.test(v)) return "Must be a list of comma separated numbers";
                 return true;
               },
             })}

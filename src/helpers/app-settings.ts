@@ -116,7 +116,7 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
 
   // lightning
   autoPayWithWebLN: true,
-  customZapAmounts: "0.05,0.1,0.5,1",
+  customZapAmounts: "0.0003,0.0013,0.0025,0.0123",
 
   // privacy
   imageProxy: "",

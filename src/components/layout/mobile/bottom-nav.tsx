@@ -17,12 +17,14 @@ export default function MobileBottomNav() {
     <>
       <Flex
         gap="2"
-        p="2"
+        pt="2"
+        px="2"
+        pb="calc(var(--chakra-space-2) + var(--safe-bottom))"
         borderTopWidth={1}
         hideFrom="md"
         bg="var(--chakra-colors-chakra-body-bg)"
         position="fixed"
-        bottom="var(--safe-bottom)"
+        bottom="0"
         left="0"
         right="0"
         zIndex="modal"

@@ -10,7 +10,7 @@ export default function SigninView() {
 
   return (
     <>
-      <Flex w="full" justifyContent="center">
+      <Flex w="full" justifyContent="center" pt="var(--safe-top)">
         <Flex direction="column" alignItems="center" gap="2" maxW="md" w="full" px="4" py="10">
           <Avatar src="/transparent.jpeg" size="lg" flexShrink={0} />
           <Heading size="lg" mb="2">

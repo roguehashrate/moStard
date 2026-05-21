@@ -26,7 +26,7 @@ const ImageContainer = styled.div`
 
 export default function NoteFoundView() {
   return (
-    <Flex direction="column" p="2" gap="10" w="full" alignItems="center" h="full" pt="15vh">
+    <Flex direction="column" p="2" gap="10" w="full" alignItems="center" h="full" pt="calc(15vh + var(--safe-top))">
       <ImageContainer>
         <Image src="/logo.svg" w="48" />
       </ImageContainer>

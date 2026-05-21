@@ -85,7 +85,7 @@ export default function MapView() {
 
   return (
     <Flex overflow={{ lg: "hidden" }} h={{ lg: "full" }} direction={{ base: "column-reverse", lg: "row" }}>
-      <Flex w={{ base: "full", lg: "xl" }} direction="column" p="2" gap="2">
+      <Flex w={{ base: "full", lg: "xl" }} direction="column" p="2" pt="calc(var(--chakra-space-2) + var(--safe-top))" gap="2">
         <Flex gap="2">
           <Button flexShrink={0} onClick={() => navigate(-1)}>
             Back

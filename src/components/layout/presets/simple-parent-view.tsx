@@ -52,6 +52,7 @@ export default function SimpleParentView({
                 <Flex
                   direction="column"
                   p={padding ? "2" : undefined}
+                  pb="calc(var(--safe-bottom-nav) + var(--chakra-space-2))"
                   gap={gap}
                   overflowY={scroll ? "auto" : "hidden"}
                   overflowX="hidden"

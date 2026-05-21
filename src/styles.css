@@ -16,6 +16,8 @@ body {
   --safe-right: env(safe-area-inset-right, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
 
+  --safe-bottom-nav: calc(56px + var(--safe-bottom));
+
   /* uncomment this to emulate iphone notch and navbar */
   /* --safe-top: 30px;
   --safe-bottom: 30px;
@@ -31,6 +33,12 @@ body.platform-android {
 body.platform-ios {
   --safe-top: env(safe-area-inset-top, 44px);
   --safe-bottom: env(safe-area-inset-bottom, 34px);
+}
+
+@media (min-width: 48em) {
+  body {
+    --safe-bottom-nav: var(--safe-bottom);
+  }
 }
 
 #root {

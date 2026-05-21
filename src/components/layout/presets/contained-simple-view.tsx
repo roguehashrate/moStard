@@ -38,7 +38,7 @@ export default function ContainedSimpleView({
         direction={reverse ? "column-reverse" : "column"}
         px={flush ? 0 : "4"}
         pt={flush ? 0 : "4"}
-        pb={flush ? 0 : "max(1rem, var(--safe-bottom))"}
+        pb={flush ? 0 : "max(1rem, var(--safe-bottom-nav))"}
         gap={gap || "2"}
         flexGrow={1}
         h={0}

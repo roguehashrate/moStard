@@ -14,7 +14,7 @@ While logging in with a secret key is supported. please don't. This is a web cli
 
 ```bash
 git clone https://github.com/roguehashrate/moStard.git
-cd nostrudel
+cd moStard
 pnpm install
 pnpm run dev
 ```

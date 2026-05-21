@@ -43,7 +43,7 @@ const Item = ({ entity }: ItemComponentProps<Token>) => {
           <Image src={url} h="1.2em" w="1.2em" display="inline-block" verticalAlign="middle" title={name} alt={name} />
         </span>
       );
-    else return <span role="option" aria-label={`Emoji: ${name}`}>{`${name}: ${char}`}</span>;
+    else return <span role="option" aria-label={`Emoji: ${name}`}>{`${name}: ${char ?? ""}`}</span>;
   } else if (isPersonToken(entity)) {
     return (
       <span role="option" aria-label={`User: ${entity.names[0]}`}>
@@ -89,15 +89,18 @@ function useEmojiTokens() {
   const nativeEmojisTokens = useMemo(() => {
     if (!native) return [];
 
-    return Object.values(native.default.emojis).map(
-      (emoji) =>
-        ({
+    return Object.values(native.default.emojis).flatMap((emoji) => {
+      const nativeChar = emoji.skins[0]?.native;
+      if (!nativeChar) return [];
+      return [
+        {
           id: emoji.id,
           name: emoji.name,
           keywords: [emoji.id, emoji.name, ...emoji.keywords],
-          char: emoji.skins[0].native,
-        }) satisfies EmojiToken,
-    );
+          char: nativeChar,
+        } satisfies EmojiToken,
+      ];
+    });
   }, [native]);
 
   // load local reaction frequency
@@ -108,10 +111,15 @@ function useEmojiTokens() {
   });
 
   return useMemo(() => {
-    const all = [...nativeEmojisTokens, ...customEmojiTokens];
+    const seen = new Set<string>();
+    const deduped = [...nativeEmojisTokens, ...customEmojiTokens].filter((t) => {
+      if (seen.has(t.id)) return false;
+      seen.add(t.id);
+      return true;
+    });
 
-    if (frequently) return all.sort((a, b) => (frequently[b.id] ?? 0) - (frequently[a.id] ?? 0));
-    else return all;
+    if (frequently) return deduped.sort((a, b) => (frequently[b.id] ?? 0) - (frequently[a.id] ?? 0));
+    else return deduped;
   }, [nativeEmojisTokens, customEmojiTokens]);
 }
 

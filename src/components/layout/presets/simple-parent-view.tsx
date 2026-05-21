@@ -34,54 +34,43 @@ export default function SimpleParentView({
   const floating = useBreakpointValue({ base: false, lg: true });
   const ref = useScrollRestoreRef("parent");
 
-  if (showMenu)
-    return (
-      <Flex data-type="parent-view" flex={1} direction={floating ? "row" : "column"}>
-        {children && (
-          <>
-            <Box w={floating ? width : 0} flexGrow={0} flexShrink={0} />
-            <Flex
-              w={{ base: "full", lg: width }}
-              direction="column"
-              position={floating ? "fixed" : "initial"}
-              top="var(--safe-top)"
-              bottom="var(--safe-bottom)"
-            >
-              {title && <SimpleHeader title={title}>{actions}</SimpleHeader>}
-              {scroll ? (
-                <Flex
-                  direction="column"
-                  p={padding ? "2" : undefined}
-                  pb="calc(var(--safe-bottom-nav) + var(--chakra-space-2))"
-                  gap={gap}
-                  overflowY={scroll ? "auto" : "hidden"}
-                  overflowX="hidden"
-                  flex={1}
-                  ref={ref}
-                >
-                  {children}
-                </Flex>
-              ) : (
-                <>{children}</>
-              )}
-            </Flex>
-          </>
-        )}
-        {!isMobile && (
-          <Suspense fallback={<Spinner />}>
-            <ErrorBoundary>
-              <Outlet context={context} />
-            </ErrorBoundary>
-          </Suspense>
-        )}
-      </Flex>
-    );
-
   return (
-    <Suspense fallback={<Spinner />}>
-      <ErrorBoundary>
-        <Outlet context={context} />
-      </ErrorBoundary>
-    </Suspense>
+    <Flex data-type="parent-view" flex={1} direction={floating ? "row" : "column"}>
+      {showMenu && children && (
+        <>
+          <Box w={floating ? width : 0} flexGrow={0} flexShrink={0} />
+          <Flex
+            w={{ base: "full", lg: width }}
+            direction="column"
+            position={floating ? "fixed" : "initial"}
+            top="var(--safe-top)"
+            bottom="var(--safe-bottom)"
+          >
+            {title && <SimpleHeader title={title}>{actions}</SimpleHeader>}
+            {scroll ? (
+              <Flex
+                direction="column"
+                p={padding ? "2" : undefined}
+                pb="calc(var(--safe-bottom-nav) + var(--chakra-space-2))"
+                gap={gap}
+                overflowY={scroll ? "auto" : "hidden"}
+                overflowX="hidden"
+                flex={1}
+                ref={ref}
+              >
+                {children}
+              </Flex>
+            ) : (
+              <>{children}</>
+            )}
+          </Flex>
+        </>
+      )}
+      <Suspense fallback={<Spinner />}>
+        <ErrorBoundary>
+          <Outlet context={context} />
+        </ErrorBoundary>
+      </Suspense>
+    </Flex>
   );
 }

@@ -8,9 +8,9 @@ moStard is a web app for exploring the [nostr](https://github.com/nostr-protocol
 
 ## Please don't trust my app with your nsec
 
-While logging in with a secret key is supported. please don't. This is a web client, so there is always a chance of XXS attacks that could steal your secret key.
+While logging in with a secret key is supported, it's best to login with [Amber](https://github.com/greenart7c3/Amber) on android.
 
-## Running locally
+## Running locally on desktop
 
 ```bash
 git clone https://github.com/roguehashrate/moStard.git

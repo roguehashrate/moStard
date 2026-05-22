@@ -98,7 +98,7 @@ export default function SupportButton() {
           <ModalOverlay />
           <ModalContent>
             <ModalCloseButton />
-            <TipModalHeader pubkey="dbe0b6bc5f455a547da4b2644846aaf88f466543604130d8fa662625c1eade8f" />
+            <TipModalHeader pubkey="bc28aad5b167f31dd37c66d8c95d400c6411d83275ed12c504f60965d1f9eec6" />
 
             <Tabs onChange={(index) => setTabIndex(index)}>
               <TabList>
@@ -109,7 +109,7 @@ export default function SupportButton() {
                 <TabPanel padding="0">
                   {tabIndex === 0 && (
                     <TipModalContents
-                      pubkey="dbe0b6bc5f455a547da4b2644846aaf88f466543604130d8fa662625c1eade8f"
+                      pubkey="bc28aad5b167f31dd37c66d8c95d400c6411d83275ed12c504f60965d1f9eec6"
                       address="883nEtA4WKewhvYVMhQfPEqN6MMvrgNR2UNmGd4aw46K9CM8x52BovowaR8kCmf3FzAMndydTL682thK7YsCrwKKL8RRfsQy"
                       description="If you are enjoying this app, consider supporting the developer!"
                     />

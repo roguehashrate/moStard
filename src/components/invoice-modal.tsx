@@ -25,11 +25,12 @@ export function InvoiceModalContent({ address, amount, onPaid, paymentType = "mo
   const info = getPaytoTypeInfo(paymentType);
   const scheme = info?.uriScheme || "monero:";
   let uri = "";
-  // TODO: tx_payment_id
-  if (Number.isNaN("amount")) {
+  if (Number.isNaN(amount)) {
     uri = `${scheme}${address?.replace(/\s/g, "")}`;
-  } else {
+  } else if (amount > 0) {
     uri = `${scheme}${address?.replace(/\s/g, "")}?tx_amount=${amount}`;
+  } else {
+    uri = `${scheme}${address?.replace(/\s/g, "")}`;
   }
 
   const payWithApp = async () => {

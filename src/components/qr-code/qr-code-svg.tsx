@@ -1,6 +1,7 @@
 import { drawSvgPath } from "../../helpers/qrcode";
 import { Ecc, QrCode } from "../../lib/qrcodegen";
 import { Box, type BoxProps } from "@chakra-ui/react";
+import { getPaytoLogoUrl } from "../../helpers/payto-logos";
 
 export default function QrCodeSvg({
   content,
@@ -26,6 +27,8 @@ export default function QrCodeSvg({
   const imageX = (qrCodeSize - imageSize) / 2;
   const imageY = (qrCodeSize - imageSize) / 2;
 
+  const logoUrl = coinIcon ? getPaytoLogoUrl(coinIcon) : xmrIcon ? getPaytoLogoUrl("monero") : null;
+
   return (
     <Box
       as="svg"
@@ -38,20 +41,19 @@ export default function QrCodeSvg({
       <title id="qr-code-title">qr</title>
       <defs>
         <linearGradient id="orangeToBlackGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" style={{ stopColor: "#FF6600", stopOpacity: 1 }} /> {/* Orange */}
-          <stop offset="100%" style={{ stopColor: "#000000", stopOpacity: 1 }} /> {/* Black */}
+          <stop offset="0%" style={{ stopColor: "#FF6600", stopOpacity: 1 }} />
+          <stop offset="100%" style={{ stopColor: "#000000", stopOpacity: 1 }} />
         </linearGradient>
       </defs>
       <rect width="100%" height="100%" fill={lightColor} />
       <path d={drawSvgPath(qrCode, border)} fill="url(#orangeToBlackGradient)" />
-      {(xmrIcon || coinIcon) && (
+      {logoUrl && (
         <image
-          href={"/resized_image2.png"}
+          href={logoUrl}
           x={imageX}
           y={imageY}
           width={imageSize}
           height={imageSize}
-          clipPath="url(#clip)"
         />
       )}
     </Box>

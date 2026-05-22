@@ -27,9 +27,10 @@ export default function SimpleParentView({
   gap?: FlexProps["gap"];
   context?: OutletProps["context"];
 }>) {
-  const match = useMatch(path);
+  const exact = useMatch(path);
   const isMobile = useBreakpointValue({ base: true, lg: false });
-  const showMenu = !isMobile || !!match;
+  const showMenu = !isMobile || !!exact;
+  const showOutlet = children ? (!exact && !!useMatch(`${path}/*`)) : true;
 
   const floating = useBreakpointValue({ base: false, lg: true });
   const ref = useScrollRestoreRef("parent");
@@ -66,11 +67,13 @@ export default function SimpleParentView({
           </Flex>
         </>
       )}
-      <Suspense fallback={<Spinner />}>
-        <ErrorBoundary>
-          <Outlet context={context} />
-        </ErrorBoundary>
-      </Suspense>
+      {showOutlet && (
+        <Suspense fallback={<Spinner />}>
+          <ErrorBoundary>
+            <Outlet context={context} />
+          </ErrorBoundary>
+        </Suspense>
+      )}
     </Flex>
   );
 }

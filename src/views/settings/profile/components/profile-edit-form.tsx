@@ -244,6 +244,25 @@ export default function ProfileEditForm({
           <FormErrorMessage>{errors.lud16?.message}</FormErrorMessage>
         </FormControl>
 
+        <FormControl isInvalid={!!errors.monero}>
+          <FormLabel>Monero Address</FormLabel>
+          <Input
+            placeholder="Your Monero address (starts with 4 or 8)"
+            autoComplete="off"
+            {...register("monero", {
+              pattern: {
+                value: /^(4|8)[0-9a-zA-Z]{94}$/,
+                message: "Invalid Monero address",
+              },
+            })}
+          />
+          <FormHelperText>
+            Your Monero wallet address for receiving tips (NIP-89 payto standard). Other clients can use this to send
+            you payments.
+          </FormHelperText>
+          <FormErrorMessage>{errors.monero?.message}</FormErrorMessage>
+        </FormControl>
+
         <FormControl isInvalid={!!errors.nip05}>
           <FormLabel>NIP-05 ID</FormLabel>
           <Input

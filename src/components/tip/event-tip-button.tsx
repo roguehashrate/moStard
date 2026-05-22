@@ -3,8 +3,8 @@ import { type ButtonProps, Button, useDisclosure } from "@chakra-ui/react";
 import TipModal from "../event-tip-modal";
 
 import type { NostrEvent } from "nostr-tools";
-import useEventXMRAddress from "~/hooks/use-event-xmr-address";
-import MoneroWhite from "../icons/monero-white";
+import useEventPaymentTargets from "~/hooks/use-event-payment-targets";
+import PaytoIcon from "../payment/payto-icon";
 
 export type NoteTipButtonProps = Omit<ButtonProps, "children"> & {
   event: NostrEvent;
@@ -13,23 +13,24 @@ export type NoteTipButtonProps = Omit<ButtonProps, "children"> & {
 };
 
 export default function EventTipButton({ event, allowComment, showEventPreview, ...props }: NoteTipButtonProps) {
-  const { address, isUserTip } = useEventXMRAddress(event);
+  const targets = useEventPaymentTargets(event);
+  const primaryTarget = targets[0];
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const title = isUserTip ? "Tip User" : "Tip Note";
+  const title = primaryTarget ? "Tip User" : "Tip Note";
 
   return (
     <>
       <Button
         m={0}
-        rightIcon={<MoneroWhite verticalAlign="sub" />}
+        rightIcon={primaryTarget ? <PaytoIcon type={primaryTarget.type} /> : undefined}
         aria-label={title}
         title={title}
         {...props}
         onClick={onOpen}
-        isDisabled={!address}
+        isDisabled={!primaryTarget}
         sx={
-          address
+          primaryTarget
             ? {}
             : {
                 "& .chakra-button__icon": {
@@ -38,7 +39,7 @@ export default function EventTipButton({ event, allowComment, showEventPreview, 
               }
         }
       >
-        {address ? "Tip" : ""}
+        {primaryTarget ? "Tip" : ""}
       </Button>
 
       {isOpen && (
@@ -48,6 +49,7 @@ export default function EventTipButton({ event, allowComment, showEventPreview, 
           event={event}
           allowComment={allowComment}
           showEmbed={showEventPreview}
+          paymentTargets={targets}
         />
       )}
     </>

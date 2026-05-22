@@ -8,7 +8,7 @@ import BackgroundWorkerSettings from "./background-worker";
 import CacheRelayView from "./cache";
 import DisplaySettings from "./display";
 import DnsIdentityView from "./dns-identity";
-import MoneroSettings from "./monero";
+import PaymentSettings from "./monero";
 import MailboxesView from "./mailboxes";
 import MediaServersView from "./media-servers";
 import MessagesSettings from "./messages";
@@ -57,7 +57,7 @@ export default [
       { path: "cache", Component: CacheRelayView },
       { path: "post", Component: PostSettings },
       { path: "privacy", Component: PrivacySettings },
-      { path: "monero", Component: MoneroSettings },
+      { path: "monero", Component: PaymentSettings },
       { path: "messages", Component: MessagesSettings },
       { path: "background-worker", Component: BackgroundWorkerSettings },
     ],

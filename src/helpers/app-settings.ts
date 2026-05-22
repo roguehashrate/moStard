@@ -1,6 +1,8 @@
 import type { ColorModeWithSystem } from "@chakra-ui/react";
 import { kinds } from "nostr-tools";
 
+export const APP_SETTINGS_VERSION = 16;
+
 export const APP_SETTINGS_KIND = kinds.Application;
 export const APP_SETTING_IDENTIFIER = "nostrudel-settings";
 
@@ -90,10 +92,15 @@ type AppSettingsV15 = Omit<AppSettingsV14, "version" | "hideUsernames"> & {
   shareService?: string;
 };
 
-export type AppSettings = AppSettingsV15;
+type AppSettingsV16 = Omit<AppSettingsV15, "version"> & {
+  version: 16;
+  enableAlternativePayments: boolean;
+};
+
+export type AppSettings = AppSettingsV16;
 
 export const DEFAULT_APP_SETTINGS: AppSettings = {
-  version: 15,
+  version: 16,
 
   // display
   theme: "default",
@@ -117,6 +124,9 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   // lightning
   autoPayWithWebLN: true,
   customZapAmounts: "0.0003,0.0013,0.0025,0.0123",
+
+  // payments
+  enableAlternativePayments: false,
 
   // privacy
   imageProxy: "",

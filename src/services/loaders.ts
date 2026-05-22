@@ -31,6 +31,18 @@ export const profileLoader = createAddressLoader(pool, {
   lookupRelays: localSettings.lookupRelays,
 });
 
+/** NIP-A3 payment info kind */
+export const PAYMENT_INFO_KIND = 10133;
+
+/** Loader for kind-10133 NIP-A3 payment info events */
+export const paymentInfoLoader = createAddressLoader(pool, {
+  cacheRequest,
+  eventStore,
+  bufferTime: 200,
+  extraRelays: localSettings.readRelays,
+  lookupRelays: localSettings.lookupRelays,
+});
+
 /** Loader for single events based on id */
 export const eventLoader = createEventLoader(pool, {
   cacheRequest,

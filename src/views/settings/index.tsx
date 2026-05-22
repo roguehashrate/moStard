@@ -95,7 +95,7 @@ export default function SettingsView() {
         Posts
       </SimpleNavItem>
       <SimpleNavItem to="/settings/monero" leftIcon={<MoneroWhiteIcon boxSize={5} />}>
-        Monero
+        Payments
       </SimpleNavItem>
       <SimpleNavItem to="/settings/privacy" leftIcon={<SpyIcon boxSize={5} />}>
         Privacy

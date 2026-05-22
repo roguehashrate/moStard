@@ -1,19 +1,27 @@
 import {
   type CardProps,
+  Flex,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
   type ModalProps,
 } from "@chakra-ui/react";
 
 import type { NostrEvent } from "nostr-tools";
 import InputStep from "./input-step";
 import UserLink from "../user/user-link";
-import useUserXMRMetadata from "../../hooks/use-user-xmr-metadata";
+import useUserPaymentTargets from "../../hooks/use-user-payment-targets";
+import PaytoIcon from "../payment/payto-icon";
 import { useBreakpointValue } from "../../providers/global/breakpoint-provider";
+import { getPaytoTypeInfo, type PaymentTarget } from "../../helpers/payto-types";
 
 export type TipModalContentsProps = {
   description?: string;
@@ -29,6 +37,7 @@ export type TipModalContentsProps = {
   embedProps?: CardProps;
   additionalRelays?: Iterable<string>;
   onTipped?: () => void;
+  paymentTargets?: PaymentTarget[];
 };
 
 export type TipModalProps = Omit<ModalProps, "children"> & TipModalContentsProps;
@@ -43,12 +52,16 @@ export function TipModalContents({
   initialAmount,
   showEmbed = true,
   embedProps,
+  paymentTargets: targetsProp,
 }: TipModalContentsProps) {
-  let address = addressParam;
+  const pubkeyOrEvent = event?.pubkey || pubkey || "";
+  const profileTargets = useUserPaymentTargets(pubkeyOrEvent);
 
-  if (!address) {
-    const { address: userAddress } = useUserXMRMetadata(event?.pubkey || pubkey!);
-    address = addressParam || userAddress;
+  const filteredTargets = targetsProp && targetsProp.length > 0 ? targetsProp : profileTargets;
+
+  let address = addressParam;
+  if (!address && filteredTargets.length > 0) {
+    address = filteredTargets[0].address;
   }
 
   return (
@@ -59,16 +72,50 @@ export function TipModalContents({
         </ModalHeader>
       )}
 
-      <InputStep
-        address={address}
-        pubkey={pubkey}
-        event={event}
-        initialComment={initialComment}
-        initialAmount={initialAmount}
-        defaultAmount={defaultAmount}
-        showEmbed={showEmbed}
-        embedProps={embedProps}
-      />
+      {filteredTargets.length > 1 ? (
+        <Tabs>
+          <TabList>
+            {filteredTargets.map((target) => {
+              const info = getPaytoTypeInfo(target.type);
+              return (
+                <Tab key={target.type} gap="1">
+                  <PaytoIcon type={target.type} boxSize={4} />
+                  {info?.label || target.type}
+                </Tab>
+              );
+            })}
+          </TabList>
+          <TabPanels>
+            {filteredTargets.map((target) => (
+              <TabPanel key={target.type} px={0}>
+                <InputStep
+                  address={target.address}
+                  paymentType={target.type}
+                  pubkey={pubkey}
+                  event={event}
+                  initialComment={initialComment}
+                  initialAmount={initialAmount}
+                  defaultAmount={defaultAmount}
+                  showEmbed={showEmbed}
+                  embedProps={embedProps}
+                />
+              </TabPanel>
+            ))}
+          </TabPanels>
+        </Tabs>
+      ) : (
+        <InputStep
+          address={address}
+          paymentType={filteredTargets[0]?.type || "monero"}
+          pubkey={pubkey}
+          event={event}
+          initialComment={initialComment}
+          initialAmount={initialAmount}
+          defaultAmount={defaultAmount}
+          showEmbed={showEmbed}
+          embedProps={embedProps}
+        />
+      )}
     </ModalBody>
   );
 }
@@ -102,6 +149,7 @@ export default function TipModal({
   showEmbed = true,
   embedProps,
   additionalRelays = [],
+  paymentTargets,
   ...props
 }: TipModalProps) {
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -122,6 +170,7 @@ export default function TipModal({
           initialAmount={initialAmount}
           showEmbed={showEmbed}
           embedProps={embedProps}
+          paymentTargets={paymentTargets}
         />
       </ModalContent>
     </Modal>

@@ -22,6 +22,7 @@ import { eventStore } from "../../../services/event-store";
 export type ProfileFormData = Omit<ProfileContent, "picture" | "banner"> & {
   picture?: string | File;
   banner?: string | File;
+  monero?: string;
 };
 
 function isLightningAddress(addr: string) {
@@ -58,10 +59,33 @@ export default function ProfileSettingsView() {
     [account.pubkey, readRelays],
   );
 
+  // Extract monero address from profile data
+  const getMoneroFromProfile = (profile: Record<string, unknown> | null | undefined): string => {
+    if (!profile) return "";
+    if (profile.payto && Array.isArray(profile.payto)) {
+      for (const entry of profile.payto) {
+        if (typeof entry === "string" && entry.startsWith("payto://monero/")) {
+          return entry.replace("payto://monero/", "");
+        }
+        if (typeof entry === "object" && entry !== null) {
+          const e = entry as Record<string, unknown>;
+          if (typeof e.uri === "string" && e.uri.startsWith("payto://monero/")) {
+            return e.uri.replace("payto://monero/", "");
+          }
+        }
+      }
+    }
+    const crypto = profile.cryptocurrency_addresses as Record<string, unknown> | undefined;
+    if (crypto?.monero && typeof crypto.monero === "string") return crypto.monero;
+    if (profile.monero && typeof profile.monero === "string") return profile.monero;
+    return "";
+  };
+
   // Reset form when metadata changes
   useEffect(() => {
     if (metadata) {
-      formMethods.reset(metadata);
+      const resetData = { ...metadata, monero: getMoneroFromProfile(metadata as Record<string, unknown>) };
+      formMethods.reset(resetData as ProfileFormData);
     }
   }, [metadata, formMethods]);
 
@@ -102,16 +126,23 @@ export default function ProfileSettingsView() {
         if (update.website !== undefined) newMetadata.website = update.website;
         if (update.nip05 !== undefined) newMetadata.nip05 = update.nip05;
 
-        // TODO: monero
-        // if (update.lud16) {
-        //   if (isLNURL(update.lud16)) {
-        //     newMetadata.lud06 = update.lud16;
-        //     delete newMetadata.lud16;
-        //   } else if (isLightningAddress(update.lud16)) {
-        //     newMetadata.lud16 = update.lud16;
-        //     delete newMetadata.lud06;
-        //   }
-        // }
+        if (update.monero !== undefined) {
+          const addr = update.monero.trim();
+          if (addr) {
+            (newMetadata as Record<string, unknown>)["monero"] = addr;
+            const profileMeta = metadata as Record<string, unknown>;
+            (newMetadata as Record<string, unknown>)["cryptocurrency_addresses"] = {
+              ...((profileMeta?.cryptocurrency_addresses || {}) as Record<string, unknown>),
+              monero: addr,
+            };
+            const existingPayto = (profileMeta?.payto || []) as string[];
+            const paytoArr = [
+              ...existingPayto.filter((p: string) => typeof p === "string" && !p.startsWith("payto://monero/")),
+              `payto://monero/${addr}`,
+            ];
+            (newMetadata as Record<string, unknown>)["payto"] = paytoArr;
+          }
+        }
 
         setUploadStatus("Signing and publishing...");
         if (eventStore.hasReplaceable(0, account.pubkey)) {

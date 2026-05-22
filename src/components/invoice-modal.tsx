@@ -15,18 +15,21 @@ import { ExternalLinkIcon } from "./icons";
 import QrCodeSvg from "./qr-code/qr-code-svg";
 import { CopyIconButton } from "./copy-icon-button";
 import { useBreakpointValue } from "../providers/global/breakpoint-provider";
+import { getPaytoTypeInfo } from "../helpers/payto-types";
 
-type CommonProps = { address?: string; amount: number; onPaid: () => void };
+type CommonProps = { address?: string; amount: number; onPaid: () => void; paymentType?: string };
 
-export function InvoiceModalContent({ address, amount, onPaid }: CommonProps) {
+export function InvoiceModalContent({ address, amount, onPaid, paymentType = "monero" }: CommonProps) {
   const showQr = useDisclosure({ isOpen: true });
   const [payingApp, setPayingApp] = useState(false);
+  const info = getPaytoTypeInfo(paymentType);
+  const scheme = info?.uriScheme || "monero:";
   let uri = "";
   // TODO: tx_payment_id
   if (Number.isNaN("amount")) {
-    uri = `monero:${address?.replace(/\s/g, "")}`;
+    uri = `${scheme}${address?.replace(/\s/g, "")}`;
   } else {
-    uri = `monero:${address?.replace(/\s/g, "")}?tx_amount=${amount}`;
+    uri = `${scheme}${address?.replace(/\s/g, "")}?tx_amount=${amount}`;
   }
 
   const payWithApp = async () => {
@@ -47,7 +50,7 @@ export function InvoiceModalContent({ address, amount, onPaid }: CommonProps) {
 
   return (
     <Flex gap="2" direction="column">
-      {showQr.isOpen && <QrCodeSvg content={uri} xmrIcon />}
+      {showQr.isOpen && <QrCodeSvg content={uri} coinIcon={paymentType} />}
       <Flex gap="2">
         <Input value={uri} readOnly />
         <CopyIconButton value={uri} aria-label="Copy Invoice" variant="solid" size="md" />
@@ -73,6 +76,7 @@ export default function InvoiceModal({
   amount,
   onClose,
   onPaid,
+  paymentType = "monero",
   ...props
 }: Omit<ModalProps, "children"> & CommonProps) {
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -84,6 +88,7 @@ export default function InvoiceModal({
           <InvoiceModalContent
             address={address}
             amount={amount}
+            paymentType={paymentType}
             onPaid={() => {
               if (onPaid) onPaid();
               onClose();

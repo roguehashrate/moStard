@@ -7,17 +7,36 @@ import {
   FormErrorMessage,
   Heading,
   Button,
+  Switch,
+  Text,
 } from "@chakra-ui/react";
 import VerticalPageLayout from "../../../components/vertical-page-layout";
 import useSettingsForm from "../use-settings-form";
 
-export default function MoneroSettings() {
-  const { register, submit, formState } = useSettingsForm();
+export default function PaymentSettings() {
+  const { register, submit, formState, watch, setValue } = useSettingsForm();
+  const enableAlternativePayments = watch("enableAlternativePayments");
 
   return (
     <VerticalPageLayout as="form" onSubmit={submit} flex={1}>
-      <Heading size="md">Monero Settings</Heading>
+      <Heading size="md">Payment Settings</Heading>
       <Flex direction="column" gap="4">
+        <FormControl display="flex" alignItems="center" justifyContent="space-between">
+          <Flex direction="column">
+            <FormLabel htmlFor="enableAlternativePayments" mb="0">
+              Enable alternative payment methods
+            </FormLabel>
+            <FormHelperText>
+              When enabled, non-Monero payment targets (Bitcoin, Lightning, etc.) will be shown on profiles and notes
+            </FormHelperText>
+          </Flex>
+          <Switch
+            id="enableAlternativePayments"
+            isChecked={enableAlternativePayments}
+            onChange={(e) => setValue("enableAlternativePayments", e.target.checked, { shouldDirty: true })}
+          />
+        </FormControl>
+
         <FormControl>
           <FormLabel htmlFor="customZapAmounts" mb="0">
             Tipping Amounts

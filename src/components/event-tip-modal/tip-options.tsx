@@ -1,9 +1,15 @@
 import { Button, Flex } from "@chakra-ui/react";
 
 import useAppSettings from "../../hooks/use-user-app-settings";
-import Monero from "../icons/monero";
+import PaytoIcon from "../payment/payto-icon";
 
-export default function CustomTipAmountOptions({ onSelect }: { onSelect: (value: number) => void }) {
+export default function CustomTipAmountOptions({
+  onSelect,
+  paymentType = "monero",
+}: {
+  onSelect: (value: number) => void;
+  paymentType?: string;
+}) {
   const { customZapAmounts } = useAppSettings();
 
   return (
@@ -15,7 +21,7 @@ export default function CustomTipAmountOptions({ onSelect }: { onSelect: (value:
           <Button
             key={amount}
             onClick={() => onSelect(amount)}
-            leftIcon={<Monero />}
+            leftIcon={<PaytoIcon type={paymentType} />}
             variant="solid"
             size="sm"
             isDisabled={false}

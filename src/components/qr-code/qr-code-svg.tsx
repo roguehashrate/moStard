@@ -8,6 +8,7 @@ export default function QrCodeSvg({
   darkColor = "black",
   border = 2,
   xmrIcon = false,
+  coinIcon,
   ...props
 }: Omit<BoxProps, "children" | "border" | "content"> & {
   content: string;
@@ -15,6 +16,7 @@ export default function QrCodeSvg({
   darkColor?: string;
   border?: number;
   xmrIcon?: boolean;
+  coinIcon?: string;
 }) {
   const qrCode = QrCode.encodeText(content, Ecc.LOW);
 
@@ -42,7 +44,7 @@ export default function QrCodeSvg({
       </defs>
       <rect width="100%" height="100%" fill={lightColor} />
       <path d={drawSvgPath(qrCode, border)} fill="url(#orangeToBlackGradient)" />
-      {xmrIcon && (
+      {(xmrIcon || coinIcon) && (
         <image
           href={"/resized_image2.png"}
           x={imageX}

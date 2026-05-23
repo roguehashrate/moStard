@@ -4,7 +4,7 @@
 
 # moStard
 
-moStard is a web app for exploring the [nostr](https://github.com/nostr-protocol) protocol.
+moStard is a Monero first [nostr](https://github.com/nostr-protocol) application.
 
 ## Please don't trust my app with your nsec
 

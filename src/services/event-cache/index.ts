@@ -67,8 +67,13 @@ export async function changeEventCache(url: string | null): Promise<void> {
 
 export function getEvents(filters: Filter[]): Observable<NostrEvent> {
   const cache = eventCache$.value;
-  if (!cache) return EMPTY;
-  return cache.read(filters).pipe(timeout({ first: 1000, with: () => EMPTY }));
+  if (!cache || !filters || filters.length === 0) return EMPTY;
+  try {
+    return cache.read(filters).pipe(timeout({ first: 1000, with: () => EMPTY }));
+  } catch (e) {
+    log("Error reading from cache", e);
+    return EMPTY;
+  }
 }
 
 // Buffer events and write them to the cache

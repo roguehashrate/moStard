@@ -28,9 +28,10 @@ export default function SimpleParentView({
   context?: OutletProps["context"];
 }>) {
   const exact = useMatch(path);
+  const subPathMatch = useMatch(`${path}/*`);
   const isMobile = useBreakpointValue({ base: true, lg: false });
   const showMenu = !isMobile || !!exact;
-  const showOutlet = children ? (!exact && !!useMatch(`${path}/*`)) : true;
+  const showOutlet = children ? (!exact && !!subPathMatch) : true;
 
   const floating = useBreakpointValue({ base: false, lg: true });
   const ref = useScrollRestoreRef("parent");

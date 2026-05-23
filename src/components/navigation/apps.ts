@@ -299,6 +299,22 @@ export const externalTools: App[] = [
     image: "https://bouquet.slidestr.net/bouquet.png",
     isExternal: true,
   },
+  {
+    id: "monerospace",
+    title: "Monerospace",
+    description: "Blockchain explorer for Monero",
+    to: "https://monerospace.org/",
+    image: "https://monerospace.org/favicon.ico",
+    isExternal: true,
+  },
+  {
+    id: "nostrarchives",
+    title: "NostrArchives",
+    description: "Analytics platform for Nostr",
+    to: "https://nostrarchives.com/",
+    image: "https://nostrarchives.com/favicon.ico",
+    isExternal: true,
+  },
 ];
 
 export const defaultAnonFavoriteApps = ["notes", "discover", "search", "articles", "streams"];

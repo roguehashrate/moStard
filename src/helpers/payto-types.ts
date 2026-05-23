@@ -79,6 +79,13 @@ const ALIAS_MAP: Record<string, string> = {
   doge: "dogecoin",
   bch: "bitcoin-cash",
   sol: "solana",
+  bip: "bitcoin",
+  bip21: "bitcoin",
+  bip47: "bitcoin",
+  bip270: "bitcoin",
+  sp: "bitcoin",
+  silentpayment: "bitcoin",
+  "silent-payment": "bitcoin",
 };
 
 // Maps external kind-0 cryptocurrency_addresses keys → canonical payto types
@@ -99,6 +106,13 @@ const KIND0_CRYPTO_ADDRESSES: Record<string, string> = {
   sol: "solana",
   "bitcoin-cash": "bitcoin-cash",
   bch: "bitcoin-cash",
+  bip: "bitcoin",
+  bip21: "bitcoin",
+  bip47: "bitcoin",
+  bip270: "bitcoin",
+  sp: "bitcoin",
+  silentpayment: "bitcoin",
+  "silent-payment": "bitcoin",
 };
 
 // Maps top-level kind-0 JSON keys → canonical payto types
@@ -110,6 +124,13 @@ const KIND0_ROOT_FIELDS: Record<string, string> = {
   dogecoin: "dogecoin",
   nano: "nano",
   solana: "solana",
+  bip: "bitcoin",
+  bip21: "bitcoin",
+  bip47: "bitcoin",
+  bip270: "bitcoin",
+  sp: "bitcoin",
+  silentpayment: "bitcoin",
+  "silent-payment": "bitcoin",
 };
 
 export const PAYTO_URI_REGEX = /payto:\/\/([a-z0-9-]+)\/([^\s\]\)\<\"']+)/gi;

@@ -1,5 +1,7 @@
+import { useState } from "react";
 import {
   type CardProps,
+  Button,
   Flex,
   Modal,
   ModalBody,
@@ -7,12 +9,8 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
   type ModalProps,
+  ButtonGroup,
 } from "@chakra-ui/react";
 
 import type { NostrEvent } from "nostr-tools";
@@ -64,6 +62,8 @@ export function TipModalContents({
     address = filteredTargets[0].address;
   }
 
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
   return (
     <ModalBody p="4">
       {description && (
@@ -73,36 +73,38 @@ export function TipModalContents({
       )}
 
       {filteredTargets.length > 1 ? (
-        <Tabs>
-          <TabList>
-            {filteredTargets.map((target) => {
+        <Flex direction="column" gap="4">
+          <ButtonGroup spacing="1" isAttached>
+            {filteredTargets.map((target, i) => {
               const info = getPaytoTypeInfo(target.type);
               return (
-                <Tab key={target.type} gap="1">
+                <Button
+                  key={`${target.type}-${target.address}`}
+                  gap="1"
+                  variant={i === selectedIndex ? "solid" : "outline"}
+                  colorScheme={i === selectedIndex ? "primary" : "gray"}
+                  onClick={() => setSelectedIndex(i)}
+                  flex={1}
+                  size="sm"
+                >
                   <PaytoIcon type={target.type} boxSize={4} />
                   {info?.label || target.type}
-                </Tab>
+                </Button>
               );
             })}
-          </TabList>
-          <TabPanels>
-            {filteredTargets.map((target) => (
-              <TabPanel key={target.type} px={0}>
-                <InputStep
-                  address={target.address}
-                  paymentType={target.type}
-                  pubkey={pubkey}
-                  event={event}
-                  initialComment={initialComment}
-                  initialAmount={initialAmount}
-                  defaultAmount={defaultAmount}
-                  showEmbed={showEmbed}
-                  embedProps={embedProps}
-                />
-              </TabPanel>
-            ))}
-          </TabPanels>
-        </Tabs>
+          </ButtonGroup>
+          <InputStep
+            address={filteredTargets[selectedIndex].address}
+            paymentType={filteredTargets[selectedIndex].type}
+            pubkey={pubkey}
+            event={event}
+            initialComment={initialComment}
+            initialAmount={initialAmount}
+            defaultAmount={defaultAmount}
+            showEmbed={showEmbed}
+            embedProps={embedProps}
+          />
+        </Flex>
       ) : (
         <InputStep
           address={address}

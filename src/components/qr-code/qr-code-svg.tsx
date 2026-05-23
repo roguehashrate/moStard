@@ -1,7 +1,8 @@
 import { drawSvgPath } from "../../helpers/qrcode";
 import { Ecc, QrCode } from "../../lib/qrcodegen";
-import { Box, type BoxProps } from "@chakra-ui/react";
+import { Box, type BoxProps, Text } from "@chakra-ui/react";
 import { getPaytoLogoUrl } from "../../helpers/payto-logos";
+import { useMemo } from "react";
 
 export default function QrCodeSvg({
   content,
@@ -19,7 +20,21 @@ export default function QrCodeSvg({
   xmrIcon?: boolean;
   coinIcon?: string;
 }) {
-  const qrCode = QrCode.encodeText(content, Ecc.LOW);
+  const qrCode = useMemo(() => {
+    try {
+      return QrCode.encodeText(content, Ecc.LOW);
+    } catch {
+      return null;
+    }
+  }, [content]);
+
+  if (!qrCode) {
+    return (
+      <Box {...props} p="4" textAlign="center">
+        <Text color="red.500">Failed to generate QR code</Text>
+      </Box>
+    );
+  }
 
   const qrCodeSize = qrCode.size + border * 2;
 
@@ -32,11 +47,14 @@ export default function QrCodeSvg({
   return (
     <Box
       as="svg"
-      {...props}
       xmlns="http://www.w3.org/2000/svg"
       version="1.1"
       viewBox={`0 0 ${qrCodeSize} ${qrCodeSize}`}
       stroke="none"
+      htmlWidth="100%"
+      htmlHeight="100%"
+      {...props}
+      width="full"
     >
       <title id="qr-code-title">qr</title>
       <defs>

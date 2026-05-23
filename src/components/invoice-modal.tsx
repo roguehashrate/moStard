@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {
+  Box,
   Button,
   Flex,
   Input,
@@ -51,7 +52,13 @@ export function InvoiceModalContent({ address, amount, onPaid, paymentType = "mo
 
   return (
     <Flex gap="2" direction="column">
-      {showQr.isOpen && <QrCodeSvg content={uri} coinIcon={paymentType} />}
+      {showQr.isOpen && (
+        <Flex justifyContent="center">
+          <Box maxW="xs" w="full">
+            <QrCodeSvg content={uri} coinIcon={paymentType} />
+          </Box>
+        </Flex>
+      )}
       <Flex gap="2">
         <Input value={uri} readOnly />
         <CopyIconButton value={uri} aria-label="Copy Invoice" variant="solid" size="md" />

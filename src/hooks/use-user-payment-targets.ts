@@ -32,6 +32,8 @@ const KIND0_CRYPTO_ADDRESSES: Record<string, string> = {
 const ROOT_FIELDS: Record<string, string> = {
   monero: "monero", bitcoin: "bitcoin", ethereum: "ethereum",
   litecoin: "litecoin", dogecoin: "dogecoin", nano: "nano", solana: "solana",
+  bip: "bitcoin", bip21: "bitcoin", bip47: "bitcoin", bip270: "bitcoin",
+  sp: "bitcoin", silentpayment: "bitcoin", "silent-payment": "bitcoin",
 };
 
 // ── About coin line parser ──

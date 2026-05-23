@@ -1,4 +1,5 @@
 import { lazy } from "react";
+import { Navigate } from "react-router-dom";
 import { RouteObject } from "react-router-dom";
 
 const ToolsHomeView = lazy(() => import("."));
@@ -17,4 +18,5 @@ export default [
   { path: "console", Component: EventConsoleView },
   { path: "corrections", Component: CorrectionsFeedView },
   { path: "publisher", Component: EventPublisherView },
+  { path: "nostrudel-users", Component: () => <Navigate replace to="/discovery" /> },
 ] satisfies RouteObject[];

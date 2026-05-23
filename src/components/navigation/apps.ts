@@ -315,6 +315,14 @@ export const externalTools: App[] = [
     image: "https://nostrarchives.com/favicon.ico",
     isExternal: true,
   },
+  {
+    id: "xmrbazaar",
+    title: "XmrBazaar",
+    description: "Buy and sell products and services for Monero",
+    to: "https://xmrbazaar.com/",
+    image: "https://xmrbazaar.com/img/img_xmrbazaar_favicon.png",
+    isExternal: true,
+  },
 ];
 
 export const defaultAnonFavoriteApps = ["notes", "discover", "search", "articles", "streams"];

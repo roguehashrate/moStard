@@ -168,15 +168,15 @@ export default function ProfileSettingsView() {
   return (
     <SimpleView title="Edit Profile" maxW="6xl" center>
       <FormProvider {...formMethods}>
-        <Grid templateColumns={{ base: "1fr", lg: "1fr 1fr" }} gap={8}>
+        <Grid templateColumns={{ base: "1fr", lg: "1fr 1fr" }} gap={{ base: 4, lg: 8 }}>
           {/* Form */}
-          <GridItem>
+          <GridItem minW={0}>
             <ProfileEditForm onSubmit={handleSubmit} loading={loading} uploadStatus={uploadStatus} />
           </GridItem>
 
           {/* Preview */}
-          <GridItem>
-            <VStack spacing={4} align="stretch" position="sticky" top={4}>
+          <GridItem minW={0}>
+            <VStack spacing={4} align="stretch" position={{ base: "static", lg: "sticky" }} top={4}>
               <Text fontSize="lg" fontWeight="semibold">
                 Preview
               </Text>

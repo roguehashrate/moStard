@@ -73,6 +73,7 @@ const ALIAS_MAP: Record<string, string> = {
   xmr: "monero",
   btc: "bitcoin",
   ln: "lightning",
+  lnurl: "lightning",
   xno: "nano",
   eth: "ethereum",
   ltc: "litecoin",
@@ -113,6 +114,7 @@ const KIND0_CRYPTO_ADDRESSES: Record<string, string> = {
   sp: "bitcoin",
   silentpayment: "bitcoin",
   "silent-payment": "bitcoin",
+  lnurl: "lightning",
 };
 
 // Maps top-level kind-0 JSON keys → canonical payto types
@@ -131,13 +133,17 @@ const KIND0_ROOT_FIELDS: Record<string, string> = {
   sp: "bitcoin",
   silentpayment: "bitcoin",
   "silent-payment": "bitcoin",
+  lnurl: "lightning",
 };
 
 export const PAYTO_URI_REGEX = /payto:\/\/([a-z0-9-]+)\/([^\s\]\)\<\"']+)/gi;
 
 export function getCanonicalPaytoType(authority: string): string {
   const lower = authority.toLowerCase();
-  return ALIAS_MAP[lower] || lower;
+  if (ALIAS_MAP[lower]) return ALIAS_MAP[lower];
+  if (lower.startsWith("bip")) return "bitcoin";
+  if (lower.startsWith("lnurl")) return "lightning";
+  return lower;
 }
 
 export function getPaytoTypeInfo(authority: string): PaytoType | undefined {

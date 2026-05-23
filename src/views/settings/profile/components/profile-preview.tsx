@@ -42,14 +42,14 @@ export default function ProfilePreview() {
 
           {/* Profile info */}
           <Box p={4} pt={0}>
-            <Flex align="end" mb={4}>
+            <Flex align="end" mb={4} minW={0} w="full">
               <MetadataAvatar pubkey={account.pubkey} metadata={{ ...metadata, picture }} size="xl" mt={-8} noProxy />
-              <VStack align="start" ml={4} spacing={1} flex={1}>
-                <Text fontSize="xl" fontWeight="bold">
+              <VStack align="start" ml={4} spacing={1} flex={1} minW={0}>
+                <Text fontSize="xl" fontWeight="bold" isTruncated w="full">
                   {getDisplayName(data as ProfileContent, truncateId(npubEncode(account.pubkey)))}
                 </Text>
                 {data.nip05 && (
-                  <Text color="blue.500" fontSize="sm">
+                  <Text color="blue.500" fontSize="sm" isTruncated w="full">
                     ✓ {data.nip05}
                   </Text>
                 )}
@@ -58,14 +58,14 @@ export default function ProfilePreview() {
 
             {data.about && <UserAboutContent mb={3} profile={metadata} />}
 
-            <VStack align="start" spacing={1}>
+            <VStack align="start" spacing={1} w="full" minW={0}>
               {data.website && (
-                <Text color="blue.500" fontSize="sm">
+                <Text color="blue.500" fontSize="sm" isTruncated w="full">
                   🌐 {data.website}
                 </Text>
               )}
               {data.lud16 && (
-                <Text color="orange.500" fontSize="sm">
+                <Text color="orange.500" fontSize="sm" isTruncated w="full">
                   ⚡ {data.lud16}
                 </Text>
               )}

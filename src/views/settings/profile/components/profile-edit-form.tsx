@@ -2,6 +2,7 @@ import {
   Button,
   ButtonGroup,
   Collapse,
+  Flex,
   FormControl,
   FormErrorMessage,
   FormHelperText,
@@ -319,14 +320,14 @@ export default function ProfileEditForm({
       </VStack>
 
       {/* Actions */}
-      <ButtonGroup>
-        <Button onClick={() => reset()} isDisabled={loading}>
+      <Flex gap="4" direction={{ base: "column-reverse", sm: "row" }}>
+        <Button onClick={() => reset()} isDisabled={loading} flexGrow={1}>
           Reset
         </Button>
-        <Button colorScheme="primary" type="submit" isLoading={loading} loadingText={uploadStatus || "Saving..."}>
+        <Button colorScheme="primary" type="submit" isLoading={loading} loadingText={uploadStatus || "Saving..."} flexGrow={1}>
           Save Profile
         </Button>
-      </ButtonGroup>
+      </Flex>
     </VStack>
   );
 }

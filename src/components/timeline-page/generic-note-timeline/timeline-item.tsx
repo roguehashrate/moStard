@@ -18,6 +18,9 @@ import ShareEvent from "./share-event";
 const StreamNote = lazy(() => import("./stream-note"));
 const BadgeAwardCard = lazy(() => import("../../../views/badges/components/badge-award-card"));
 const EmbeddedFlareVideo = lazy(() => import("../../embed-event/card/embedded-flare-video"));
+const EmbeddedNip71Video = lazy(() => import("../../embed-event/card/embedded-nip71-video"));
+const HighlightCard = lazy(() => import("../../highlight/highlight-card"));
+const PollCard = lazy(() => import("../../poll/poll-card"));
 
 function TimelineItem({ event, visible, minHeight }: { event: NostrEvent; visible: boolean; minHeight?: number }) {
   const ref = useEventIntersectionRef(event);
@@ -45,6 +48,16 @@ function TimelineItem({ event, visible, minHeight }: { event: NostrEvent; visibl
       break;
     case PICTURE_POST_KIND:
       content = <PicturePost post={event} />;
+      break;
+    case 21:
+    case 22:
+      content = <EmbeddedNip71Video video={event} />;
+      break;
+    case 1068:
+      content = <PollCard event={event} />;
+      break;
+    case 9802:
+      content = <HighlightCard event={event} />;
       break;
     default:
       content = <EmbeddedUnknown event={event} />;

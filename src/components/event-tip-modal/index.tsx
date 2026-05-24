@@ -105,10 +105,10 @@ export function TipModalContents({
             embedProps={embedProps}
           />
         </Flex>
-      ) : (
+      ) : filteredTargets.length === 1 ? (
         <InputStep
-          address={address}
-          paymentType={filteredTargets[0]?.type || "monero"}
+          address={address || filteredTargets[0].address}
+          paymentType={filteredTargets[0].type}
           pubkey={pubkey}
           event={event}
           initialComment={initialComment}
@@ -117,7 +117,7 @@ export function TipModalContents({
           showEmbed={showEmbed}
           embedProps={embedProps}
         />
-      )}
+      ) : null}
     </ModalBody>
   );
 }

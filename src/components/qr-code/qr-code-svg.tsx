@@ -4,6 +4,8 @@ import { Box, type BoxProps, Text } from "@chakra-ui/react";
 import { getPaytoLogoUrl } from "../../helpers/payto-logos";
 import { useMemo } from "react";
 
+import xmrOrangeLogo from "../../payto_logos/xmr_orange.png";
+
 export default function QrCodeSvg({
   content,
   lightColor = "white",
@@ -42,7 +44,8 @@ export default function QrCodeSvg({
   const imageX = (qrCodeSize - imageSize) / 2;
   const imageY = (qrCodeSize - imageSize) / 2;
 
-  const logoUrl = coinIcon ? getPaytoLogoUrl(coinIcon) : xmrIcon ? getPaytoLogoUrl("monero") : null;
+  const isMonero = coinIcon === "monero" || xmrIcon;
+  const logoUrl = isMonero ? xmrOrangeLogo : coinIcon ? getPaytoLogoUrl(coinIcon) : null;
 
   return (
     <Box

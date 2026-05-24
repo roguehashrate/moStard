@@ -26,11 +26,18 @@ function LoadUnknownEvent({ pointer, link }: { pointer: nip19.EventPointer; link
   return <RenderRedirect event={event} link={link} />;
 }
 
+const KIND_TITLES: Record<number, string> = {
+  1068: "Poll",
+  9802: "Highlight",
+};
+
 function UnknownView({ pointer, event }: { pointer: DecodeResult; event?: NostrEvent }) {
   const comment = useDisclosure();
 
+  const title = event?.kind ? KIND_TITLES[event.kind] || `Kind ${event.kind}` : "Unknown event kind";
+
   return (
-    <SimpleView title="Unknown event kind" maxW="4xl" center>
+    <SimpleView title={title} maxW="4xl" center>
       {event ? <EmbedEventCard event={event} /> : <EmbedEventPointerCard pointer={pointer} />}
 
       {event && (
@@ -77,6 +84,8 @@ function RenderRedirect({ event, link }: { event?: NostrEvent; link: string }) {
       if (k === WIKI_PAGE_KIND) return <Navigate to={`/wiki/page/${link}`} replace />;
       if (k === PICTURE_POST_KIND) return <Navigate to={`/pictures/${link}`} replace />;
       if (k === kinds.FileMetadata) return <Navigate to={`/files/${link}`} replace />;
+      if (k === 21 || k === 22) return <Navigate to={`/videos/${link}`} replace />;
+      if (k === 1068 || k === 9802) return <Navigate to={`/n/${link}`} replace />;
 
       if (!event && decoded.type === "naddr") return <LoadUnknownAddress pointer={decoded.data} link={link} />;
       if (!event && decoded.type === "nevent") return <LoadUnknownEvent pointer={decoded.data} link={link} />;

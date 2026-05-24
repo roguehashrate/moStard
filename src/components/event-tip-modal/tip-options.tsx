@@ -5,7 +5,7 @@ import PaytoIcon from "../payment/payto-icon";
 
 export default function CustomTipAmountOptions({
   onSelect,
-  paymentType = "monero",
+  paymentType = "",
 }: {
   onSelect: (value: number) => void;
   paymentType?: string;

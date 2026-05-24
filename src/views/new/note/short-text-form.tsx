@@ -30,7 +30,6 @@ import { useThrottle } from "react-use";
 
 import { useActiveAccount } from "applesauce-react/hooks";
 import { ErrorBoundary } from "../../../components/error-boundary";
-import InsertGifButton from "../../../components/gif/insert-gif-button";
 import { ChevronDownIcon, ChevronUpIcon } from "../../../components/icons";
 import MagicTextArea, { type RefType } from "../../../components/magic-textarea";
 import TextNoteContents from "../../../components/note/timeline-note/text-note-contents";
@@ -47,6 +46,7 @@ import { eventStore } from "../../../services/event-store";
 import localSettings from "../../../services/preferences";
 import { PublishLogEntryDetails } from "../../task-manager/publish-log/entry-details";
 import InsertImageButton from "./insert-image-button";
+import CreatePollButton from "../../../components/poll/create-poll-button";
 
 type FormValues = {
   content: string;
@@ -194,7 +194,7 @@ export default function ShortTextNoteForm({
         <Flex gap="2" alignItems="center" justifyContent="flex-end">
           <Flex mr="auto" gap="2">
             <InsertImageButton onUploaded={insertText} aria-label="Upload image" />
-            <InsertGifButton onSelectURL={insertText} aria-label="Add gif" />
+            <CreatePollButton />
             <InsertReactionButton onSelect={insertText} aria-label="Add emoji" />
           </Flex>
         </Flex>

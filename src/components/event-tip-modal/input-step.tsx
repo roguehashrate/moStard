@@ -69,7 +69,7 @@ const CACHE_TIME = 5 * 60 * 1000;
 const useCoinPrice = (currency: string, isApiEnabled: boolean, coingeckoId?: string) => {
   const [price, setPrice] = useState(null);
   const cacheRef = useRef({});
-  const coinId = coingeckoId || "monero";
+  const coinId = coingeckoId || "";
 
   useEffect(() => {
     if (!isApiEnabled) return;
@@ -127,7 +127,7 @@ export default function InputStep({
   showEmbed = true,
   embedProps,
   address,
-  paymentType = "monero",
+  paymentType = "",
 }: InputStepProps) {
   const { customZapAmounts } = useAppSettings();
   const [isApiEnabled, setIsApiEnabled] = useState(false);

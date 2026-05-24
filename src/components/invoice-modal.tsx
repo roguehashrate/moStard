@@ -20,11 +20,11 @@ import { getPaytoTypeInfo } from "../helpers/payto-types";
 
 type CommonProps = { address?: string; amount: number; onPaid: () => void; paymentType?: string };
 
-export function InvoiceModalContent({ address, amount, onPaid, paymentType = "monero" }: CommonProps) {
+export function InvoiceModalContent({ address, amount, onPaid, paymentType = "" }: CommonProps) {
   const showQr = useDisclosure({ isOpen: true });
   const [payingApp, setPayingApp] = useState(false);
   const info = getPaytoTypeInfo(paymentType);
-  const scheme = info?.uriScheme || "monero:";
+  const scheme = info?.uriScheme || "";
   let uri = "";
   if (Number.isNaN(amount)) {
     uri = `${scheme}${address?.replace(/\s/g, "")}`;
@@ -84,7 +84,7 @@ export default function InvoiceModal({
   amount,
   onClose,
   onPaid,
-  paymentType = "monero",
+  paymentType = "",
   ...props
 }: Omit<ModalProps, "children"> & CommonProps) {
   const isMobile = useBreakpointValue({ base: true, md: false });

@@ -219,7 +219,12 @@ export default function useUserPaymentTargets(pubkey: string): PaymentTarget[] {
     for (const t of kind10133) push(t);
     for (const t of kind0) push(t);
 
-    if (enableAlternativePayments) return merged;
+    if (enableAlternativePayments) {
+      // stable sort — monero first so it's the default selection
+      const moneroTargets = merged.filter((t) => t.type === "monero");
+      const otherTargets = merged.filter((t) => t.type !== "monero");
+      return [...moneroTargets, ...otherTargets];
+    }
     return merged.filter((t) => t.type === "monero");
   }, [rawEvent, paymentEvent, enableAlternativePayments]);
 }

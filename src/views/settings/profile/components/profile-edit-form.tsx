@@ -12,20 +12,27 @@ import {
   InputGroup,
   InputRightElement,
   Link,
+  Select,
   Text,
   Textarea,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
+import { AddIcon, CloseIcon } from "@chakra-ui/icons";
 import { parseNIP05Address, ProfileContent } from "applesauce-core/helpers";
 import { IdentityStatus } from "applesauce-loaders/helpers/dns-identity";
 import { useActiveAccount } from "applesauce-react/hooks";
 import { useEffect, useRef, useState } from "react";
-import { useForm, useFormContext } from "react-hook-form";
+import { useFieldArray, useForm, useFormContext } from "react-hook-form";
 
 import { ChevronDownIcon, ChevronUpIcon, OutboxIcon } from "../../../../components/icons";
+import { PAYTO_TYPES, type PaytoType } from "../../../../helpers/payto-types";
 import dnsIdentityLoader from "../../../../services/dns-identity-loader";
 import type { ProfileFormData } from "..";
+
+const PAYTO_TYPE_OPTIONS = (Object.entries(PAYTO_TYPES) as [string, PaytoType][])
+  .filter(([key]) => key !== "monero")
+  .map(([key, value]) => ({ value: key, label: `${value.label} (${value.symbol})` }));
 
 function isLightningAddress(addr: string) {
   const isEmail =
@@ -161,8 +168,14 @@ export default function ProfileEditForm({
     handleSubmit,
     reset,
     setValue,
+    control,
     formState: { errors },
   } = useFormContext<ProfileFormData>();
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "paymentTargets",
+  });
 
   return (
     <VStack as="form" onSubmit={handleSubmit(onSubmit)} spacing={6} align="stretch">
@@ -263,6 +276,44 @@ export default function ProfileEditForm({
           </FormHelperText>
           <FormErrorMessage>{errors.monero?.message}</FormErrorMessage>
         </FormControl>
+
+        <Flex direction="column" gap="3">
+          <Flex alignItems="center" gap="2" mt="2">
+            <Text fontSize="md" fontWeight="semibold">
+              Additional Payment Addresses
+            </Text>
+            <Button size="sm" leftIcon={<AddIcon />} onClick={() => append({ type: "bitcoin", address: "" })}>
+              Add
+            </Button>
+          </Flex>
+          {fields.map((field, index) => (
+            <Flex key={field.id} gap="2" alignItems="flex-start">
+              <Select
+                flex={1}
+                {...register(`paymentTargets.${index}.type`)}
+              >
+                {PAYTO_TYPE_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </Select>
+              <Input
+                flex={2}
+                placeholder="Address or identifier"
+                autoComplete="off"
+                {...register(`paymentTargets.${index}.address`)}
+              />
+              <IconButton
+                aria-label="Remove address"
+                icon={<CloseIcon />}
+                size="sm"
+                variant="ghost"
+                onClick={() => remove(index)}
+              />
+            </Flex>
+          ))}
+        </Flex>
 
         <FormControl isInvalid={!!errors.nip05}>
           <FormLabel>NIP-05 ID</FormLabel>

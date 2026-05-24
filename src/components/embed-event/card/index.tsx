@@ -1,4 +1,5 @@
 import { type CardProps, Spinner } from "@chakra-ui/react";
+import { PICTURE_POST_KIND } from "applesauce-core/helpers";
 import type { DecodeResult } from "applesauce-core/helpers";
 import { kinds, type NostrEvent } from "nostr-tools";
 import { lazy, Suspense } from "react";
@@ -21,6 +22,7 @@ import EmbeddedSetOrList from "./embedded-list";
 import EmbeddedReaction from "./embedded-reaction";
 import EmbeddedRepost from "./embedded-repost";
 import EmbeddedUnknown from "./embedded-unknown";
+import PicturePost from "../../picture-post/picture-post-card";
 
 const EmbeddedArticle = lazy(() => import("./embedded-article"));
 const EmbeddedCommunity = lazy(() => import("./embedded-community"));
@@ -35,6 +37,9 @@ const EmbeddedStream = lazy(() => import("./embedded-stream"));
 const EmbeddedStreamMessage = lazy(() => import("./embedded-stream-message"));
 const EmbeddedStemstrTrack = lazy(() => import("./embedded-stemstr-track"));
 const EmbeddedFile = lazy(() => import("./embedded-file"));
+const EmbeddedNip71Video = lazy(() => import("./embedded-nip71-video"));
+const EmbeddedPoll = lazy(() => import("./embedded-poll"));
+const EmbeddedHighlight = lazy(() => import("./embedded-highlight"));
 
 export function EmbedEventCard({ event, ...cardProps }: Omit<CardProps, "children"> & { event: NostrEvent }) {
   const renderContent = () => {
@@ -74,6 +79,15 @@ export function EmbedEventCard({ event, ...cardProps }: Omit<CardProps, "childre
         return <EmbeddedWikiPage page={event} {...cardProps} />;
       case kinds.FileMetadata:
         return <EmbeddedFile file={event} {...cardProps} />;
+      case PICTURE_POST_KIND:
+        return <PicturePost post={event} />;
+      case 21:
+      case 22:
+        return <EmbeddedNip71Video video={event} {...cardProps} />;
+      case 1068:
+        return <EmbeddedPoll event={event} {...cardProps} />;
+      case 9802:
+        return <EmbeddedHighlight event={event} {...cardProps} />;
       case kinds.Handlerinformation:
         // if its a content DVM
         if (event.tags.some((t) => t[0] === "k" && t[1] === String(DVM_CONTENT_DISCOVERY_JOB_KIND)))

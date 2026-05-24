@@ -257,3 +257,9 @@ export const ArticleIcon = Edit04;
 export const VideoIcon = Film02;
 
 export const MediaIcon = Camera01;
+
+export const PollIcon = createIcon({
+  displayName: "PollIcon",
+  d: "M3 17V15H7V17H3ZM3 12V10H11V12H3ZM3 7V5H15V7H3ZM17 21V11H21V21H17ZM17 9V3H21V9H17Z",
+  defaultProps,
+});

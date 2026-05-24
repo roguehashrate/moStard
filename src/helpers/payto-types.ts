@@ -30,7 +30,7 @@ const WALLET_APPS: Record<string, WalletApp> = {
   ledger: { label: "Ledger Live", uriTemplate: "ledgerlive://send?currency={coinScheme}&recipient={authority}" },
 };
 
-const PAYTO_TYPES: Record<string, PaytoType> = {
+export const PAYTO_TYPES: Record<string, PaytoType> = {
   monero: {
     label: "Monero", symbol: "XMR", category: "crypto", uriScheme: "monero:", coingeckoId: "monero",
     walletOpen: { scheme: "monero", walletApps: ["cakewallet", "ledger"] },

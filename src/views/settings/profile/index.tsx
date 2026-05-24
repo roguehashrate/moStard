@@ -15,6 +15,7 @@ import useUserProfile from "../../../hooks/use-user-profile";
 import { usePublishEvent } from "../../../providers/global/publish-provider";
 import { profileLoader } from "../../../services/loaders";
 import localSettings from "../../../services/preferences";
+import { parsePaytoUri } from "../../../helpers/payto-types";
 import ProfileEditForm from "./components/profile-edit-form";
 import ProfilePreview from "./components/profile-preview";
 import { eventStore } from "../../../services/event-store";
@@ -23,6 +24,7 @@ export type ProfileFormData = Omit<ProfileContent, "picture" | "banner"> & {
   picture?: string | File;
   banner?: string | File;
   monero?: string;
+  paymentTargets?: { type: string; address: string }[];
 };
 
 function isLightningAddress(addr: string) {
@@ -81,10 +83,33 @@ export default function ProfileSettingsView() {
     return "";
   };
 
+  // Extract non-Monero payto targets from profile
+  const getAdditionalPaymentTargets = (profile: Record<string, unknown> | null | undefined) => {
+    if (!profile) return [];
+    const targets: { type: string; address: string }[] = [];
+    const payto = profile.payto;
+    if (Array.isArray(payto)) {
+      for (const entry of payto) {
+        const uri = typeof entry === "string" ? entry : (entry as Record<string, unknown>)?.uri as string | undefined;
+        if (uri) {
+          const parsed = parsePaytoUri(uri);
+          if (parsed && parsed.authority !== "monero") {
+            targets.push({ type: parsed.authority, address: parsed.address });
+          }
+        }
+      }
+    }
+    return targets;
+  };
+
   // Reset form when metadata changes
   useEffect(() => {
     if (metadata) {
-      const resetData = { ...metadata, monero: getMoneroFromProfile(metadata as Record<string, unknown>) };
+      const resetData = {
+        ...metadata,
+        monero: getMoneroFromProfile(metadata as Record<string, unknown>),
+        paymentTargets: getAdditionalPaymentTargets(metadata as Record<string, unknown>),
+      };
       formMethods.reset(resetData as ProfileFormData);
     }
   }, [metadata, formMethods]);
@@ -126,22 +151,36 @@ export default function ProfileSettingsView() {
         if (update.website !== undefined) newMetadata.website = update.website;
         if (update.nip05 !== undefined) newMetadata.nip05 = update.nip05;
 
+        const profileMeta = metadata as Record<string, unknown>;
+
         if (update.monero !== undefined) {
           const addr = update.monero.trim();
           if (addr) {
             (newMetadata as Record<string, unknown>)["monero"] = addr;
-            const profileMeta = metadata as Record<string, unknown>;
             (newMetadata as Record<string, unknown>)["cryptocurrency_addresses"] = {
               ...((profileMeta?.cryptocurrency_addresses || {}) as Record<string, unknown>),
               monero: addr,
             };
-            const existingPayto = (profileMeta?.payto || []) as string[];
-            const paytoArr = [
-              ...existingPayto.filter((p: string) => typeof p === "string" && !p.startsWith("payto://monero/")),
-              `payto://monero/${addr}`,
-            ];
-            (newMetadata as Record<string, unknown>)["payto"] = paytoArr;
           }
+        }
+
+        {
+          const existingPayto = (profileMeta?.payto || []) as string[];
+          const paytoArr = [
+            ...existingPayto.filter((p) => {
+              if (typeof p !== "string") return true;
+              return !p.startsWith("payto://");
+            }),
+          ];
+          if (update.monero?.trim()) paytoArr.push(`payto://monero/${update.monero.trim()}`);
+          if (update.paymentTargets) {
+            for (const target of update.paymentTargets) {
+              if (target.type && target.address?.trim()) {
+                paytoArr.push(`payto://${target.type}/${target.address.trim()}`);
+              }
+            }
+          }
+          (newMetadata as Record<string, unknown>)["payto"] = paytoArr;
         }
 
         setUploadStatus("Signing and publishing...");

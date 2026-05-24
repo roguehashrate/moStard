@@ -28,6 +28,7 @@ import useAppSettings from "../../../hooks/use-user-app-settings";
 import { useBreakpointValue } from "../../../providers/global/breakpoint-provider";
 import { ContentSettingsProvider } from "../../../providers/local/content-settings";
 import { getSharableEventAddress } from "../../../services/relay-hints";
+import { EmbedEventCard } from "../../../components/embed-event/card";
 import DetailsTabs from "./details-tabs";
 import ReplyForm from "./reply-form";
 import SeenOnRelaysButton from "../../../components/note/seen-on-relays-button";
@@ -97,9 +98,13 @@ function ThreadPost({ post, initShowReplies, focusId, level = -1 }: ThreadItemPr
   const renderContent = () => {
     const override = focusId === post.event.id ? false : undefined;
 
-    return isMuted && !alwaysShow ? (
-      muteAlert
-    ) : (
+    if (isMuted && !alwaysShow) return muteAlert;
+
+    if (post.event.kind === 1068) {
+      return <EmbedEventCard event={post.event} />;
+    }
+
+    return (
       <ContentSettingsProvider blurMedia={override} hideEmbeds={override} event={post.event}>
         <TextNoteContents event={post.event} pl="2" />
       </ContentSettingsProvider>

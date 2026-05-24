@@ -14,7 +14,7 @@ import NoteFilterTypeButtons from "../../components/note-filter-type-buttons";
 import KindSelectionProvider, { useKindSelectionContext } from "../../providers/local/kind-selection-provider";
 import { useReadRelays } from "../../hooks/use-client-relays";
 
-const defaultKinds = [kinds.ShortTextNote, kinds.Repost, kinds.GenericRepost];
+const defaultKinds = [kinds.ShortTextNote, kinds.Repost, kinds.GenericRepost, 1068];
 
 function HomePage() {
   const showReplies = useDisclosure({ defaultIsOpen: localStorage.getItem("show-replies") === "true" });

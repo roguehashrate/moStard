@@ -18,6 +18,7 @@ import { Link as RouterLink } from "react-router-dom";
 
 import Timestamp from "../timestamp";
 import UserAvatarLink from "../user/user-avatar-link";
+import UserDnsIdentityIcon from "../user/user-dns-identity-icon";
 import UserLink from "../user/user-link";
 import { getThreadReferences } from "../../helpers/nostr/event";
 import useEventIntersectionRef from "../../hooks/use-event-intersection-ref";
@@ -160,6 +161,31 @@ function PollCard({ event, showReplyButton }: { event: NostrEvent; showReplyButt
                   {total} vote{total !== 1 ? "s" : ""} · {options.length} option{options.length !== 1 ? "s" : ""}
                 </Text>
               </Flex>
+
+              {responses.some((r) => r.content?.trim()) && (
+                <Flex direction="column" gap="3" mt="4" pt="3" borderTopWidth={1}>
+                  <Text fontSize="sm" fontWeight="semibold" color="gray.500">
+                    Responses
+                  </Text>
+                  {responses
+                    .filter((r) => r.content?.trim())
+                    .map((resp) => (
+                      <Flex key={resp.id} gap="2" alignItems="flex-start">
+                        <UserAvatarLink pubkey={resp.pubkey} size="xs" mt="1" />
+                        <Box>
+                          <Flex gap="1" alignItems="center">
+                            <UserLink pubkey={resp.pubkey} fontWeight="bold" fontSize="sm" />
+                            <UserDnsIdentityIcon pubkey={resp.pubkey} />
+                            <Timestamp timestamp={resp.created_at} fontSize="xs" color="gray.500" />
+                          </Flex>
+                          <Text fontSize="sm" whiteSpace="pre-wrap">
+                            {resp.content}
+                          </Text>
+                        </Box>
+                      </Flex>
+                    ))}
+                </Flex>
+              )}
             </CardBody>
 
             <CardFooter p="2" display="flex" gap="2" flexDirection="column" alignItems="flex-start">

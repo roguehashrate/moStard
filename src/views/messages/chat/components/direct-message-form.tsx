@@ -1,5 +1,6 @@
 import {
   Alert,
+  Box,
   Button,
   ButtonGroup,
   Flex,
@@ -14,7 +15,10 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Stack,
   Text,
+  useBreakpointValue,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { SendLegacyMessage, SendWrappedMessage } from "applesauce-actions/actions";
 import {
@@ -125,7 +129,7 @@ export type MessageType = "nip04" | "nip17";
 export default function SendMessageForm({
   pubkey,
   rootId,
-  initialType = "nip04",
+  initialType = "nip17",
   initialExpiration,
   ...props
 }: { pubkey: string; rootId?: string; initialType?: MessageType; initialExpiration?: number } & Omit<
@@ -240,8 +244,13 @@ export default function SendMessageForm({
 
   const formRef = useRef<HTMLFormElement | null>(null);
 
+  const isCompact = useBreakpointValue({ base: true, sm: false });
+  const inputBg = useColorModeValue("white", "whiteAlpha.200");
+  const inputBorder = useColorModeValue("blackAlpha.100", "whiteAlpha.100");
+  const inputHover = useColorModeValue("white", "whiteAlpha.300");
+
   return (
-    <Flex as="form" gap="2" onSubmit={sendMessage} ref={formRef} {...props}>
+    <Flex as="form" direction="column" gap="3" onSubmit={sendMessage} ref={formRef} w="full" {...props}>
       {formState.isSubmitting ? (
         sending ? (
           <SendingStatus entries={sending} onSkip={skipPublishing} />
@@ -251,34 +260,61 @@ export default function SendMessageForm({
           </Heading>
         )
       ) : (
-        <>
-          <Flex gap="2" direction="column">
-            <ExpirationToggleButton value={expiration} onChange={setExpiration} variant="ghost" />
-            <MessageTypeToggleButton value={type} onChange={setType} variant="ghost" />
-          </Flex>
-          <MagicTextArea
-            mb="2"
-            value={getValues().content}
-            onChange={(e) => setValue("content", e.target.value, { shouldDirty: true, shouldTouch: true })}
-            rows={2}
-            isRequired
-            instanceRef={(inst) => (autocompleteRef.current = inst)}
-            ref={textAreaRef}
-            onPaste={onPaste}
-            onKeyDown={(e) => {
-              if ((e.ctrlKey || e.metaKey) && e.key === "Enter" && formRef.current) formRef.current.requestSubmit();
-            }}
-          />
-          <Flex gap="2" direction="column">
-            <ButtonGroup size="sm">
-              <InsertGifButton onSelectURL={insertText} aria-label="Add gif" />
-              <InsertReactionButton onSelect={insertText} aria-label="Add emoji" />
-            </ButtonGroup>
-            <Button type="submit" colorScheme="primary">
+        <Flex direction="column" gap="3">
+          <Flex gap={{ base: 3, md: 4 }} align="flex-end" w="full">
+            <Stack spacing={{ base: 1, md: 2 }} direction={isCompact ? "row" : "column"} align="center">
+              <ExpirationToggleButton value={expiration} onChange={setExpiration} variant="ghost" size="sm" />
+              <MessageTypeToggleButton value={type} onChange={setType} variant="ghost" size="sm" />
+            </Stack>
+
+            <Box
+              flex="1"
+              bg={inputBg}
+              borderRadius="2xl"
+              borderWidth="1px"
+              borderColor={inputBorder}
+              px={{ base: 3, md: 4 }}
+              py={{ base: 2, md: 3 }}
+              transition="background-color 0.2s ease"
+              _hover={{ backgroundColor: inputHover }}
+            >
+              <MagicTextArea
+                value={getValues().content}
+                onChange={(e) => setValue("content", e.target.value, { shouldDirty: true, shouldTouch: true })}
+                rows={isCompact ? 2 : 3}
+                resize="none"
+                isRequired
+                instanceRef={(inst) => (autocompleteRef.current = inst)}
+                ref={textAreaRef}
+                onPaste={onPaste}
+                onKeyDown={(e) => {
+                  if ((e.ctrlKey || e.metaKey) && e.key === "Enter" && formRef.current) formRef.current.requestSubmit();
+                }}
+              />
+
+              <Flex align="center" justify="space-between" mt="2">
+                <ButtonGroup size="sm" variant="ghost" colorScheme="purple">
+                  <InsertGifButton onSelectURL={insertText} aria-label="Add gif" />
+                  <InsertReactionButton onSelect={insertText} aria-label="Add emoji" />
+                </ButtonGroup>
+                <Text fontSize="xs" color="gray.500">
+                  {getValues().content.length > 0 ? `${getValues().content.length} chars` : ""}
+                </Text>
+              </Flex>
+            </Box>
+
+            <Button
+              type="submit"
+              colorScheme="primary"
+              borderRadius="full"
+              size={isCompact ? "md" : "lg"}
+              px={{ base: 5, md: 8 }}
+              minW={isCompact ? "auto" : "4.5rem"}
+            >
               Send
             </Button>
           </Flex>
-        </>
+        </Flex>
       )}
     </Flex>
   );

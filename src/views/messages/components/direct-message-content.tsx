@@ -3,7 +3,7 @@ import { useRenderedContent } from "applesauce-react/hooks";
 import { kinds, NostrEvent } from "nostr-tools";
 import React, { useMemo } from "react";
 
-import { getExpirationTimestamp, getRumorGiftWraps, Rumor } from "applesauce-core/helpers";
+import { getExpirationTimestamp, getRumorGiftWraps, isRumor, Rumor } from "applesauce-core/helpers";
 import dayjs from "dayjs";
 import { components } from "../../../components/content";
 import {
@@ -78,19 +78,30 @@ function LegacyDirectMessageContent({
   );
 }
 
-function WrappedDirectMessageContent({
+type SealedMessage = Rumor | (NostrEvent & { kind: typeof kinds.PrivateDirectMessage });
+
+function isSealedMessage(message: NostrEvent | Rumor): message is SealedMessage {
+  if (isRumor(message)) return true;
+  const event = message as NostrEvent;
+  return event.kind === kinds.PrivateDirectMessage;
+}
+
+function SealedDirectMessageContent({
   message,
   children,
   ...props
-}: { message: Rumor; children?: React.ReactNode } & BoxProps) {
+}: { message: SealedMessage; children?: React.ReactNode } & BoxProps) {
   const content = useRenderedContent(message, components, { linkRenderers, cacheKey: DirectMessageContentSymbol });
   const expirationTimestamp = useMemo(() => {
-    const giftWraps = getRumorGiftWraps(message);
-    for (const giftWrap of giftWraps) {
-      const ts = getExpirationTimestamp(giftWrap);
-      if (ts) return ts;
+    if (isRumor(message)) {
+      const giftWraps = getRumorGiftWraps(message);
+      for (const giftWrap of giftWraps) {
+        const ts = getExpirationTimestamp(giftWrap);
+        if (ts) return ts;
+      }
+      return undefined;
     }
-    return undefined;
+    return getExpirationTimestamp(message);
   }, [message]);
 
   return (
@@ -111,22 +122,18 @@ function WrappedDirectMessageContent({
   );
 }
 
-function isWrappedMessage(message: NostrEvent | Rumor): message is Rumor {
-  return message.kind === kinds.PrivateDirectMessage;
-}
-
 export default function DirectMessageContent({
   message,
   children,
   ...props
 }: { message: NostrEvent | Rumor; children?: React.ReactNode } & BoxProps) {
-  if (isWrappedMessage(message)) {
-    return <WrappedDirectMessageContent message={message} children={children} {...props} />;
-  } else {
-    return (
-      <DecryptPlaceholder message={message}>
-        {(text) => <LegacyDirectMessageContent message={message} text={text} children={children} {...props} />}
-      </DecryptPlaceholder>
-    );
+  if (isSealedMessage(message)) {
+    return <SealedDirectMessageContent message={message} children={children} {...props} />;
   }
+
+  return (
+    <DecryptPlaceholder message={message as NostrEvent}>
+      {(text) => <LegacyDirectMessageContent message={message as NostrEvent} text={text} children={children} {...props} />}
+    </DecryptPlaceholder>
+  );
 }

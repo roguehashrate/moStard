@@ -1,13 +1,17 @@
 import {
   AvatarGroup,
   Badge,
+  Box,
   Button,
   ButtonGroup,
   Flex,
+  Icon,
   IconButton,
   LinkBox,
   LinkOverlay,
+  Stack,
   Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { mergeRelaySets, type Rumor } from "applesauce-core/helpers";
 import { GiftWrapsModel, LegacyMessagesGroups, WrappedMessagesGroups } from "applesauce-core/models";
@@ -20,6 +24,7 @@ import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList, type ListChildComponentProps } from "react-window";
 
 import { SettingsIcon } from "../../components/icons";
+import Lightning01 from "../../components/icons/lightning-01";
 import SimpleParentView from "../../components/layout/presets/simple-parent-view";
 import RequireActiveAccount from "../../components/router/require-active-account";
 import Timestamp from "../../components/timestamp";
@@ -40,7 +45,15 @@ import ReadAuthRequiredAlert from "./components/read-auth-required-alert";
 
 function MessagePreview({ message }: { message: NostrEvent }) {
   const { plaintext } = useLegacyMessagePlaintext(message);
-  return plaintext ? <Text isTruncated>{plaintext || "<Encrypted>"}</Text> : <Badge variant="subtle">Encrypted</Badge>;
+  return plaintext ? (
+    <Text fontSize="sm" color="gray.600" _dark={{ color: "gray.300" }} noOfLines={1}>
+      {plaintext || "<Encrypted>"}
+    </Text>
+  ) : (
+    <Badge variant="subtle" colorScheme="purple">
+      Encrypted
+    </Badge>
+  );
 }
 
 function ConversationCard({ index, style, data }: ListChildComponentProps<(LegacyGroup | WrappedGroup)[]>) {
@@ -49,45 +62,75 @@ function ConversationCard({ index, style, data }: ListChildComponentProps<(Legac
 
   const location = useLocation();
   const lastMessage = conversation.lastMessage;
+  const surfaceBg = useColorModeValue("white", "whiteAlpha.100");
+  const surfaceRing = useColorModeValue("blackAlpha.50", "whiteAlpha.100");
+  const surfaceHover = useColorModeValue("white", "whiteAlpha.200");
 
   const ref = useEventIntersectionRef(lastMessage as NostrEvent);
   const others = conversation.participants.filter((p) => p !== account.pubkey);
+  const isGroup = others.length > 1;
+  const linkTarget = isGroup
+    ? `/messages/group/${others.map(npubEncode).join(":")}`
+    : `/messages/${others.map(npubEncode).join(":")}` + location.search;
+
+  const isLegacy = lastMessage.kind === kinds.EncryptedDirectMessage;
+  const preview = isLegacy ? (
+    <MessagePreview message={lastMessage as NostrEvent} />
+  ) : (
+    <Text fontSize="sm" color="gray.600" _dark={{ color: "gray.300" }} noOfLines={1}>
+      {lastMessage.content || "<Encrypted>"}
+    </Text>
+  );
 
   return (
-    <LinkBox as={Flex} ref={ref} style={style} gap="2" overflow="hidden" px="2">
-      <AvatarGroup size="md" max={3}>
-        {others.map((pubkey) => (
-          <UserAvatar key={pubkey} pubkey={pubkey} />
-        ))}
-      </AvatarGroup>
-      <Flex direction="column" gap="1" overflow="hidden" flex={1} py="2" alignItems="flex-start">
-        <Flex gap="2" alignItems="center" overflow="hidden" w="full">
-          <Text fontSize="sm" isTruncated>
-            {others.map((pubkey, index) => (
-              <span key={pubkey}>
-                <UserName pubkey={pubkey} />
-                {index < others.length - 1 && ", "}
-              </span>
-            ))}
-          </Text>
-          <Timestamp flexShrink={0} timestamp={lastMessage.created_at} ml="auto" />
-        </Flex>
-        {lastMessage.kind === kinds.EncryptedDirectMessage ? (
-          <MessagePreview message={lastMessage as NostrEvent} />
-        ) : (
-          <Text fontSize="sm" isTruncated>
-            {lastMessage.content}
-          </Text>
-        )}
+    <LinkBox as={Flex} ref={ref} style={style} px={{ base: "1.5", md: "3" }} py="2" w="full">
+      <Flex
+        w="full"
+        gap={{ base: "3", md: "4" }}
+        align="center"
+        bg={surfaceBg}
+        borderRadius="2xl"
+        boxShadow="lg"
+        borderWidth="1px"
+        borderColor={surfaceRing}
+        px={{ base: "3", md: "4" }}
+        py={{ base: "3", md: "4" }}
+        transition="all 0.2s ease"
+        _hover={{ bg: surfaceHover, transform: "translateY(-2px)", boxShadow: "xl" }}
+      >
+        <AvatarGroup size="md" max={3}>
+          {others.map((pubkey) => (
+            <UserAvatar key={pubkey} pubkey={pubkey} />
+          ))}
+        </AvatarGroup>
+        <Stack flex={1} spacing="1" overflow="hidden">
+          <Flex align="center" gap="2" w="full">
+            <Text fontWeight="semibold" fontSize="sm" noOfLines={1}>
+              {others.map((pubkey, index) => (
+                <span key={pubkey}>
+                  <UserName pubkey={pubkey} />
+                  {index < others.length - 1 && ", "}
+                </span>
+              ))}
+            </Text>
+            {isGroup && (
+              <Badge colorScheme="primary" variant="subtle">
+                Group
+              </Badge>
+            )}
+            <Timestamp flexShrink={0} fontSize="xs" color="gray.500" ml="auto" timestamp={lastMessage.created_at} />
+          </Flex>
+          {preview}
+        </Stack>
+        <Icon
+          as={Lightning01}
+          color={isLegacy ? "yellow.400" : "primary.400"}
+          boxSize="5"
+          opacity={0.7}
+          aria-hidden
+        />
+        <LinkOverlay as={RouterLink} to={linkTarget} />
       </Flex>
-      <LinkOverlay
-        as={RouterLink}
-        to={
-          others.length > 1
-            ? `/messages/group/${others.map(npubEncode).join(":")}`
-            : `/messages/${others.map(npubEncode).join(":")}` + location.search
-        }
-      />
     </LinkBox>
   );
 }
@@ -147,7 +190,14 @@ function Groups() {
   return (
     <IntersectionObserverProvider callback={callback}>
       <ReadAuthRequiredAlert relays={inboxes} flexShrink={0} />
-      <Flex flex={1} overflow="hidden" position="relative">
+      <Flex
+        flex={1}
+        overflow="hidden"
+        position="relative"
+        bgGradient={useColorModeValue("linear(to-b, gray.50, gray.100)", "linear(to-b, blackAlpha.700, blackAlpha.900)" )}
+        px={{ base: "2", md: "4" }}
+        py={{ base: "4", md: "6" }}
+      >
         <AutoSizer>
           {({ width, height }) => (
             <FixedSizeList
@@ -156,7 +206,7 @@ function Groups() {
               itemData={groups ?? []}
               itemCount={groups?.length ?? 0}
               itemKey={(i, data) => data[i].id}
-              itemSize={64}
+              itemSize={96}
               innerRef={scroll}
               overscanCount={10}
             >

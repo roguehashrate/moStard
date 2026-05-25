@@ -1,6 +1,5 @@
 import {
   Box,
-  ButtonGroup,
   Flex,
   IconButton,
   Menu,
@@ -9,6 +8,7 @@ import {
   MenuList,
   Text,
   useColorModeValue,
+  usePrefersReducedMotion,
   useToast,
 } from "@chakra-ui/react";
 import { Rumor } from "applesauce-core/helpers";
@@ -25,58 +25,55 @@ import UserAvatarLink from "../../../components/user/user-avatar-link";
 import { useLegacyMessagePlaintext } from "../../../hooks/use-legacy-message-plaintext";
 import DirectMessageContent from "./direct-message-content";
 
-function DirectMessageActions({
+function DirectMessageActionsMenu({
   message,
   onReply,
   account,
   toast,
+  placement,
 }: {
   message: NostrEvent;
   onReply?: (message: NostrEvent) => void;
   account: any;
   toast: any;
+  placement: "top-start" | "top-end";
 }) {
   const { plaintext } = useLegacyMessagePlaintext(message);
   const isOwnMessage = message.pubkey === account.pubkey;
   const canDelete = isOwnMessage && message.kind === kinds.EncryptedDirectMessage;
 
-  const handleReply = () => {
-    onReply?.(message);
-  };
-
   const handleCopyText = async () => {
-    if (plaintext) {
-      try {
-        await navigator.clipboard.writeText(plaintext);
-        toast({
-          title: "Text copied to clipboard",
-          status: "success",
-          duration: 2000,
-        });
-      } catch (error) {
-        toast({
-          title: "Failed to copy text",
-          status: "error",
-          duration: 2000,
-        });
-      }
+    if (!plaintext) return;
+    try {
+      await navigator.clipboard.writeText(plaintext);
+      toast({ title: "Text copied", status: "success", duration: 2000 });
+    } catch (error) {
+      toast({ title: "Failed to copy", status: "error", duration: 2000 });
     }
   };
 
   return (
-    <ButtonGroup size="xs" variant="ghost" gap="0">
-      <IconButton aria-label="Reply" icon={<ReplyIcon />} onClick={handleReply} size="xs" />
-      <Menu>
-        <MenuButton as={IconButton} aria-label="More actions" icon={<DotsHorizontal />} size="xs" />
-        <MenuList fontSize="sm">
-          <MenuItem icon={<CopyToClipboardIcon />} onClick={handleCopyText}>
-            Copy text
+    <Menu placement={placement} gutter={4} isLazy>
+      <MenuButton
+        as={IconButton}
+        icon={<DotsHorizontal />}
+        aria-label="Message actions"
+        size="xs"
+        variant="ghost"
+      />
+      <MenuList fontSize="sm" minW="40">
+        {onReply && (
+          <MenuItem icon={<ReplyIcon />} onClick={() => onReply(message)}>
+            Reply
           </MenuItem>
-          {canDelete && <DeleteEventMenuItem event={message} />}
-          <DebugEventMenuItem event={message} />
-        </MenuList>
-      </Menu>
-    </ButtonGroup>
+        )}
+        <MenuItem icon={<CopyToClipboardIcon />} onClick={handleCopyText}>
+          Copy text
+        </MenuItem>
+        {canDelete && <DeleteEventMenuItem event={message} />}
+        <DebugEventMenuItem event={message} />
+      </MenuList>
+    </Menu>
   );
 }
 
@@ -112,64 +109,79 @@ function DirectMessageBubble({
   account: any;
   toast: any;
 }) {
-  const [hover, setHover] = useState(false);
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const bubbleGradient = isOwn ? "linear(to-br, primary.500, primary.400)" : undefined;
+  const bubbleBg = isOwn ? undefined : otherBg;
+  const bubbleColor = isOwn ? "white" : "gray.900";
+  const timeLabel = dayjs.unix(message.created_at).format("h:mm A");
 
   return (
-    <Flex
-      justify={isOwn ? "flex-end" : "flex-start"}
-      px="2"
-      mb="1"
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      position="relative"
-    >
-      {hover && (
-        <Box
-          position="absolute"
-          top="-5"
-          zIndex="1"
-          bg="var(--chakra-colors-chakra-body-bg)"
-          borderWidth="1px"
-          borderRadius="md"
-          px="1"
-          py="0.5"
-          boxShadow="md"
-          {...(isOwn ? { right: "2" } : { left: "8" })}
-        >
-          <DirectMessageActions message={message as NostrEvent} onReply={onReply} account={account} toast={toast} />
-        </Box>
-      )}
-
-      <Flex gap="1" maxW="80%" align="flex-end">
-        {!isOwn && isGroupStart && (
-          <UserAvatarLink pubkey={message.pubkey} size="xs" mb="auto" mt="1" flexShrink={0} />
+    <Flex justify={isOwn ? "flex-end" : "flex-start"} px={{ base: "3", md: "4" }} mb="3">
+      <Flex gap="3" maxW="88%" align="flex-end" position="relative">
+        {!isOwn && (
+          <Box transition="opacity 0.2s" opacity={isGroupStart ? 1 : 0} w="8">
+            <UserAvatarLink
+              pubkey={message.pubkey}
+              size="sm"
+              mb="auto"
+              flexShrink={0}
+              border="2px solid"
+              borderColor="whiteAlpha.600"
+            />
+          </Box>
         )}
-        {!isOwn && !isGroupStart && <Box w="6" flexShrink={0} />}
 
-        <Box>
+        <Box position="relative" flex="1" px={isOwn ? 0 : 0} display="flex" justifyContent={isOwn ? "flex-end" : "flex-start"}>
           <Box
-            bg={isOwn ? "primary.500" : otherBg}
-            color={isOwn ? "white" : undefined}
-            px="3"
-            py="2"
-            borderRadius="lg"
-            borderBottomRightRadius={isOwn && isGroupStart ? 0 : "lg"}
-            borderBottomLeftRadius={!isOwn && isGroupStart ? 0 : "lg"}
-            maxW="100%"
+            position="relative"
+            px="4"
+            py="3"
+            borderRadius="xl"
+            borderBottomRightRadius={isOwn ? "md" : "2xl"}
+            borderBottomLeftRadius={isOwn ? "2xl" : "md"}
+            bg={bubbleBg}
+            bgGradient={bubbleGradient}
+            boxShadow="lg"
+            color={bubbleColor}
+            backdropFilter={!isOwn ? "saturate(120%)" : undefined}
+            _after={{
+              content: '""',
+              position: "absolute",
+              width: "3",
+              height: "3",
+              bottom: "1",
+              right: isOwn ? "-1.5" : undefined,
+              left: isOwn ? undefined : "-1.5",
+              transform: isOwn ? "rotate(45deg)" : "rotate(-45deg)",
+              bg: isOwn ? undefined : otherBg,
+              bgGradient: bubbleGradient,
+              borderRadius: "sm",
+              boxShadow: "md",
+            }}
+            transition={prefersReducedMotion ? undefined : "transform 0.2s ease, box-shadow 0.2s ease"}
+            _hover={prefersReducedMotion ? undefined : { transform: "translateY(-1px)", boxShadow: "xl" }}
           >
             <DirectMessageContent message={message} />
+            <Flex justify="space-between" align="center" mt="2" opacity={0.85} gap="3">
+              <Text fontSize="xs" color={isOwn ? "whiteAlpha.800" : "gray.500"}>
+                {timeLabel}
+              </Text>
+              <DirectMessageActionsMenu
+                message={message as NostrEvent}
+                onReply={onReply as (msg: NostrEvent) => void}
+                account={account}
+                toast={toast}
+                placement={isOwn ? "top-end" : "top-start"}
+              />
+            </Flex>
           </Box>
-          <Flex justify={isOwn ? "flex-end" : "flex-start"} mt="0.5" px="1">
-            <Text fontSize="10px" color="gray.500">
-              {dayjs.unix(message.created_at).format("h:mm A")}
-            </Text>
-          </Flex>
         </Box>
 
-        {isOwn && isGroupStart && (
-          <UserAvatarLink pubkey={message.pubkey} size="xs" mb="auto" mt="1" flexShrink={0} />
+        {isOwn && (
+          <Box w="8" display={isGroupStart ? "block" : "none"}>
+            <UserAvatarLink pubkey={message.pubkey} size="sm" mb="auto" flexShrink={0} border="2px solid" borderColor="primary.200" />
+          </Box>
         )}
-        {isOwn && !isGroupStart && <Box w="6" flexShrink={0} />}
       </Flex>
     </Flex>
   );
@@ -184,13 +196,13 @@ function DirectMessageGroup({
 }) {
   const account = useActiveAccount()!;
   const toast = useToast();
-  const otherBg = useColorModeValue("gray.100", "whiteAlpha.200");
+  const otherBg = useColorModeValue("whiteAlpha.900", "whiteAlpha.200");
 
   // Messages are newest-first; reverse for chronological display (oldest first, newest at bottom)
   const sorted = useMemo(() => [...messages].reverse(), [messages]);
 
   return (
-    <Flex direction="column">
+    <Flex direction="column" gap="1.5">
       {sorted.map((message, i, arr) => {
         const isOwn = message.pubkey === account.pubkey;
         const prev = arr[i - 1];
@@ -200,8 +212,8 @@ function DirectMessageGroup({
         return (
           <Box key={message.id}>
             {showDate && (
-              <Flex justify="center" my="2">
-                <Text fontSize="xs" color="gray.500" bg="var(--chakra-colors-chakra-body-bg)" px="3" py="1" borderRadius="full">
+              <Flex justify="center" my="3">
+                <Text fontSize="xs" color="gray.600" bg="whiteAlpha.700" px="4" py="1" borderRadius="full" boxShadow="sm">
                   {formatDateSeparator(message.created_at)}
                 </Text>
               </Flex>

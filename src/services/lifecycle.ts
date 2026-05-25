@@ -112,7 +112,26 @@ pool.relays$
   )
   .subscribe();
 
-// Observable to subscribe to DM relays for legacy messages (falls back to NIP-65 inboxes)
+// Observable to subscribe to NIP-65 inboxes for wrapped messages (NIP-17)
+export const wrappedMessageSubscription = accounts.active$.pipe(
+  switchMap((account) => {
+    if (!account) return NEVER;
+    const inboxes = eventStore.model(DirectMessageRelays, account.pubkey).pipe(defined());
+    return combineLatest([of(account), inboxes]);
+  }),
+  // Open a subscription to all relays for incoming messages
+  switchMap(([account, inboxes]) =>
+    pool
+      .subscription(inboxes, { kinds: [kinds.GiftWrap], "#p": [account.pubkey] })
+      .pipe(onlyEvents(), mapEventsToStore(eventStore)),
+  ),
+  // Ingore all updates since subscribes will get the events from the store
+  ignoreElements(),
+  // Ensure only one subscription is created and keep it alive for 30 seconds after last subscriber
+  share({ resetOnRefCountZero: () => timer(30_000) }),
+);
+
+// Observable to subscribe to legacy DM relays for backward compatibility
 export const legacyMessageSubscription = accounts.active$.pipe(
   switchMap((account) => {
     if (!account) return NEVER;
@@ -129,25 +148,6 @@ export const legacyMessageSubscription = accounts.active$.pipe(
       .subscription(targets, { kinds: [kinds.EncryptedDirectMessage], "#p": [account.pubkey] })
       .pipe(onlyEvents(), mapEventsToStore(eventStore));
   }),
-  // Ingore all updates since subscribes will get the events from the store
-  ignoreElements(),
-  // Ensure only one subscription is created and keep it alive for 30 seconds after last subscriber
-  share({ resetOnRefCountZero: () => timer(30_000) }),
-);
-
-// Observable to subscribe to NIP-65 inboxes for wrapped messages
-export const wrappedMessageSubscription = accounts.active$.pipe(
-  switchMap((account) => {
-    if (!account) return NEVER;
-    const inboxes = eventStore.model(DirectMessageRelays, account.pubkey).pipe(defined());
-    return combineLatest([of(account), inboxes]);
-  }),
-  // Open a subscription to all relays for incoming messages
-  switchMap(([account, inboxes]) =>
-    pool
-      .subscription(inboxes, { kinds: [kinds.GiftWrap], "#p": [account.pubkey] })
-      .pipe(onlyEvents(), mapEventsToStore(eventStore)),
-  ),
   // Ingore all updates since subscribes will get the events from the store
   ignoreElements(),
   // Ensure only one subscription is created and keep it alive for 30 seconds after last subscriber

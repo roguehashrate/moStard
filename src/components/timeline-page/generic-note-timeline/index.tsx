@@ -1,8 +1,9 @@
-import { memo, useState } from "react";
-import { Box, Button } from "@chakra-ui/react";
+import { memo, useState, useCallback, useEffect, useRef } from "react";
+import { Box, Button, IconButton } from "@chakra-ui/react";
 import { NostrEvent } from "nostr-tools";
 import { getEventUID } from "nostr-idb";
 import dayjs from "dayjs";
+import { ChevronUpIcon } from "@chakra-ui/icons";
 
 import useNumberCache from "../../../hooks/timeline/use-number-cache";
 import useCacheEntryHeight from "../../../hooks/timeline/use-cache-entry-height";
@@ -15,6 +16,8 @@ const NOTE_BUFFER = 5;
 
 function GenericNoteTimeline({ timeline }: { timeline: NostrEvent[] }) {
   const [latest, setLatest] = useState(() => dayjs().unix());
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const scrollContainerRef = useRef<HTMLElement | null>(null);
 
   const cacheKey = useTimelineLocationCacheKey();
   const numberCache = useNumberCache(cacheKey);
@@ -22,6 +25,55 @@ function GenericNoteTimeline({ timeline }: { timeline: NostrEvent[] }) {
 
   // measure and cache the hight of every entry
   useCacheEntryHeight(numberCache.set);
+
+  const scrollToTop = useCallback(() => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      container.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    if (typeof document !== "undefined" && document.scrollingElement) {
+      document.scrollingElement.scrollTo({ top: 0, behavior: "smooth" });
+    } else if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const container = document.querySelector('[aria-label="Main content"]');
+    const targetElement = container instanceof HTMLElement ? container : null;
+    const fallbackElement = document.scrollingElement instanceof HTMLElement ? document.scrollingElement : null;
+
+    scrollContainerRef.current = targetElement ?? fallbackElement;
+
+    const getScrollTop = () => {
+       const elementScrollTop = targetElement?.scrollTop ?? fallbackElement?.scrollTop ?? 0;
+       const windowScrollTop = window.scrollY ?? fallbackElement?.scrollTop ?? document.documentElement.scrollTop ?? 0;
+       return Math.max(elementScrollTop, windowScrollTop);
+    };
+
+    const handleScroll = () => {
+      const next = getScrollTop() > 200;
+      setShowScrollTop((prev) => (prev === next ? prev : next));
+    };
+
+    handleScroll();
+
+    targetElement?.addEventListener("scroll", handleScroll, { passive: true });
+    fallbackElement?.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      targetElement?.removeEventListener("scroll", handleScroll);
+      fallbackElement?.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", handleScroll);
+      if (scrollContainerRef.current === targetElement || scrollContainerRef.current === fallbackElement) {
+        scrollContainerRef.current = null;
+      }
+    };
+  }, []);
 
   const newNotes: NostrEvent[] = [];
   const notes: NostrEvent[] = [];
@@ -53,6 +105,21 @@ function GenericNoteTimeline({ timeline }: { timeline: NostrEvent[] }) {
           minHeight={numberCache.get(getEventUID(note))}
         />
       ))}
+      {showScrollTop && (
+        <IconButton
+          aria-label="Scroll to top"
+          icon={<ChevronUpIcon />}
+          onClick={scrollToTop}
+          position="fixed"
+          bottom="calc(var(--safe-bottom-nav) + var(--chakra-space-4))"
+          right="4"
+          zIndex="modal"
+          size="lg"
+          isRound
+          colorScheme="primary"
+          boxShadow="lg"
+        />
+      )}
     </>
   );
 }

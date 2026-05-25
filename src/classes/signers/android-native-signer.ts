@@ -51,11 +51,23 @@ export default class AndroidNativeSigner implements Nip07Interface {
     const result = await (this.permissions.length > 0
       ? NostrSignerPlugin.getPublicKey({ permissions: JSON.stringify(this.permissions) })
       : NostrSignerPlugin.getPublicKey());
+    const key = result.npub;
+    if (!key) throw new Error("Signer did not return a public key");
 
-    const pubkey = nip19.decode(result.npub).data as string;
-    this.pubkey = pubkey;
+    this.pubkey = this.parseReturnedKey(key);
 
     this.connected = true;
+  }
+
+  private parseReturnedKey(key: string): string {
+    const hexRegex = /^[0-9a-f]{64}$/i;
+    if (key.startsWith("npub")) {
+      return nip19.decode(key).data as string;
+    }
+    if (hexRegex.test(key)) {
+      return key.toLowerCase();
+    }
+    throw new Error("Unsupported public key format returned by signer");
   }
 
   async getPublicKey() {

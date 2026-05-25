@@ -38,7 +38,7 @@ const ChatLog = memo(({ messages }: { messages: (Rumor | NostrEvent)[] }) => {
   return (
     <>
       {grouped.map((group) => (
-        <DirectMessageGroup key={group[0].id} messages={group} reverse />
+        <DirectMessageGroup key={group[0].id} messages={group} />
       ))}
     </>
   );

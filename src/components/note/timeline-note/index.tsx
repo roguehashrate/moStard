@@ -13,7 +13,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import type { NostrEvent } from "nostr-tools";
-import { memo } from "react";
+import { memo, type ReactNode } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
 import { getThreadReferences } from "../../../helpers/nostr/event";
@@ -50,6 +50,8 @@ export type TimelineNoteProps = Omit<CardProps, "children"> & {
   hideDrawerButton?: boolean;
   registerIntersectionEntity?: boolean;
   clickable?: boolean;
+  body?: ReactNode;
+  showMore?: boolean;
 };
 export function TimelineNote({
   event,
@@ -59,6 +61,8 @@ export function TimelineNote({
   hideDrawerButton,
   registerIntersectionEntity = true,
   clickable = true,
+  body,
+  showMore = true,
   ...props
 }: TimelineNoteProps) {
   const { showReactions } = useAppSettings();
@@ -102,8 +106,8 @@ export function TimelineNote({
               </Flex>
               {showReplyLine && <ReplyContext event={event} />}
             </CardHeader>
-            <CardBody as={ShowMoreContainer} px="2">
-              <NoteContentWithWarning event={event} />
+            <CardBody as={showMore ? ShowMoreContainer : undefined} px="2">
+              {body ?? <NoteContentWithWarning event={event} />}
             </CardBody>
             <CardFooter p="2" display="flex" gap="2" flexDirection="column" alignItems="flex-start">
               {showReactionsOnNewLine && reactionButtons}

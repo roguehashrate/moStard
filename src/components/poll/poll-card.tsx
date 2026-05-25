@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   ButtonGroup,
   Card,
   CardBody,
@@ -11,9 +12,10 @@ import {
   Progress,
   Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import type { NostrEvent } from "nostr-tools";
-import { memo, useMemo } from "react";
+import { memo, useMemo, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
 import Timestamp from "../timestamp";
@@ -29,8 +31,9 @@ import { ExpandProvider } from "../../providers/local/expanded";
 import { getSharableEventAddress } from "../../services/relay-hints";
 import { useReadRelays } from "../../hooks/use-client-relays";
 import useTimelineLoader from "../../hooks/use-timeline-loader";
+import { useActiveAccount, useEventFactory } from "applesauce-react/hooks";
+import { setContent } from "applesauce-factory/operations/event";
 import ReplyForm from "../../views/thread/components/reply-form";
-import HoverLinkOverlay from "../hover-link-overlay";
 import { ReplyIcon } from "../icons";
 import POWIcon from "../pow/pow-icon";
 import EventTipButton from "../tip/event-tip-button";
@@ -41,6 +44,7 @@ import NotePublishedUsing from "../note/note-published-using";
 import EventShareButton from "../note/timeline-note/components/event-share-button";
 import NoteProxyLink from "../note/timeline-note/components/note-proxy-link";
 import NoteReactions from "../note/timeline-note/components/note-reactions";
+import { usePublishEvent } from "../../providers/global/publish-provider";
 
 function getPollMetadata(event: NostrEvent) {
   const options = event.tags
@@ -71,11 +75,18 @@ function countResponses(responses: NostrEvent[], optionIds: Set<string>) {
   return { counts, total };
 }
 
-function PollCard({ event, showReplyButton }: { event: NostrEvent; showReplyButton?: boolean }) {
+function PollCard({ event, showReplyButton = true }: { event: NostrEvent; showReplyButton?: boolean }) {
   const replyForm = useDisclosure();
   const { showReactions } = useAppSettings();
   const ref = useEventIntersectionRef(event);
   const showReactionsOnNewLine = useBreakpointValue({ base: true, lg: false });
+  const account = useActiveAccount();
+  const factory = useEventFactory();
+  const publish = usePublishEvent();
+  const toast = useToast();
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const [submittingVote, setSubmittingVote] = useState(false);
+  const [hasLocallyVoted, setHasLocallyVoted] = useState(false);
 
   const { options, pollType, hasEnded } = useMemo(() => getPollMetadata(event), [event]);
 
@@ -91,6 +102,61 @@ function PollCard({ event, showReplyButton }: { event: NostrEvent; showReplyButt
   const optionIds = useMemo(() => new Set(options.map((o) => o.id)), [options]);
   const { counts, total } = useMemo(() => countResponses(responses, optionIds), [responses, optionIds]);
 
+  const userVotes = useMemo(() => {
+    if (!account) return [];
+    const ids = new Set<string>();
+    for (const resp of responses) {
+      if (resp.pubkey !== account.pubkey) continue;
+      for (const tag of resp.tags) {
+        if (tag[0] === "response" && tag[1]) ids.add(tag[1]);
+      }
+    }
+    return [...ids];
+  }, [responses, account]);
+
+  const hasVoted = hasLocallyVoted || userVotes.length > 0;
+  const canVote = !!account && !hasEnded;
+
+  const toggleOption = (optionId: string) => {
+    if (!canVote || submittingVote) return;
+    setSelectedOptions((prev) => {
+      if (pollType === "singlechoice") {
+        return prev.includes(optionId) ? [] : [optionId];
+      }
+      return prev.includes(optionId) ? prev.filter((id) => id !== optionId) : [...prev, optionId];
+    });
+  };
+
+  const submitVote = async () => {
+    if (!canVote) {
+      toast({ status: "info", description: "Sign in to vote" });
+      return;
+    }
+    if (selectedOptions.length === 0) {
+      toast({ status: "warning", description: "Select at least one option" });
+      return;
+    }
+    setSubmittingVote(true);
+    try {
+      const tags: string[][] = [
+        ["e", event.id],
+        ["p", event.pubkey],
+        ...selectedOptions.map((id) => ["response", id]),
+      ];
+      for (const relay of relayTags) {
+        if (relay) tags.push(["relay", relay]);
+      }
+      const draft = await factory.build({ kind: 1018, tags }, setContent(""));
+      await publish("Vote in poll", draft);
+      setHasLocallyVoted(true);
+      setSelectedOptions([]);
+    } catch (error) {
+      if (error instanceof Error) toast({ status: "error", description: error.message });
+    } finally {
+      setSubmittingVote(false);
+    }
+  };
+
   const reactionButtons = showReactions && (
     <NoteReactions event={event} flexWrap="wrap" variant="ghost" size="sm" zIndex={1} />
   );
@@ -102,7 +168,6 @@ function PollCard({ event, showReplyButton }: { event: NostrEvent; showReplyButt
       <ExpandProvider>
         <Flex direction="column" borderWidth="0 2px 0 2px" rounded="none" borderColor="var(--chakra-colors-chakra-border-color)">
           <Card variant="unstyled" ref={ref} data-event-id={event.id}>
-            <HoverLinkOverlay as={RouterLink} to={`/n/${getSharableEventAddress(event)}`} />
             <CardHeader p="2">
               <Flex flex="1" gap="2" alignItems="center">
                 <UserAvatarLink pubkey={event.pubkey} size="sm" />
@@ -138,29 +203,76 @@ function PollCard({ event, showReplyButton }: { event: NostrEvent; showReplyButt
                 </Flex>
               )}
 
-              <Flex direction="column" gap="3">
-                {options.map((option) => {
-                  const count = counts[option.id] || 0;
-                  const pct = total > 0 ? Math.round((count / total) * 100) : 0;
-                  return (
-                    <Box key={option.id}>
-                      <Flex justify="space-between" mb="1">
-                        <Text fontSize="sm">{option.label}</Text>
-                        <Text fontSize="sm" fontWeight="bold">
-                          {pct}% ({count})
-                        </Text>
-                      </Flex>
-                      <Progress value={pct} size="lg" colorScheme="primary" borderRadius="md" />
-                    </Box>
-                  );
-                })}
-              </Flex>
+              {canVote && !hasVoted ? (
+                <Flex direction="column" gap="2">
+                  {options.map((option) => (
+                    <Button
+                      key={option.id}
+                      variant={selectedOptions.includes(option.id) ? "solid" : "outline"}
+                      colorScheme="primary"
+                      justifyContent="space-between"
+                      onClick={() => toggleOption(option.id)}
+                      isDisabled={submittingVote}
+                    >
+                      <Text>{option.label}</Text>
+                      {selectedOptions.includes(option.id) && <Text fontSize="sm">Selected</Text>}
+                    </Button>
+                  ))}
+                  <Flex justify="space-between" align="center">
+                    <Text fontSize="xs" color="gray.500">
+                      {pollType === "multiplechoice" ? "Select one or more options" : "Select one option"}
+                    </Text>
+                    <Button
+                      size="sm"
+                      colorScheme="primary"
+                      onClick={submitVote}
+                      isLoading={submittingVote}
+                      isDisabled={selectedOptions.length === 0}
+                    >
+                      Submit vote
+                    </Button>
+                  </Flex>
+                  {!account && (
+                    <Text fontSize="xs" color="gray.500">
+                      Sign in to cast a vote
+                    </Text>
+                  )}
+                </Flex>
+              ) : (
+                <>
+                  <Flex direction="column" gap="3">
+                    {options.map((option) => {
+                      const count = counts[option.id] || 0;
+                      const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+                      const voted = userVotes.includes(option.id);
+                      return (
+                        <Box key={option.id}>
+                          <Flex justify="space-between" mb="1">
+                            <Text fontSize="sm" fontWeight={voted ? "bold" : "normal"}>
+                              {option.label}
+                            </Text>
+                            <Text fontSize="sm" fontWeight="bold">
+                              {pct}% ({count})
+                            </Text>
+                          </Flex>
+                          <Progress value={pct} size="lg" colorScheme={voted ? "green" : "primary"} borderRadius="md" />
+                        </Box>
+                      );
+                    })}
+                  </Flex>
 
-              <Flex gap="2" mt="3" alignItems="center">
-                <Text fontSize="sm" color="gray.500">
-                  {total} vote{total !== 1 ? "s" : ""} · {options.length} option{options.length !== 1 ? "s" : ""}
-                </Text>
-              </Flex>
+                  <Flex gap="2" mt="3" alignItems="center" wrap="wrap">
+                    <Text fontSize="sm" color="gray.500">
+                      {total} vote{total !== 1 ? "s" : ""} · {options.length} option{options.length !== 1 ? "s" : ""}
+                    </Text>
+                    {hasVoted && (
+                      <Text fontSize="sm" color="green.500" fontWeight="bold">
+                        You voted
+                      </Text>
+                    )}
+                  </Flex>
+                </>
+              )}
 
               {responses.some((r) => r.content?.trim()) && (
                 <Flex direction="column" gap="3" mt="4" pt="3" borderTopWidth={1}>

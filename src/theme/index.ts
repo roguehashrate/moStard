@@ -2,6 +2,8 @@ import { extendTheme, Theme, DeepPartial } from "@chakra-ui/react";
 import chroma from "chroma-js";
 
 import defaultTheme from "./default";
+import sapphireTheme from "./sapphire";
+import emeraldTheme from "./emerald";
 import { drawerTheme } from "./drawer";
 import { containerTheme } from "./container";
 
@@ -12,19 +14,26 @@ function pallet(colors: string[]) {
   );
 }
 
+const themeConfigs: Record<string, { primary: string; theme?: object }> = {
+  default: { primary: "#ff6600", theme: defaultTheme },
+  sapphire: { primary: "#2b7be8", theme: sapphireTheme },
+  emerald: { primary: "#24a35a", theme: emeraldTheme },
+};
+
 function getTheme(name: string) {
-  if (name === "default") return defaultTheme;
-  return {};
+  return themeConfigs[name]?.theme ?? {};
 }
 
 export default function buildTheme(themeName: string) {
+  const primary = themeConfigs[themeName]?.primary ?? "#ff6600";
+
   const theme = extendTheme(getTheme(themeName), {
     config: {
       initialColorMode: "system",
       useSystemColorMode: true,
     },
     colors: {
-      primary: pallet(chroma.scale([chroma("#ff6600").brighten(1), chroma("#ff6600").darken(1)]).colors(10)),
+      primary: pallet(chroma.scale([chroma(primary).brighten(1), chroma(primary).darken(1)]).colors(10)),
     },
     components: {
       Container: containerTheme,

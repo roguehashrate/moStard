@@ -78,6 +78,9 @@ const encryptionSalt = await PreferenceSubject.create<Uint8Array>(
 );
 const encryptDecryptionCache = await PreferenceSubject.boolean("encrypt-decryption-cache", true);
 
+// Notifications
+const lastNotificationReadAt = await PreferenceSubject.numberNullable("last-notification-read-at", null);
+
 // Direct messages
 const enableDecryptionCache = await PreferenceSubject.boolean("enable-decryption-cache", true);
 const autoDecryptMessages = await PreferenceSubject.boolean("auto-decrypt-messages", true);
@@ -125,6 +128,9 @@ const localSettings = {
   // Decryption cache
   encryptionSalt,
   encryptDecryptionCache,
+
+  // Notifications
+  lastNotificationReadAt,
 
   // Direct messages
   autoDecryptMessages,

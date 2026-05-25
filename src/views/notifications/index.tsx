@@ -19,6 +19,7 @@ import useLocalStorageDisclosure from "../../hooks/use-localstorage-disclosure";
 import TimelineActionAndStatus from "../../components/timeline/timeline-action-and-status";
 import FocusedContext from "./focused-context";
 import readStatusService from "../../services/read-status";
+import localSettings from "../../services/preferences";
 import useTimelineLocationCacheKey from "../../hooks/timeline/use-timeline-cache-key";
 import useNumberCache from "../../hooks/timeline/use-number-cache";
 import { useTimelineDates } from "../../hooks/timeline/use-timeline-dates";
@@ -207,6 +208,7 @@ function NotificationsPage() {
     for (const event of timelineCache.current) {
       readStatusService.setRead(event.id);
     }
+    localSettings.lastNotificationReadAt.next(dayjs().unix());
   }, []);
 
   return (

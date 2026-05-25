@@ -50,6 +50,8 @@ export default function DisplaySettings() {
         </FormLabel>
         <Select id="theme" {...register("theme")} maxW="sm">
           <option value="default">Default</option>
+          <option value="sapphire">Sapphire</option>
+          <option value="emerald">Emerald</option>
           <option value="chakraui">ChakraUI</option>
         </Select>
       </FormControl>

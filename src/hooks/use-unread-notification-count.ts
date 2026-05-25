@@ -3,6 +3,7 @@ import { Subscription } from "rxjs";
 
 import notifications$ from "../services/notifications";
 import readStatusService from "../services/read-status";
+import localSettings from "../services/preferences";
 
 export default function useUnreadNotificationCount(): number {
   const [count, setCount] = useState(0);
@@ -14,9 +15,12 @@ export default function useUnreadNotificationCount(): number {
       innerSubs.forEach((s) => s.unsubscribe());
       innerSubs.length = 0;
 
+      const lastReadAt = localSettings.lastNotificationReadAt.value;
+
       const recount = () => {
         let c = 0;
         for (const event of events) {
+          if (lastReadAt && event.created_at <= lastReadAt) continue;
           const status = readStatusService.getStatus(event.id).value;
           if (status !== true) c++;
         }

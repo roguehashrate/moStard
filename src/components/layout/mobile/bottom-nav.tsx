@@ -1,10 +1,11 @@
-import { Avatar, Flex, IconButton, useDisclosure } from "@chakra-ui/react";
+import { Avatar, Badge, Box, Flex, IconButton, useDisclosure } from "@chakra-ui/react";
 import { useActiveAccount } from "applesauce-react/hooks";
 import { Link as RouterLink } from "react-router-dom";
 
 import { DirectMessagesIcon, NotesIcon, NotificationsIcon, PlusCircleIcon, SearchIcon } from "../../icons";
 import useRootPadding from "../../../hooks/use-root-padding";
 
+import useUnreadNotificationCount from "../../../hooks/use-unread-notification-count";
 import UserAvatar from "../../user/user-avatar";
 import NavDrawer from "./nav-drawer";
 
@@ -12,6 +13,7 @@ export default function MobileBottomNav() {
   useRootPadding({ bottom: "var(--chakra-sizes-14)" });
   const account = useActiveAccount();
   const drawer = useDisclosure();
+  const unreadCount = useUnreadNotificationCount();
 
   return (
     <>
@@ -60,14 +62,34 @@ export default function MobileBottomNav() {
           size="md"
           to="/messages"
         />
-        <IconButton
-          as={RouterLink}
-          icon={<NotificationsIcon boxSize={6} />}
-          aria-label="Notifications"
-          flexGrow="1"
-          size="md"
-          to="/notifications"
-        />
+        <Box position="relative" flexGrow="1" display="flex">
+          <IconButton
+            as={RouterLink}
+            icon={<NotificationsIcon boxSize={6} />}
+            aria-label="Notifications"
+            flex="1"
+            size="md"
+            to="/notifications"
+          />
+          {unreadCount > 0 && (
+            <Badge
+              position="absolute"
+              top="0"
+              right="0"
+              colorScheme="red"
+              borderRadius="full"
+              fontSize="xs"
+              minW="5"
+              h="5"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              zIndex="1"
+            >
+              {unreadCount > 99 ? "99+" : unreadCount}
+            </Badge>
+          )}
+        </Box>
       </Flex>
       <NavDrawer isOpen={drawer.isOpen} onClose={drawer.onClose} />
     </>

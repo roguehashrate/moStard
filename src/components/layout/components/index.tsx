@@ -6,14 +6,16 @@ import { QuestionIcon } from "@chakra-ui/icons";
 
 import { RelayIcon, SettingsIcon } from "../../icons";
 import Package from "../../icons/package";
+import useFavoriteInternalIds from "../../../hooks/use-favorite-internal-ids";
 import useRecentIds from "../../../hooks/use-recent-ids";
+import useUnreadNotificationCount from "../../../hooks/use-unread-notification-count";
 import { defaultAnonFavoriteApps, defaultUserFavoriteApps, internalApps, internalTools } from "../../navigation/apps";
 import NavItem from "./nav-item";
 import Plus from "../../icons/plus";
-import useFavoriteInternalIds from "../../../hooks/use-favorite-internal-ids";
 
 export default function NavItems() {
   const account = useActiveAccount();
+  const unreadCount = useUnreadNotificationCount();
 
   const defaultApps = account ? defaultUserFavoriteApps : defaultAnonFavoriteApps;
   const { ids: favorites = defaultApps } = useFavoriteInternalIds("apps", "app");
@@ -35,7 +37,13 @@ export default function NavItems() {
   return (
     <>
       {favoriteApps.map((app) => (
-        <NavItem key={app.id} to={app.to} icon={app.icon || QuestionIcon} label={app.title} />
+        <NavItem
+          key={app.id}
+          to={app.to}
+          icon={app.icon || QuestionIcon}
+          label={app.title}
+          badge={app.id === "notifications" ? unreadCount : undefined}
+        />
       ))}
       <NavItem to="/other-stuff" icon={Package} label="All Apps" />
       {recentApps.length > 0 && (

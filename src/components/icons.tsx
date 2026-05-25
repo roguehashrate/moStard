@@ -214,7 +214,6 @@ export const AddReactionIcon = createIcon({
 });
 
 export const EmojiPacksIcon = FaceSmile;
-export const GoalIcon = Target04;
 export const BadgeIcon = Award01;
 
 export const DrawerIcon = LayoutRight;
@@ -242,8 +241,6 @@ export const ChannelsIcon = MessageChatSquare;
 export const ThreadIcon = MessageChatSquare;
 export const ThingsIcon = Package;
 export const TorrentIcon = Magnet;
-export const TrackIcon = Recording02;
-
 export const InboxIcon = Download01;
 export const OutboxIcon = Upload01;
 

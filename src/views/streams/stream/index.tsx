@@ -198,7 +198,6 @@ function MobileStreamPage({ stream }: { stream: NostrEvent }) {
               <StreamHashtags stream={stream} />
             </Flex>
           )}
-          <Heading size="sm">Stream goal</Heading>
           <Divider />
           <StreamerCards pubkey={host} />
         </Flex>

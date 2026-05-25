@@ -112,22 +112,23 @@ pool.relays$
   )
   .subscribe();
 
-// Observable to subscribe to NIP-65 inboxes for legacy messages
+// Observable to subscribe to DM relays for legacy messages (falls back to NIP-65 inboxes)
 export const legacyMessageSubscription = accounts.active$.pipe(
   switchMap((account) => {
     if (!account) return NEVER;
+    const dmRelays = eventStore.model(DirectMessageRelays, account.pubkey).pipe(defined());
     const inboxes = eventStore.model(MailboxesQuery, account.pubkey).pipe(
       defined(),
       map((m) => m?.inboxes),
     );
-    return combineLatest([of(account), inboxes]);
+    return combineLatest([of(account), dmRelays, inboxes]);
   }),
-  // Open a subscription to all relays for incoming messages
-  switchMap(([account, inboxes]) =>
-    pool
-      .subscription(inboxes, { kinds: [kinds.EncryptedDirectMessage], "#p": [account.pubkey] })
-      .pipe(onlyEvents(), mapEventsToStore(eventStore)),
-  ),
+  switchMap(([account, dmRelays, inboxes]) => {
+    const targets = dmRelays && dmRelays.length > 0 ? dmRelays : inboxes;
+    return pool
+      .subscription(targets, { kinds: [kinds.EncryptedDirectMessage], "#p": [account.pubkey] })
+      .pipe(onlyEvents(), mapEventsToStore(eventStore));
+  }),
   // Ingore all updates since subscribes will get the events from the store
   ignoreElements(),
   // Ensure only one subscription is created and keep it alive for 30 seconds after last subscriber

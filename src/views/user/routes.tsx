@@ -8,7 +8,6 @@ import UserPicturePostsTab from "./media-posts";
 
 // other stuff
 const UserStreamsTab = lazy(() => import("./streams"));
-const UserTracksTab = lazy(() => import("./tracks"));
 const UserFilesTab = lazy(() => import("./files"));
 const UserVideosTab = lazy(() => import("./videos"));
 const UserReactionsTab = lazy(() => import("./reactions"));
@@ -32,7 +31,6 @@ export default [
       { path: "articles", Component: UserArticlesTab },
       { path: "media", Component: UserPicturePostsTab },
       { path: "streams", Component: UserStreamsTab },
-      { path: "tracks", Component: UserTracksTab },
       { path: "videos", Component: UserVideosTab },
       { path: "files", Component: UserFilesTab },
       { path: "reactions", Component: UserReactionsTab },

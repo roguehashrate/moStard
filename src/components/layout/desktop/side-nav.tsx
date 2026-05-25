@@ -80,7 +80,6 @@ export default function DesktopSideNav({ ...props }: Omit<FlexProps, "children">
 
         <SupportButton />
 
-        {/* TODO: monthly goal */}
         <Text>Cheers!</Text>
         <Image src="/monero_chan.webp" />
       </Flex>

@@ -9,6 +9,7 @@ import CacheRelayView from "./cache";
 import DisplaySettings from "./display";
 import DnsIdentityView from "./dns-identity";
 import PaymentSettings from "./monero";
+import DmRelaysView from "./dm-relays";
 import MailboxesView from "./mailboxes";
 import MediaServersView from "./media-servers";
 import MessagesSettings from "./messages";
@@ -45,6 +46,7 @@ export default [
         ),
       },
       { path: "mailboxes", Component: MailboxesView },
+      { path: "dm-relays", Component: DmRelaysView },
       { path: "identity", Component: DnsIdentityView },
       { path: "authentication", Component: AuthenticationSettingsView },
       { path: "media-servers", Component: MediaServersView },

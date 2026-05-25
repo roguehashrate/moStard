@@ -1,4 +1,4 @@
-import { memo, ReactNode, useCallback, useMemo } from "react";
+import { memo, ReactNode, useCallback, useEffect, useMemo, useRef } from "react";
 import { Button, Divider, Flex, Text } from "@chakra-ui/react";
 import dayjs, { Dayjs } from "dayjs";
 import { getEventUID } from "nostr-idb";
@@ -186,6 +186,14 @@ function NotificationsPage() {
   const setFocused = useCallback((id: string) => cachedFocus.next(id), [cachedFocus]);
   const focusContext = useMemo(() => ({ id: focused, focus: setFocused }), [focused, setFocused]);
 
+  const timelineCache = useRef<CategorizedEvent[]>([]);
+  useEffect(() => {
+    const sub = notifications$.subscribe((events) => {
+      timelineCache.current = events;
+    });
+    return () => sub.unsubscribe();
+  }, []);
+
   const showReplies = useLocalStorageDisclosure("notifications-show-replies", true);
   const showMentions = useLocalStorageDisclosure("notifications-show-mentions", true);
   const showQuotes = useLocalStorageDisclosure("notifications-show-quotes", true);
@@ -194,6 +202,12 @@ function NotificationsPage() {
   const showUnknown = useLocalStorageDisclosure("notifications-show-unknown", false);
 
   const callback = useTimelineCurserIntersectionCallback(loader);
+
+  const markAllRead = useCallback(() => {
+    for (const event of timelineCache.current) {
+      readStatusService.setRead(event.id);
+    }
+  }, []);
 
   return (
     <VerticalPageLayout>
@@ -208,6 +222,9 @@ function NotificationsPage() {
             showUnknown={showUnknown}
           />
           <PeopleListSelection flexShrink={0} />
+          <Button size="sm" variant="ghost" onClick={markAllRead}>
+            Mark all read
+          </Button>
         </Flex>
       </Flex>
 

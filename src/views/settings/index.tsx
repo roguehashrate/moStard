@@ -18,6 +18,7 @@ import CpuChip01 from "../../components/icons/cpu-chip-01";
 import Database01 from "../../components/icons/database-01";
 import FilterFunnel02 from "../../components/icons/filter-funnel-02";
 import Image01 from "../../components/icons/image-01";
+import Lock01 from "../../components/icons/lock-01";
 import Mail02 from "../../components/icons/mail-02";
 import Share07 from "../../components/icons/share-07";
 import User01 from "../../components/icons/user-01";
@@ -54,6 +55,9 @@ export default function SettingsView() {
           </SimpleNavItem>
           <SimpleNavItem to="/settings/mailboxes" leftIcon={<Mail02 boxSize={5} />}>
             Mailboxes
+          </SimpleNavItem>
+          <SimpleNavItem to="/settings/dm-relays" leftIcon={<Lock01 boxSize={5} />}>
+            DM Relays
           </SimpleNavItem>
           <SimpleNavItem to="/settings/media-servers" leftIcon={<Image01 boxSize={5} />}>
             Media Servers

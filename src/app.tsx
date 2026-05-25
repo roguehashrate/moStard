@@ -19,7 +19,6 @@ import SearchView from "./views/search";
 import NotificationsView from "./views/notifications";
 import OtherStuffView from "./views/other-stuff";
 
-const TracksView = lazy(() => import("./views/tracks"));
 const MapView = lazy(() => import("./views/map"));
 const HashTagView = lazy(() => import("./views/hashtag"));
 
@@ -112,7 +111,6 @@ const router = createBrowserRouter(
         { path: "bookmarks", children: bookmarksRoutes },
         { path: "lists", children: listsRoutes },
         { path: "files", children: filesRoutes },
-        { path: "tracks", Component: TracksView },
         { path: "map", Component: MapView },
         { path: "videos", children: videosRoutes },
         { path: "torrents", children: torrentsRoutes },

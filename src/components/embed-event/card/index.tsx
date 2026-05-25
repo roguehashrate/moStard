@@ -6,7 +6,6 @@ import { lazy, Suspense } from "react";
 
 import { safeDecode } from "../../../helpers/nip19";
 import { LIST_KINDS, SET_KINDS } from "../../../helpers/nostr/lists";
-import { STEMSTR_TRACK_KIND } from "../../../helpers/nostr/stemstr";
 import { TORRENT_COMMENT_KIND, TORRENT_KIND } from "../../../helpers/nostr/torrents";
 import { FLARE_VIDEO_KIND } from "../../../helpers/nostr/video";
 import { WIKI_PAGE_KIND } from "../../../helpers/nostr/wiki";
@@ -35,7 +34,6 @@ const EmbeddedEmojiPack = lazy(() => import("./embedded-emoji-pack"));
 const EmbeddedWikiPage = lazy(() => import("./embedded-wiki-page"));
 const EmbeddedStream = lazy(() => import("./embedded-stream"));
 const EmbeddedStreamMessage = lazy(() => import("./embedded-stream-message"));
-const EmbeddedStemstrTrack = lazy(() => import("./embedded-stemstr-track"));
 const EmbeddedFile = lazy(() => import("./embedded-file"));
 const EmbeddedNip71Video = lazy(() => import("./embedded-nip71-video"));
 const EmbeddedPoll = lazy(() => import("./embedded-poll"));
@@ -62,8 +60,6 @@ export function EmbedEventCard({ event, ...cardProps }: Omit<CardProps, "childre
         return <EmbeddedStreamMessage message={event} {...cardProps} />;
       case kinds.CommunityDefinition:
         return <EmbeddedCommunity community={event} {...cardProps} />;
-      case STEMSTR_TRACK_KIND:
-        return <EmbeddedStemstrTrack track={event} {...cardProps} />;
       case TORRENT_KIND:
         return <EmbeddedTorrent torrent={event} {...cardProps} />;
       case TORRENT_COMMENT_KIND:

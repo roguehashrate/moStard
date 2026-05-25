@@ -13,7 +13,6 @@ import {
   NotificationsIcon,
   SearchIcon,
   TorrentIcon,
-  TrackIcon,
   VideoIcon,
   WikiIcon,
 } from "../icons";
@@ -141,13 +140,6 @@ export const internalApps: App[] = [
     icon: Users01,
     id: "lists",
     to: "/lists",
-  },
-  {
-    title: "Tracks",
-    description: "Browse stemstr tracks",
-    icon: TrackIcon,
-    id: "tracks",
-    to: "/tracks",
   },
   {
     title: "Videos",

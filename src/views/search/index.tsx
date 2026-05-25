@@ -14,7 +14,7 @@ import { useBreakpointValue } from "../../providers/global/breakpoint-provider";
 import PeopleListProvider from "../../providers/local/people-list-provider";
 import { eventCache$ } from "../../services/event-cache";
 import SearchRelayPicker from "./components/search-relay-picker";
-import SearchResults from "./components/search-results";
+import SearchResults, { type SearchType } from "./components/search-results";
 
 export function SearchPage() {
   const eventCache = useObservableEagerState(eventCache$);
@@ -26,11 +26,12 @@ export function SearchPage() {
 
   const [params, setParams] = useSearchParams();
   const searchQuery = params.get("q") || "";
+  const searchType = (params.get("type") as SearchType) || "all";
 
   const relay = params.get("relay") ?? (localSearchSupported ? "" : undefined) ?? searchRelays[0] ?? "";
 
   const { register, handleSubmit, setValue } = useForm({
-    defaultValues: { query: searchQuery, relay },
+    defaultValues: { query: searchQuery, relay, type: searchType },
     mode: "all",
   });
 
@@ -59,6 +60,16 @@ export function SearchPage() {
   const readClipboard = useCallback(async () => {
     handleSearchText(await navigator.clipboard.readText());
   }, []);
+
+  const handleTypeChange = useCallback(
+    (type: SearchType) => {
+      const newParams = new URLSearchParams(params);
+      if (type !== "all") newParams.set("type", type);
+      else newParams.delete("type");
+      setParams(newParams, { replace: true });
+    },
+    [params, setParams],
+  );
 
   // set the search when the form is submitted
   const submit = handleSubmit((values) => {
@@ -92,7 +103,7 @@ export function SearchPage() {
           autoFocus={autoFocusSearch}
           w="auto"
           flexGrow={1}
-          {...register("query", { required: true, minLength: 3 })}
+          {...register("query", { required: true, minLength: 2 })}
           autoComplete="off"
         />
         <SearchRelayPicker {...register("relay")} showLocal />
@@ -109,7 +120,9 @@ export function SearchPage() {
       </Flex>
 
       <Flex direction="column" gap="2">
-        {shouldSearch ? <SearchResults relay={relay} query={searchQuery} /> : null}
+        {shouldSearch ? (
+          <SearchResults relay={relay} query={searchQuery} type={searchType} onTypeChange={handleTypeChange} />
+        ) : null}
       </Flex>
     </VerticalPageLayout>
   );

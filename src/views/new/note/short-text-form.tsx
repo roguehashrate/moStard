@@ -23,8 +23,8 @@ import {
 import ConfirmDialog from "../../../components/confirm-dialog";
 import { type Emoji, getEventPointerFromQTag, processTags } from "applesauce-core/helpers";
 import { useEventFactory, useObservableEagerState } from "applesauce-react/hooks";
-import type { UnsignedEvent } from "nostr-tools";
-import { useRef, useState } from "react";
+import { kinds, type UnsignedEvent } from "nostr-tools";
+import { useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useThrottle } from "react-use";
 
@@ -53,6 +53,7 @@ type FormValues = {
   nsfw: boolean;
   nsfwReason: string;
   difficulty: number;
+  markdown: boolean;
 };
 
 export type ShortTextNoteFormProps = {
@@ -83,6 +84,7 @@ export default function ShortTextNoteForm({
       nsfw: false,
       nsfwReason: "",
       difficulty: noteDifficulty || 0,
+      markdown: false,
     },
     mode: "all",
   });
@@ -93,6 +95,7 @@ export default function ShortTextNoteForm({
   watch("nsfw");
   watch("nsfwReason");
   watch("difficulty");
+  watch("markdown");
 
   // cache form to localStorage
   useCacheForm<FormValues>(cacheFormKey, getValues, reset, formState);
@@ -104,12 +107,26 @@ export default function ShortTextNoteForm({
       contentWarning: values.nsfw ? values.nsfwReason || values.nsfw : false,
     });
 
+    if (values.markdown) {
+      draft.tags = draft.tags.filter((tag) => tag[0] !== "content-type");
+      draft.tags.push(["content-type", "text/markdown"]);
+    }
+
     const unsigned = await factory.stamp(draft);
     setDraft(unsigned);
     return unsigned;
   };
 
   const preview = useThrottle(getValues("content"), 500);
+  const markdownEnabled = watch("markdown");
+  const previewEvent = useMemo(
+    () => ({
+      kind: kinds.ShortTextNote,
+      content: preview || "",
+      tags: markdownEnabled ? [["content-type", "text/markdown"]] : [],
+    }),
+    [preview, markdownEnabled],
+  );
 
   const textAreaRef = useRef<RefType | null>(null);
   const insertText = useTextAreaInsertTextWithForm(textAreaRef, getValues, setValue);
@@ -184,8 +201,7 @@ export default function ShortTextNoteForm({
             <Box borderWidth={1} borderRadius="md" p="2">
               <ErrorBoundary>
                 <ContentSettingsProvider blurMedia={false}>
-                  {/* @ts-ignore */}
-                  <TextNoteContents event={getValues("content")} />
+                  <TextNoteContents event={previewEvent} />
                 </ContentSettingsProvider>
               </ErrorBoundary>
             </Box>
@@ -197,6 +213,17 @@ export default function ShortTextNoteForm({
             <CreatePollButton />
             <InsertReactionButton onSelect={insertText} aria-label="Add emoji" />
           </Flex>
+          <Switch
+            isChecked={markdownEnabled}
+            onChange={(e) =>
+              setValue("markdown", e.target.checked, {
+                shouldDirty: true,
+                shouldTouch: true,
+              })
+            }
+          >
+            Markdown formatting
+          </Switch>
         </Flex>
         <Flex gap="2" alignItems="center" justifyContent="space-between">
           <Button

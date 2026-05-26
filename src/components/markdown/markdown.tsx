@@ -3,7 +3,6 @@ import {
   CodeProps,
   Heading,
   HeadingProps,
-  Image,
   Link,
   LinkProps,
   ListItem,
@@ -30,10 +29,11 @@ import remarkGfm from "remark-gfm";
 import wikiLinkPlugin from "remark-wiki-link";
 
 import { EmbedEventPointerCard } from "../embed-event/card";
+import { EmbeddedImage, renderImageUrl } from "../content/links/image";
 import UserLink from "../user/user-link";
 import WikiLink from "./wiki-link";
 
-const StyledMarkdown = styled(Markdown)`
+export const StyledMarkdown = styled(Markdown)`
   pre > code {
     display: block;
     padding-block: var(--chakra-space-2);
@@ -95,6 +95,14 @@ function A({ children, node, href, ...props }: LinkProps & ExtraProps) {
     );
   }
 
+  if (href) {
+    try {
+      const url = new URL(href);
+      const render = renderImageUrl(url);
+      if (render) return render;
+    } catch (error) {}
+  }
+
   // render nostr: mentions
   if (href?.startsWith("nostr:")) {
     try {
@@ -147,7 +155,25 @@ function CustomCode({ children, node, ...props }: CodeProps & ExtraProps) {
   );
 }
 
-const components: Partial<Components> = {
+function MarkdownImage({ src, alt }: ExtraProps & { src?: string; alt?: string }) {
+  if (!src) return null;
+
+  try {
+    const url = new URL(src);
+    const render = renderImageUrl(url);
+    if (render) return render;
+  } catch (error) {}
+
+  return (
+    <EmbeddedImage
+      src={src}
+      imageProps={{ alt: alt, maxH: ["initial", "35vh"], objectFit: "contain" }}
+      display="inline-block"
+    />
+  );
+}
+
+export const markdownComponents: Partial<Components> = {
   h1: H1,
   h2: H2,
   h3: H3,
@@ -155,7 +181,7 @@ const components: Partial<Components> = {
   h5: H5,
   h6: H6,
   a: A,
-  img: Image,
+  img: MarkdownImage,
   p: P,
   ul: UnorderedList,
   ol: OrderedList,
@@ -170,20 +196,22 @@ const components: Partial<Components> = {
   code: CustomCode,
 };
 
-function urlTransform(url: string) {
+export function markdownUrlTransform(url: string) {
   if (url.startsWith("nostr:")) return url;
   return defaultUrlTransform(url);
 }
+
+export const markdownRemarkPlugins = [remarkGfm, wikiLinkPlugin, remarkNostrMentions] as const;
 
 export const CharkaMarkdown = memo(
   forwardRef<HTMLDivElement, { children: string }>(({ children }, ref) => {
     return (
       <div ref={ref}>
         <StyledMarkdown
-          remarkPlugins={[remarkGfm, wikiLinkPlugin, remarkNostrMentions]}
-          components={components}
+          remarkPlugins={markdownRemarkPlugins}
+          components={markdownComponents}
           skipHtml
-          urlTransform={urlTransform}
+          urlTransform={markdownUrlTransform}
         >
           {children}
         </StyledMarkdown>

@@ -80,8 +80,7 @@ export default function DesktopSideNav({ ...props }: Omit<FlexProps, "children">
 
         <SupportButton />
 
-        <Text>Cheers!</Text>
-        <Image src="/monero_chan.webp" />
+        <Image src="/xmr-beeg-yoshi.png" />
       </Flex>
     </CollapsedContext.Provider>
   );

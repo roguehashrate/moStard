@@ -1,6 +1,6 @@
 import { RelayPool } from "applesauce-relay";
 import { Filter, NostrEvent } from "nostr-tools";
-import { BehaviorSubject, combineLatest, interval, map, merge, Observable, shareReplay, switchMap } from "rxjs";
+import { BehaviorSubject, combineLatest, map, merge, Observable, shareReplay, switchMap } from "rxjs";
 
 import { nanoid } from "nanoid";
 
@@ -8,9 +8,9 @@ export type ConnectionState = "connecting" | "connected" | "retrying" | "dormant
 
 const pool = new RelayPool();
 
-// NOTE: hack to set default relay props
-interval(1000).subscribe(() => {
-  for (const relay of pool.relays.values()) {
+// Set keepAlive on all relays when they are added
+pool.relays$.subscribe((relays) => {
+  for (const relay of relays.values()) {
     relay.keepAlive = 120_000;
   }
 });
@@ -64,7 +64,7 @@ pool.relays$
     ),
   )
   .subscribe((notice) => {
-    notices$.next([...notices$.value, notice]);
+    notices$.next([...notices$.value, notice].slice(-500));
   });
 
 export function nostrRequest(relays: string[], filters: Filter[], id?: string): Observable<NostrEvent> {

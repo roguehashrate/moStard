@@ -72,20 +72,6 @@ export const internalApps: App[] = [
     to: "/search",
   },
   {
-    title: "Streams",
-    description: "Watch live streams",
-    icon: LiveStreamIcon,
-    id: "streams",
-    to: "/streams",
-  },
-  {
-    title: "Groups",
-    description: "Simple relay based groups",
-    icon: Users02,
-    id: "groups",
-    to: "/groups",
-  },
-  {
     title: "Relay Chat",
     description: "Simple dissapearing chat on relays",
     icon: MessageChatCircle,
@@ -192,13 +178,6 @@ export const internalTools: App[] = [
     icon: MapIcon,
     id: "map",
     to: "/map",
-  },
-  {
-    title: "Stream Moderation",
-    description: "A dashboard for moderating streams",
-    icon: LiveStreamIcon,
-    id: "stream-moderation",
-    to: "/streams/moderation",
   },
   {
     title: "noStrudel Users",
@@ -325,7 +304,7 @@ export const externalTools: App[] = [
   },
 ];
 
-export const defaultAnonFavoriteApps = ["notes", "discover", "search", "articles", "streams"];
+export const defaultAnonFavoriteApps = ["notes", "discover", "search", "articles"];
 export const defaultUserFavoriteApps = ["notes", "discover", "notifications", "messages", "search"];
 
 export const allApps = [...internalApps, ...internalTools, ...externalTools];

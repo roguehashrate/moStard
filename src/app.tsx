@@ -31,7 +31,6 @@ import settingsRoutes from "./views/settings/routes";
 import relaysRoutes from "./views/relays/routes";
 import videosRoutes from "./views/videos/routes";
 import picturesRoutes from "./views/pictures/routes";
-import streamsRoutes from "./views/streams/routes";
 import toolsRoutes from "./views/tools/routes";
 import discoveryRoutes from "./views/discovery/routes";
 import wikiRoutes from "./views/wiki/routes";
@@ -42,7 +41,6 @@ import bookmarksRoutes from "./views/bookmarks/routes";
 import articlesRoutes from "./views/articles/routes";
 import torrentsRoutes from "./views/torrents/routes";
 import channelsRoutes from "./views/channels/routes";
-import groupsRoutes from "./views/groups/routes";
 import relayChatRoutes from "./views/relay-chat/routes";
 import badgesRoutes from "./views/badges/routes";
 import emojisRoutes from "./views/emojis/routes";
@@ -97,8 +95,6 @@ const router = createBrowserRouter(
         { path: "relays", children: relaysRoutes },
         { path: "notifications", Component: NotificationsView },
         { path: "pictures", children: picturesRoutes },
-        { path: "streams", children: streamsRoutes },
-        { path: "groups", children: groupsRoutes },
         { path: "relay-chat", children: relayChatRoutes },
         { path: "tools", children: toolsRoutes },
         { path: "discovery", children: discoveryRoutes },

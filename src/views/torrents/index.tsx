@@ -22,7 +22,8 @@ import { useReadRelays } from "../../hooks/use-client-relays";
 function Warning() {
   const navigate = useNavigate();
   const toast = useToast();
-  const account = useActiveAccount()!;
+  const account = useActiveAccount();
+  if (!account) return null;
   const metadata = useUserProfile(account.pubkey);
   const [loading, setLoading] = useState(false);
 

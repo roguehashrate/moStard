@@ -30,6 +30,7 @@ import {
   ExternalLinkIcon,
   KeyIcon,
   LightningIcon,
+  MoneroIcon,
   VerifiedIcon,
 } from "../../../components/icons";
 import Share07 from "../../../components/icons/share-07";
@@ -43,6 +44,7 @@ import { truncatedId } from "../../../helpers/nostr/event";
 import { useSharableProfileId } from "../../../hooks/use-shareable-profile-id";
 import { useUserDNSIdentity } from "../../../hooks/use-user-dns-identity";
 import useUserProfile from "../../../hooks/use-user-profile";
+import useUserXMRMetadata from "../../../hooks/use-user-xmr-metadata";
 import { useAdditionalRelayContext } from "../../../providers/local/additional-relay";
 import { socialGraph$ } from "../../../services/social-graph";
 import DNSIdentityWarning from "../../settings/dns-identity/identity-warning";
@@ -50,7 +52,6 @@ import { QrIconButton } from "../components/share-qr-button";
 import { UserProfileMenu } from "../components/user-profile-menu";
 import UserZapButton from "../components/user-zap-button";
 import UserJoinedChannels from "./user-joined-channels";
-import UserJoinedGroups from "./user-joined-groups";
 import UserPinnedEvents from "./user-pinned-events";
 import UserProfileBadges from "./user-profile-badges";
 import UserRecentEvents from "./user-recent-events";
@@ -63,6 +64,7 @@ export default function UserAboutTab() {
   const colorModal = useDisclosure();
 
   const metadata = useUserProfile({ pubkey, relays: contextRelays });
+  const xmr = useUserXMRMetadata(pubkey);
   const npub = nip19.npubEncode(pubkey);
   const nprofile = useSharableProfileId(pubkey);
   const pubkeyColor = "#" + pubkey.slice(0, 6);
@@ -158,16 +160,17 @@ export default function UserAboutTab() {
           </Link>
         </Flex>
 
+        {xmr.address && (
+          <Flex gap="2">
+            <MoneroIcon boxSize="1.2em" />
+            <Text>{truncatedId(xmr.address, 10)}</Text>
+            <CopyIconButton value={xmr.address} title="Copy Monero address" aria-label="Copy Monero address" size="xs" variant="ghost" />
+          </Flex>
+        )}
         {metadata?.lud16 && (
           <Flex gap="2">
             <LightningIcon boxSize="1.2em" />
-            {/* TODO: monero */}
-            {/* <Link */}
-            {/* 	href={parseLNURLOrAddress(metadata.lud16)?.toString()} */}
-            {/* 	isExternal */}
-            {/* > */}
-            {/* 	{metadata.lud16} */}
-            {/* </Link> */}
+            <Text>{metadata.lud16}</Text>
           </Flex>
         )}
         {nip05URL && (
@@ -250,7 +253,6 @@ export default function UserAboutTab() {
           Nostree page
         </Button>
       </Flex>
-      <UserJoinedGroups pubkey={pubkey} />
       <UserJoinedChannels pubkey={pubkey} />
 
       <Modal isOpen={colorModal.isOpen} onClose={colorModal.onClose} size="2xl">

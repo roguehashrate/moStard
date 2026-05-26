@@ -7,7 +7,6 @@ import UserArticlesTab from "./articles";
 import UserPicturePostsTab from "./media-posts";
 
 // other stuff
-const UserStreamsTab = lazy(() => import("./streams"));
 const UserFilesTab = lazy(() => import("./files"));
 const UserVideosTab = lazy(() => import("./videos"));
 const UserReactionsTab = lazy(() => import("./reactions"));
@@ -30,7 +29,6 @@ export default [
       { path: "notes", Component: UserNotesTab },
       { path: "articles", Component: UserArticlesTab },
       { path: "media", Component: UserPicturePostsTab },
-      { path: "streams", Component: UserStreamsTab },
       { path: "videos", Component: UserVideosTab },
       { path: "files", Component: UserFilesTab },
       { path: "reactions", Component: UserReactionsTab },

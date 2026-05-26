@@ -7,7 +7,6 @@ import FeedsCard from "./components/feeds-card";
 import SearchForm from "./components/search-form";
 import NotificationsCard from "./components/notifications-card";
 import ToolsCard from "./components/tools-card";
-import StreamsCard from "./components/streams-card";
 
 function LaunchpadPage() {
   return (
@@ -19,9 +18,6 @@ function LaunchpadPage() {
       </ErrorBoundary>
       <ErrorBoundary>
         <NotificationsCard w="full" maxH="40vh" />
-      </ErrorBoundary>
-      <ErrorBoundary>
-        <StreamsCard w={{ base: "full", md: "40%" }} />
       </ErrorBoundary>
       <ErrorBoundary>
         <ToolsCard w={{ base: "full", md: "calc(60% - 1rem)" }} />

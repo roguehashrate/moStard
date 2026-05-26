@@ -55,7 +55,6 @@ import UserX01 from "./icons/user-x-01";
 import Plus from "./icons/plus";
 import Bookmark from "./icons/bookmark";
 import BankNote01 from "./icons/bank-note-01";
-import Wallet02 from "./icons/wallet-02";
 import Download01 from "./icons/download-01";
 import Repeat01 from "./icons/repeat-01";
 import ReverseLeft from "./icons/reverse-left";
@@ -233,7 +232,6 @@ export const GhostIcon = createIcon({
 });
 
 export const CashIcon = BankNote01;
-export const WalletIcon = Wallet02;
 export const DownloadIcon = Download01;
 
 export const TranslateIcon = Translate01;

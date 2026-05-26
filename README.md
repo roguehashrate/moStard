@@ -40,7 +40,7 @@ Please <b>don't trust</b> my app with your <b>nsec</b>. Use a dedicated signer i
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Keep PRs small — this is a personal project.
+See [CONTRIBUTING.md](CONTRIBUTING.md). Open to PR's, make sure you explain what your PR is and why.
 
 ## Support
 

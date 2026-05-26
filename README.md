@@ -13,6 +13,14 @@
   <img src="https://img.shields.io/github/last-commit/roguehashrate/moStard" alt="Last Commit">
 </p>
 
+## Screenshots
+
+<p align="center">
+  <img src="screenshots/desktop-mostard.png" width="45%">
+  <img src="screenshots/mobile-mostard1.png" width="20%">
+  <img src="screenshots/mobile-mostard2.png" width="20%">
+</p>
+
 ## Getting Started
 
 ```bash

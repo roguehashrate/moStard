@@ -27,6 +27,7 @@ import { forwardRef, memo } from "react";
 import Markdown, { Components, defaultUrlTransform, ExtraProps } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import wikiLinkPlugin from "remark-wiki-link";
+import type { PluggableList } from "unified";
 
 import { EmbedEventPointerCard } from "../embed-event/card";
 import { EmbeddedImage, renderImageUrl } from "../content/links/image";
@@ -201,14 +202,14 @@ export function markdownUrlTransform(url: string) {
   return defaultUrlTransform(url);
 }
 
-export const markdownRemarkPlugins = [remarkGfm, wikiLinkPlugin, remarkNostrMentions] as const;
+export const markdownRemarkPlugins: PluggableList = [remarkGfm, wikiLinkPlugin, remarkNostrMentions];
 
 export const CharkaMarkdown = memo(
   forwardRef<HTMLDivElement, { children: string }>(({ children }, ref) => {
     return (
       <div ref={ref}>
         <StyledMarkdown
-          remarkPlugins={markdownRemarkPlugins}
+          remarkPlugins={[...markdownRemarkPlugins]}
           components={markdownComponents}
           skipHtml
           urlTransform={markdownUrlTransform}

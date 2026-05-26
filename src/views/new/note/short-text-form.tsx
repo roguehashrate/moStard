@@ -124,6 +124,7 @@ export default function ShortTextNoteForm({
       kind: kinds.ShortTextNote,
       content: preview || "",
       tags: markdownEnabled ? [["content-type", "text/markdown"]] : [],
+      created_at: Math.floor(Date.now() / 1000),
     }),
     [preview, markdownEnabled],
   );

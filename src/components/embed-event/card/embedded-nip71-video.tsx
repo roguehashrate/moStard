@@ -35,9 +35,7 @@ export default function EmbeddedNip71Video({ video, ...props }: Omit<CardProps, 
   return (
     <Card {...props} position="relative">
       <CardBody p="2" as={RouterLink} to={`/videos/${naddr}`} _hover={{ textDecoration: "none" }}>
-        {thumb && (
-          <Image src={thumb} borderRadius="md" maxH="2in" mx="auto" mb="2" />
-        )}
+        {thumb && <Image src={thumb} borderRadius="md" maxH="2in" mx="auto" mb="2" />}
         <Flex gap="2" alignItems="center">
           <UserAvatar pubkey={video.pubkey} size="xs" />
           <Text fontSize="sm" fontWeight="bold">

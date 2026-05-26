@@ -108,9 +108,9 @@ export function renderImageUrl(match: URL) {
   // by making a HEAD request to check content-type
   const verifyImageViaHeadRequest = async (url: URL): Promise<boolean> => {
     try {
-      const response = await fetch(url.toString(), { method: 'HEAD' });
-      const contentType = response.headers.get('content-type');
-      return contentType ? contentType.startsWith('image/') : false;
+      const response = await fetch(url.toString(), { method: "HEAD" });
+      const contentType = response.headers.get("content-type");
+      return contentType ? contentType.startsWith("image/") : false;
     } catch {
       // If HEAD request fails, fall back to default behavior
       return false;
@@ -122,7 +122,7 @@ export function renderImageUrl(match: URL) {
   // This would ideally be implemented with a custom hook that can handle async checks
   const pathname = match.pathname;
   const isHashLikePath = /^[a-f0-9]{64}$/.test(pathname.substring(1)); // Check for 64-char hex string after leading slash
-  
+
   if (isHashLikePath) {
     // For now, we'll assume hash-like paths might be images
     // In the future, we should add a proper async check

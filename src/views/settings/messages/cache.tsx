@@ -100,7 +100,14 @@ function DecryptionCacheStats() {
             </>
           )}
 
-          <Button onClick={clearDialog.onOpen} isLoading={clearing} colorScheme="red" variant="outline" size="sm" me="auto">
+          <Button
+            onClick={clearDialog.onOpen}
+            isLoading={clearing}
+            colorScheme="red"
+            variant="outline"
+            size="sm"
+            me="auto"
+          >
             Clear Cache
           </Button>
           <ConfirmDialog

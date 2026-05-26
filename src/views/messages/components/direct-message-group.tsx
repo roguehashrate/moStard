@@ -54,13 +54,7 @@ function DirectMessageActionsMenu({
 
   return (
     <Menu placement={placement} gutter={4} isLazy>
-      <MenuButton
-        as={IconButton}
-        icon={<DotsHorizontal />}
-        aria-label="Message actions"
-        size="xs"
-        variant="ghost"
-      />
+      <MenuButton as={IconButton} icon={<DotsHorizontal />} aria-label="Message actions" size="xs" variant="ghost" />
       <MenuList fontSize="sm" minW="40">
         {onReply && (
           <MenuItem icon={<ReplyIcon />} onClick={() => onReply(message)}>
@@ -131,7 +125,13 @@ function DirectMessageBubble({
           </Box>
         )}
 
-        <Box position="relative" flex="1" px={isOwn ? 0 : 0} display="flex" justifyContent={isOwn ? "flex-end" : "flex-start"}>
+        <Box
+          position="relative"
+          flex="1"
+          px={isOwn ? 0 : 0}
+          display="flex"
+          justifyContent={isOwn ? "flex-end" : "flex-start"}
+        >
           <Box
             position="relative"
             px="4"
@@ -179,7 +179,14 @@ function DirectMessageBubble({
 
         {isOwn && (
           <Box w="8" display={isGroupStart ? "block" : "none"}>
-            <UserAvatarLink pubkey={message.pubkey} size="sm" mb="auto" flexShrink={0} border="2px solid" borderColor="primary.200" />
+            <UserAvatarLink
+              pubkey={message.pubkey}
+              size="sm"
+              mb="auto"
+              flexShrink={0}
+              border="2px solid"
+              borderColor="primary.200"
+            />
           </Box>
         )}
       </Flex>
@@ -213,7 +220,15 @@ function DirectMessageGroup({
           <Box key={message.id}>
             {showDate && (
               <Flex justify="center" my="3">
-                <Text fontSize="xs" color="gray.600" bg="whiteAlpha.700" px="4" py="1" borderRadius="full" boxShadow="sm">
+                <Text
+                  fontSize="xs"
+                  color="gray.600"
+                  bg="whiteAlpha.700"
+                  px="4"
+                  py="1"
+                  borderRadius="full"
+                  boxShadow="sm"
+                >
                   {formatDateSeparator(message.created_at)}
                 </Text>
               </Flex>

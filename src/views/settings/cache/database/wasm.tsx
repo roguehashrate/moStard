@@ -80,12 +80,9 @@ export default function WasmDatabasePage() {
     return worker.query(["REQ", "export", {}]);
   }, [worker]);
 
-  const deleteKind = useCallback(
-    async (kind: string) => {
-      setDeletingKind(kind);
-    },
-    [],
-  );
+  const deleteKind = useCallback(async (kind: string) => {
+    setDeletingKind(kind);
+  }, []);
 
   const confirmDeleteKind = useCallback(async () => {
     if (!worker || !deletingKind) return;

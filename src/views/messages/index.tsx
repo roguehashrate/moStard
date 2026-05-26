@@ -122,13 +122,7 @@ function ConversationCard({ index, style, data }: ListChildComponentProps<(Legac
           </Flex>
           {preview}
         </Stack>
-        <Icon
-          as={Lightning01}
-          color={isLegacy ? "yellow.400" : "primary.400"}
-          boxSize="5"
-          opacity={0.7}
-          aria-hidden
-        />
+        <Icon as={Lightning01} color={isLegacy ? "yellow.400" : "primary.400"} boxSize="5" opacity={0.7} aria-hidden />
         <LinkOverlay as={RouterLink} to={linkTarget} />
       </Flex>
     </LinkBox>
@@ -194,7 +188,10 @@ function Groups() {
         flex={1}
         overflow="hidden"
         position="relative"
-        bgGradient={useColorModeValue("linear(to-b, gray.50, gray.100)", "linear(to-b, blackAlpha.700, blackAlpha.900)" )}
+        bgGradient={useColorModeValue(
+          "linear(to-b, gray.50, gray.100)",
+          "linear(to-b, blackAlpha.700, blackAlpha.900)",
+        )}
         px={{ base: "2", md: "4" }}
         py={{ base: "4", md: "6" }}
       >

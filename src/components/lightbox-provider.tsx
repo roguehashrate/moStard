@@ -103,14 +103,7 @@ function EventSlideHeader({ event, ...props }: { event: NostrEvent } & Omit<Flex
   const encoded = useMemo(() => getSharableEventAddress(event), [event]);
 
   return (
-    <Flex
-      gap="2"
-      alignItems="center"
-      px="2"
-      pb="2"
-      pt="calc(var(--chakra-space-2) + var(--safe-top))"
-      {...props}
-    >
+    <Flex gap="2" alignItems="center" px="2" pb="2" pt="calc(var(--chakra-space-2) + var(--safe-top))" {...props}>
       <UserAvatarLink pubkey={event.pubkey} size={["xs", "sm"]} />
       <UserLink pubkey={event.pubkey} isTruncated fontWeight="bold" fontSize="lg" />
       <Spacer />

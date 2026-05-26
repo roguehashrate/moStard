@@ -59,7 +59,10 @@ function DirectMessageChatPage({ pubkey }: { pubkey: string }) {
   const navigate = useNavigate();
   const location = useLocation();
   const isMobile = useBreakpointValue({ base: true, md: false });
-  const chatBackground = useColorModeValue("linear(to-b, #eef2ff, #ffffff)", "linear(to-b, rgba(20, 22, 34, 0.94), rgba(25, 27, 38, 0.96))");
+  const chatBackground = useColorModeValue(
+    "linear(to-b, #eef2ff, #ffffff)",
+    "linear(to-b, rgba(20, 22, 34, 0.94), rgba(25, 27, 38, 0.96))",
+  );
   const composerSurface = useColorModeValue("rgba(255, 255, 255, 0.92)", "rgba(26, 28, 38, 0.92)");
   const composerBorder = useColorModeValue("blackAlpha.100", "whiteAlpha.100");
   const headerMetaColor = useColorModeValue("gray.600", "gray.400");
@@ -160,13 +163,7 @@ function DirectMessageChatPage({ pubkey }: { pubkey: string }) {
 
   return (
     <IntersectionObserverProvider callback={callback}>
-      <Flex
-        direction="column"
-        flex={1}
-        minH="100%"
-        bgGradient={chatBackground}
-        position="relative"
-      >
+      <Flex direction="column" flex={1} minH="100%" bgGradient={chatBackground} position="relative">
         <Flex
           as="header"
           align="center"

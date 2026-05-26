@@ -32,33 +32,67 @@ const WALLET_APPS: Record<string, WalletApp> = {
 
 export const PAYTO_TYPES: Record<string, PaytoType> = {
   monero: {
-    label: "Monero", symbol: "XMR", category: "crypto", uriScheme: "monero:", coingeckoId: "monero",
+    label: "Monero",
+    symbol: "XMR",
+    category: "crypto",
+    uriScheme: "monero:",
+    coingeckoId: "monero",
     walletOpen: { scheme: "monero", walletApps: ["cakewallet", "ledger"] },
   },
   bitcoin: {
-    label: "Bitcoin", symbol: "BTC", category: "crypto", uriScheme: "bitcoin:", coingeckoId: "bitcoin",
+    label: "Bitcoin",
+    symbol: "BTC",
+    category: "crypto",
+    uriScheme: "bitcoin:",
+    coingeckoId: "bitcoin",
     walletOpen: { scheme: "bitcoin", walletApps: ["cakewallet", "ledger"] },
   },
-  lightning: { label: "Lightning", symbol: "⚡", category: "bitcoin-layer", uriScheme: "lightning:", coingeckoId: "bitcoin" },
+  lightning: {
+    label: "Lightning",
+    symbol: "⚡",
+    category: "bitcoin-layer",
+    uriScheme: "lightning:",
+    coingeckoId: "bitcoin",
+  },
   nano: { label: "Nano", symbol: "XNO", category: "crypto", uriScheme: "nano:", coingeckoId: "nano" },
   ethereum: {
-    label: "Ethereum", symbol: "ETH", category: "crypto", uriScheme: "ethereum:", coingeckoId: "ethereum",
+    label: "Ethereum",
+    symbol: "ETH",
+    category: "crypto",
+    uriScheme: "ethereum:",
+    coingeckoId: "ethereum",
     walletOpen: { scheme: "ethereum", walletApps: ["cakewallet", "ledger"] },
   },
   litecoin: {
-    label: "Litecoin", symbol: "LTC", category: "crypto", uriScheme: "litecoin:", coingeckoId: "litecoin",
+    label: "Litecoin",
+    symbol: "LTC",
+    category: "crypto",
+    uriScheme: "litecoin:",
+    coingeckoId: "litecoin",
     walletOpen: { scheme: "litecoin", walletApps: ["cakewallet", "ledger"] },
   },
   dogecoin: {
-    label: "Dogecoin", symbol: "DOGE", category: "crypto", uriScheme: "dogecoin:", coingeckoId: "dogecoin",
+    label: "Dogecoin",
+    symbol: "DOGE",
+    category: "crypto",
+    uriScheme: "dogecoin:",
+    coingeckoId: "dogecoin",
     walletOpen: { scheme: "dogecoin", walletApps: ["cakewallet", "ledger"] },
   },
   "bitcoin-cash": {
-    label: "Bitcoin Cash", symbol: "BCH", category: "crypto", uriScheme: "bitcoincash:", coingeckoId: "bitcoin-cash",
+    label: "Bitcoin Cash",
+    symbol: "BCH",
+    category: "crypto",
+    uriScheme: "bitcoincash:",
+    coingeckoId: "bitcoin-cash",
     walletOpen: { scheme: "bitcoincash", walletApps: ["cakewallet", "ledger"] },
   },
   solana: {
-    label: "Solana", symbol: "SOL", category: "crypto", uriScheme: "solana:", coingeckoId: "solana",
+    label: "Solana",
+    symbol: "SOL",
+    category: "crypto",
+    uriScheme: "solana:",
+    coingeckoId: "solana",
     walletOpen: { scheme: "solana", walletApps: ["cakewallet", "ledger"] },
   },
   paypal: { label: "PayPal", symbol: "PayPal", category: "fiat", uriScheme: "paypal:" },
@@ -66,7 +100,7 @@ export const PAYTO_TYPES: Record<string, PaytoType> = {
   cashapp: { label: "Cash App", symbol: "CashApp", category: "fiat", uriScheme: "cashapp:" },
   "ko-fi": { label: "Ko-fi", symbol: "Ko-fi", category: "service", uriScheme: "kofi:" },
   patreon: { label: "Patreon", symbol: "Patreon", category: "tip", uriScheme: "patreon:" },
-  "buymeacoffee": { label: "Buy Me a Coffee", symbol: "BMC", category: "tip", uriScheme: "buymeacoffee:" },
+  buymeacoffee: { label: "Buy Me a Coffee", symbol: "BMC", category: "tip", uriScheme: "buymeacoffee:" },
 };
 
 const ALIAS_MAP: Record<string, string> = {
@@ -187,9 +221,7 @@ export function resolveWalletDeepLink(paytoType: string, address: string, appId:
   const app = WALLET_APPS[appId];
   if (!app) return null;
   const scheme = info.walletOpen.scheme;
-  const href = app.uriTemplate
-    .replace("{coinScheme}", scheme)
-    .replace("{authority}", encodeURIComponent(address));
+  const href = app.uriTemplate.replace("{coinScheme}", scheme).replace("{authority}", encodeURIComponent(address));
   return href;
 }
 

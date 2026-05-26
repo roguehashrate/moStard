@@ -68,15 +68,7 @@ export default function QrCodeSvg({
       </defs>
       <rect width="100%" height="100%" fill={lightColor} />
       <path d={drawSvgPath(qrCode, border)} fill="url(#orangeToBlackGradient)" />
-      {logoUrl && (
-        <image
-          href={logoUrl}
-          x={imageX}
-          y={imageY}
-          width={imageSize}
-          height={imageSize}
-        />
-      )}
+      {logoUrl && <image href={logoUrl} x={imageX} y={imageY} width={imageSize} height={imageSize} />}
     </Box>
   );
 }

@@ -31,7 +31,7 @@ export default function SimpleParentView({
   const subPathMatch = useMatch(`${path}/*`);
   const isMobile = useBreakpointValue({ base: true, lg: false });
   const showMenu = !isMobile || !!exact;
-  const showOutlet = children ? (!exact && !!subPathMatch) : true;
+  const showOutlet = children ? !exact && !!subPathMatch : true;
 
   const floating = useBreakpointValue({ base: false, lg: true });
   const ref = useScrollRestoreRef("parent");

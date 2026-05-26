@@ -53,7 +53,9 @@ const MARKDOWN_PATTERNS = [
 
 function hasMarkdownTag(tags?: (string | undefined)[][]): boolean {
   if (!Array.isArray(tags)) return false;
-  return tags.some((tag) => tag[0] === "content-type" && typeof tag[1] === "string" && tag[1].toLowerCase().includes("markdown"));
+  return tags.some(
+    (tag) => tag[0] === "content-type" && typeof tag[1] === "string" && tag[1].toLowerCase().includes("markdown"),
+  );
 }
 
 function looksLikeMarkdown(content: string | undefined): boolean {
@@ -71,7 +73,7 @@ function isMarkdownContent(event: NostrEvent | EventTemplate | string): boolean 
   const tags = typeof event === "string" ? undefined : (event as EventTemplate).tags;
   if (hasMarkdownTag(tags)) return true;
 
-  const content = typeof event === "string" ? event : event.content ?? "";
+  const content = typeof event === "string" ? event : (event.content ?? "");
   return looksLikeMarkdown(content);
 }
 
@@ -109,7 +111,7 @@ export const TextNoteContents = React.memo(
       cacheKey: TextNoteContentSymbol,
     });
 
-    const rawContent = typeof event === "string" ? event : event.content ?? "";
+    const rawContent = typeof event === "string" ? event : (event.content ?? "");
 
     return (
       <MediaOwnerProvider owner={(event as NostrEvent).pubkey as string | undefined}>

@@ -229,7 +229,12 @@ export default function InputStep({
     <Flex gap="4" direction="column">
       {showEmbed && event && <EmbedEventCard event={event} {...embedProps} />}
 
-      <InvoiceModalContent address={address} amount={watch("cryptoAmount")} paymentType={paymentType} onPaid={() => {}} />
+      <InvoiceModalContent
+        address={address}
+        amount={watch("cryptoAmount")}
+        paymentType={paymentType}
+        onPaid={() => {}}
+      />
 
       {defaultAmount ? null : (
         <>

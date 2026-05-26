@@ -1,16 +1,19 @@
 <p align="center">
-  <img src="public/logo_bg.png" alt="Project Logo" width="21%">
+  <img src="public/logo_bg.png" alt="moStard" width="21%">
 </p>
 
-# moStard
+<h1 align="center">moStard</h1>
 
-moStard is a Monero first [nostr](https://github.com/nostr-protocol) application.
+<p align="center">
+  <em>A Monero-first nostr client.</em>
+</p>
 
-## Please don't trust my app with your nsec
+<p align="center">
+  <img src="https://img.shields.io/github/license/roguehashrate/moStard" alt="License">
+  <img src="https://img.shields.io/github/last-commit/roguehashrate/moStard" alt="Last Commit">
+</p>
 
-While logging in with a secret key is supported, it's best to login with [Amber](https://github.com/greenart7c3/Amber) on android.
-
-## Running locally on desktop
+## Getting Started
 
 ```bash
 git clone https://github.com/roguehashrate/moStard.git
@@ -19,10 +22,17 @@ pnpm install
 pnpm run dev
 ```
 
+## Security
+
+Please <b>don't trust</b> my app with your <b>nsec</b>. Use a dedicated signer instead:
+
+- **Android** — [Amber](https://github.com/greenart7c3/Amber)
+- **Chrome** — [Ditto Extension](https://chromewebstore.google.com/detail/ditto-extension/fbiegkepanmjielbemkhieckmlckiagi) or [nos2x](https://chromewebstore.google.com/detail/nos2x/kpgefcfmnafjgpblomihpgmejjdanjjp)
+- **Firefox** — [nos2x-fox](https://addons.mozilla.org/en-US/firefox/addon/nos2x-fox/)
+
 ## Contributing
 
-This is only a personal project, so if you open any PRs please keep them small. thanks
-
+See [CONTRIBUTING.md](CONTRIBUTING.md). Keep PRs small — this is a personal project.
 
 ## Support
 

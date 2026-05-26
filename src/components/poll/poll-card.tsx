@@ -47,9 +47,7 @@ import NoteReactions from "../note/timeline-note/components/note-reactions";
 import { usePublishEvent } from "../../providers/global/publish-provider";
 
 function getPollMetadata(event: NostrEvent) {
-  const options = event.tags
-    .filter((t) => t[0] === "option" && t[1] && t[2])
-    .map((t) => ({ id: t[1], label: t[2] }));
+  const options = event.tags.filter((t) => t[0] === "option" && t[1] && t[2]).map((t) => ({ id: t[1], label: t[2] }));
 
   const pollType = event.tags.find((t) => t[0] === "polltype")?.[1] || "singlechoice";
   const endsAt = event.tags.find((t) => t[0] === "endsAt")?.[1];
@@ -93,11 +91,10 @@ function PollCard({ event, showReplyButton = true }: { event: NostrEvent; showRe
   const relayTags = event.tags.filter((t) => t[0] === "relay").map((t) => t[1]);
   const readRelays = useReadRelays(relayTags);
 
-  const { timeline: responses } = useTimelineLoader(
-    `poll-${event.id}`,
-    readRelays,
-    { kinds: [1018], "#e": [event.id] },
-  );
+  const { timeline: responses } = useTimelineLoader(`poll-${event.id}`, readRelays, {
+    kinds: [1018],
+    "#e": [event.id],
+  });
 
   const optionIds = useMemo(() => new Set(options.map((o) => o.id)), [options]);
   const { counts, total } = useMemo(() => countResponses(responses, optionIds), [responses, optionIds]);
@@ -138,11 +135,7 @@ function PollCard({ event, showReplyButton = true }: { event: NostrEvent; showRe
     }
     setSubmittingVote(true);
     try {
-      const tags: string[][] = [
-        ["e", event.id],
-        ["p", event.pubkey],
-        ...selectedOptions.map((id) => ["response", id]),
-      ];
+      const tags: string[][] = [["e", event.id], ["p", event.pubkey], ...selectedOptions.map((id) => ["response", id])];
       for (const relay of relayTags) {
         if (relay) tags.push(["relay", relay]);
       }
@@ -166,7 +159,12 @@ function PollCard({ event, showReplyButton = true }: { event: NostrEvent; showRe
   return (
     <ContentSettingsProvider event={event}>
       <ExpandProvider>
-        <Flex direction="column" borderWidth="0 2px 0 2px" rounded="none" borderColor="var(--chakra-colors-chakra-border-color)">
+        <Flex
+          direction="column"
+          borderWidth="0 2px 0 2px"
+          rounded="none"
+          borderColor="var(--chakra-colors-chakra-border-color)"
+        >
           <Card variant="unstyled" ref={ref} data-event-id={event.id}>
             <CardHeader p="2">
               <Flex flex="1" gap="2" alignItems="center">

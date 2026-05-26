@@ -288,10 +288,7 @@ export default function ProfileEditForm({
           </Flex>
           {fields.map((field, index) => (
             <Flex key={field.id} gap="2" alignItems="flex-start">
-              <Select
-                flex={1}
-                {...register(`paymentTargets.${index}.type`)}
-              >
+              <Select flex={1} {...register(`paymentTargets.${index}.type`)}>
                 {PAYTO_TYPE_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
                     {opt.label}
@@ -375,7 +372,13 @@ export default function ProfileEditForm({
         <Button onClick={() => reset()} isDisabled={loading} flexGrow={1}>
           Reset
         </Button>
-        <Button colorScheme="primary" type="submit" isLoading={loading} loadingText={uploadStatus || "Saving..."} flexGrow={1}>
+        <Button
+          colorScheme="primary"
+          type="submit"
+          isLoading={loading}
+          loadingText={uploadStatus || "Saving..."}
+          flexGrow={1}
+        >
           Save Profile
         </Button>
       </Flex>

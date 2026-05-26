@@ -90,7 +90,7 @@ export default function ProfileSettingsView() {
     const payto = profile.payto;
     if (Array.isArray(payto)) {
       for (const entry of payto) {
-        const uri = typeof entry === "string" ? entry : (entry as Record<string, unknown>)?.uri as string | undefined;
+        const uri = typeof entry === "string" ? entry : ((entry as Record<string, unknown>)?.uri as string | undefined);
         if (uri) {
           const parsed = parsePaytoUri(uri);
           if (parsed && parsed.authority !== "monero") {

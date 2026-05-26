@@ -12,7 +12,13 @@ export default function UserZapButton({ pubkey, ...props }: { pubkey: string } &
 
   return (
     <>
-      <IconButton onClick={onOpen} aria-label="Tip User" title="Tip User" icon={<PaytoIcon type={primary.type} />} {...props} />
+      <IconButton
+        onClick={onOpen}
+        aria-label="Tip User"
+        title="Tip User"
+        icon={<PaytoIcon type={primary.type} />}
+        {...props}
+      />
       {isOpen && <TipModal isOpen={isOpen} onClose={onClose} pubkey={pubkey} />}
     </>
   );

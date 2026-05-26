@@ -13,13 +13,7 @@ export default function HighlightCard({ event, ...props }: Omit<CardProps, "chil
   return (
     <Card {...props}>
       <CardBody p="4">
-        <Box
-          borderLeft="4px solid"
-          borderColor="green.400"
-          pl="4"
-          py="2"
-          mb="3"
-        >
+        <Box borderLeft="4px solid" borderColor="green.400" pl="4" py="2" mb="3">
           <Text whiteSpace="pre-wrap" fontStyle="italic">
             {highlightedText}
           </Text>

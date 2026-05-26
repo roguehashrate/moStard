@@ -195,7 +195,9 @@ export default function SendMessageForm({
 
       // Send legacy direct messages to both users' DM relays, fallback to NIP-65 inboxes
       for (let event of events) {
-        publishes.push(await publish("Send message", event, mergeRelaySets(otherDmTargets, selfDmTargets), false, true));
+        publishes.push(
+          await publish("Send message", event, mergeRelaySets(otherDmTargets, selfDmTargets), false, true),
+        );
       }
     } else {
       if (!inboxes) throw new Error("Missing both users inboxes");

@@ -21,10 +21,7 @@ const symbolMap: Record<string, string> = {
   nano: "Ӿ",
 };
 
-export default function PaytoIcon({
-  type,
-  boxSize = 4,
-}: { type: string; boxSize?: string | number }) {
+export default function PaytoIcon({ type, boxSize = 4 }: { type: string; boxSize?: string | number }) {
   const logoUrl = getPaytoLogoUrl(type);
 
   if (logoUrl) {

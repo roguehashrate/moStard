@@ -72,7 +72,15 @@ export default function SignupView() {
   };
 
   return (
-    <Flex direction="column" alignItems="center" gap="2" w="full" px="4" pt="calc(var(--chakra-space-10) + var(--safe-top))" pb="10">
+    <Flex
+      direction="column"
+      alignItems="center"
+      gap="2"
+      w="full"
+      px="4"
+      pt="calc(var(--chakra-space-10) + var(--safe-top))"
+      pb="10"
+    >
       {renderStep()}
     </Flex>
   );

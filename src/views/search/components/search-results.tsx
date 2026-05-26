@@ -1,4 +1,19 @@
-import { Alert, AlertDescription, AlertIcon, AlertTitle, Box, Flex, Heading, Spinner, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from "@chakra-ui/react";
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  Box,
+  Flex,
+  Heading,
+  Spinner,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Text,
+} from "@chakra-ui/react";
 import { mapEventsToStore } from "applesauce-core";
 import { LRU } from "applesauce-core/helpers";
 import { onlyEvents } from "applesauce-relay";

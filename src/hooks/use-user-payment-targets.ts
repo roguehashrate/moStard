@@ -19,21 +19,39 @@ import {
 // ── Catalog ──
 
 const KIND0_CRYPTO_ADDRESSES: Record<string, string> = {
-  monero: "monero", xmr: "monero",
-  bitcoin: "bitcoin", btc: "bitcoin",
-  ethereum: "ethereum", eth: "ethereum",
-  litecoin: "litecoin", ltc: "litecoin",
-  dogecoin: "dogecoin", doge: "dogecoin",
-  nano: "nano", xno: "nano",
-  solana: "solana", sol: "solana",
-  "bitcoin-cash": "bitcoin-cash", bch: "bitcoin-cash",
+  monero: "monero",
+  xmr: "monero",
+  bitcoin: "bitcoin",
+  btc: "bitcoin",
+  ethereum: "ethereum",
+  eth: "ethereum",
+  litecoin: "litecoin",
+  ltc: "litecoin",
+  dogecoin: "dogecoin",
+  doge: "dogecoin",
+  nano: "nano",
+  xno: "nano",
+  solana: "solana",
+  sol: "solana",
+  "bitcoin-cash": "bitcoin-cash",
+  bch: "bitcoin-cash",
 };
 
 const ROOT_FIELDS: Record<string, string> = {
-  monero: "monero", bitcoin: "bitcoin", ethereum: "ethereum",
-  litecoin: "litecoin", dogecoin: "dogecoin", nano: "nano", solana: "solana",
-  bip: "bitcoin", bip21: "bitcoin", bip47: "bitcoin", bip270: "bitcoin",
-  sp: "bitcoin", silentpayment: "bitcoin", "silent-payment": "bitcoin",
+  monero: "monero",
+  bitcoin: "bitcoin",
+  ethereum: "ethereum",
+  litecoin: "litecoin",
+  dogecoin: "dogecoin",
+  nano: "nano",
+  solana: "solana",
+  bip: "bitcoin",
+  bip21: "bitcoin",
+  bip47: "bitcoin",
+  bip270: "bitcoin",
+  sp: "bitcoin",
+  silentpayment: "bitcoin",
+  "silent-payment": "bitcoin",
 };
 
 // ── About coin line parser ──
@@ -85,10 +103,7 @@ function parseAboutCoinLines(about: string): PaymentTarget[] {
 
 // ── Extract from a raw kind-0 event ──
 
-function extractTargetsFromEvent(
-  event: Event | undefined,
-  enableAlternativePayments: boolean,
-): PaymentTarget[] {
+function extractTargetsFromEvent(event: Event | undefined, enableAlternativePayments: boolean): PaymentTarget[] {
   const targets: PaymentTarget[] = [];
   const seen = new Set<string>();
 

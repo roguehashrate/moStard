@@ -34,11 +34,7 @@ type PaymentTargetDialogProps = {
   onClose: () => void;
 } & Omit<ModalProps, "children">;
 
-export default function PaymentTargetDialog({
-  target,
-  onClose,
-  ...props
-}: PaymentTargetDialogProps) {
+export default function PaymentTargetDialog({ target, onClose, ...props }: PaymentTargetDialogProps) {
   const isMobile = useBreakpointValue({ base: true, md: false });
   const showQr = useDisclosure({ isOpen: true });
   const [payingApp, setPayingApp] = useState(false);
@@ -51,9 +47,7 @@ export default function PaymentTargetDialog({
   const walletAppIds = info?.walletOpen?.walletApps ?? [];
 
   const payWithApp = async () => {
-    const href = selectedApp
-      ? resolveWalletDeepLink(target.type, target.address, selectedApp)
-      : nativeUri;
+    const href = selectedApp ? resolveWalletDeepLink(target.type, target.address, selectedApp) : nativeUri;
     if (!href) return;
 
     setPayingApp(true);

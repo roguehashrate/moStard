@@ -43,11 +43,7 @@ function DmRelaysPage() {
   });
 
   return (
-    <SimpleView
-      title="DM Relays"
-      actions={event && <DebugEventButton event={event} size="sm" ml="auto" />}
-      maxW="4xl"
-    >
+    <SimpleView title="DM Relays" actions={event && <DebugEventButton event={event} size="sm" ml="auto" />} maxW="4xl">
       <Text fontStyle="italic" mt="-2">
         DM relays are used to send and receive direct messages. They are defined in{" "}
         <Link

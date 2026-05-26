@@ -49,9 +49,9 @@ function GenericNoteTimeline({ timeline }: { timeline: NostrEvent[] }) {
     scrollContainerRef.current = targetElement ?? fallbackElement;
 
     const getScrollTop = () => {
-       const elementScrollTop = targetElement?.scrollTop ?? fallbackElement?.scrollTop ?? 0;
-       const windowScrollTop = window.scrollY ?? fallbackElement?.scrollTop ?? document.documentElement.scrollTop ?? 0;
-       return Math.max(elementScrollTop, windowScrollTop);
+      const elementScrollTop = targetElement?.scrollTop ?? fallbackElement?.scrollTop ?? 0;
+      const windowScrollTop = window.scrollY ?? fallbackElement?.scrollTop ?? document.documentElement.scrollTop ?? 0;
+      return Math.max(elementScrollTop, windowScrollTop);
     };
 
     const handleScroll = () => {

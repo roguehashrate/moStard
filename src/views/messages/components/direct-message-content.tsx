@@ -133,7 +133,9 @@ export default function DirectMessageContent({
 
   return (
     <DecryptPlaceholder message={message as NostrEvent}>
-      {(text) => <LegacyDirectMessageContent message={message as NostrEvent} text={text} children={children} {...props} />}
+      {(text) => (
+        <LegacyDirectMessageContent message={message as NostrEvent} text={text} children={children} {...props} />
+      )}
     </DecryptPlaceholder>
   );
 }

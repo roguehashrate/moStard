@@ -36,7 +36,10 @@ export default function CreatePollButton() {
   const factory = useEventFactory();
 
   const [question, setQuestion] = useState("");
-  const [options, setOptions] = useState([{ id: randomId(), label: "" }, { id: randomId(), label: "" }]);
+  const [options, setOptions] = useState([
+    { id: randomId(), label: "" },
+    { id: randomId(), label: "" },
+  ]);
   const [pollType, setPollType] = useState<"singlechoice" | "multiplechoice">("singlechoice");
   const [hasEndTime, setHasEndTime] = useState(false);
   const [endDate, setEndDate] = useState("");
@@ -52,7 +55,10 @@ export default function CreatePollButton() {
 
   const reset = () => {
     setQuestion("");
-    setOptions([{ id: randomId(), label: "" }, { id: randomId(), label: "" }]);
+    setOptions([
+      { id: randomId(), label: "" },
+      { id: randomId(), label: "" },
+    ]);
     setPollType("singlechoice");
     setHasEndTime(false);
     setEndDate("");
@@ -72,10 +78,7 @@ export default function CreatePollButton() {
         endsAt = Math.floor(new Date(dateStr).getTime() / 1000);
       }
 
-      const tags: string[][] = [
-        ...validOptions.map((o) => ["option", o.id, o.label.trim()]),
-        ["polltype", pollType],
-      ];
+      const tags: string[][] = [...validOptions.map((o) => ["option", o.id, o.label.trim()]), ["polltype", pollType]];
       if (endsAt) tags.push(["endsAt", String(endsAt)]);
 
       const draft = await factory.build(
@@ -138,7 +141,10 @@ export default function CreatePollButton() {
 
                 <FormControl>
                   <FormLabel>Poll type</FormLabel>
-                  <Select value={pollType} onChange={(e) => setPollType(e.target.value as "singlechoice" | "multiplechoice")}>
+                  <Select
+                    value={pollType}
+                    onChange={(e) => setPollType(e.target.value as "singlechoice" | "multiplechoice")}
+                  >
                     <option value="singlechoice">Single choice</option>
                     <option value="multiplechoice">Multiple choice</option>
                   </Select>

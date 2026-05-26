@@ -27,7 +27,7 @@ const LOGO_MAP: Record<string, string> = {
   cashapp: cashappLogo,
   "ko-fi": kofiLogo,
   patreon: patreonLogo,
-  "buymeacoffee": buymeacoffeeLogo,
+  buymeacoffee: buymeacoffeeLogo,
 };
 
 export function getPaytoLogoUrl(type: string): string | null {

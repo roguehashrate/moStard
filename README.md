@@ -23,6 +23,7 @@ pnpm run dev
 
 This is only a personal project, so if you open any PRs please keep them small. thanks
 
+
 ## Support
 
 <img src="public/donate_qr.png" alt="Donate QR" width="21%"> <br> Any and all donations are appreciated.

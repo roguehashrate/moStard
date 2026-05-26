@@ -315,6 +315,14 @@ export const externalTools: App[] = [
     image: "https://xmrbazaar.com/img/img_xmrbazaar_favicon.png",
     isExternal: true,
   },
+  {
+    id: "nano-gpt",
+    title: "Nano GPT",
+    description: "An AI that supports Monero payments for use — affiliate link, purchases support moStard",
+    to: "https://nano-gpt.com/r/x7tJXbdk",
+    image: "https://nano-gpt.com/logo.png",
+    isExternal: true,
+  },
 ];
 
 export const defaultAnonFavoriteApps = ["notes", "discover", "search", "articles", "streams"];

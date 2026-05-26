@@ -224,35 +224,7 @@ export default function UserAboutTab() {
       </Box>
       <UserStatsAccordion pubkey={pubkey} />
 
-      <Flex gap="2" wrap="wrap">
-        <Button
-          as={Link}
-          href={`https://nosta.me/${nprofile}`}
-          leftIcon={<Image src="https://nosta.me/images/favicon-32x32.png" w="1.2em" />}
-          rightIcon={<ExternalLinkIcon />}
-          isExternal
-        >
-          Nosta.me page
-        </Button>
-        <Button
-          as={Link}
-          href={`https://slidestr.net/${npub}`}
-          leftIcon={<Image src="https://slidestr.net/slidestr.svg" w="1.2em" />}
-          rightIcon={<ExternalLinkIcon />}
-          isExternal
-        >
-          Slidestr Slideshow
-        </Button>
-        <Button
-          as={Link}
-          href={`https://nostree.me/${npub}`}
-          leftIcon={<Image src="https://nostree.me/favicon.svg" w="1.2em" />}
-          rightIcon={<ExternalLinkIcon />}
-          isExternal
-        >
-          Nostree page
-        </Button>
-      </Flex>
+
       <UserJoinedChannels pubkey={pubkey} />
 
       <Modal isOpen={colorModal.isOpen} onClose={colorModal.onClose} size="2xl">

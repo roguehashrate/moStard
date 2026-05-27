@@ -68,7 +68,8 @@ export const KindNames: Record<number, string> = {
   31925: "Calendar Event RSVP",
   31989: "Handler recommendation",
   31990: "Handler information",
-  34550: "Community Definition",
+   34550: "Community Definition",
+   32267: "Software Application",
 };
 
 for (let i = 5000; i < 6000; i++) KindNames[i] = "Job Request";

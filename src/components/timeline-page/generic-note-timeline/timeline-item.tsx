@@ -5,6 +5,7 @@ import { type ReactNode, Suspense, lazy, memo } from "react";
 
 import { isReply } from "../../../helpers/nostr/event";
 import { FLARE_VIDEO_KIND } from "../../../helpers/nostr/video";
+import { SOFTWARE_APP_KIND } from "../../../helpers/nostr/software";
 import useEventIntersectionRef from "../../../hooks/use-event-intersection-ref";
 import ArticleCard from "../../../views/articles/components/article-card";
 import EmbeddedUnknown from "../../embed-event/card/embedded-unknown";
@@ -21,6 +22,7 @@ const EmbeddedFlareVideo = lazy(() => import("../../embed-event/card/embedded-fl
 const EmbeddedNip71Video = lazy(() => import("../../embed-event/card/embedded-nip71-video"));
 const HighlightCard = lazy(() => import("../../highlight/highlight-card"));
 const PollCard = lazy(() => import("../../poll/poll-card"));
+const EmbeddedSoftware = lazy(() => import("../../embed-event/card/embedded-software"));
 
 function TimelineItem({ event, visible, minHeight }: { event: NostrEvent; visible: boolean; minHeight?: number }) {
   const ref = useEventIntersectionRef(event);
@@ -58,6 +60,9 @@ function TimelineItem({ event, visible, minHeight }: { event: NostrEvent; visibl
       break;
     case 9802:
       content = <HighlightCard event={event} />;
+      break;
+    case SOFTWARE_APP_KIND:
+      content = <EmbeddedSoftware app={event} />;
       break;
     default:
       content = <EmbeddedUnknown event={event} />;

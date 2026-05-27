@@ -8,6 +8,7 @@ import { safeDecode } from "../../../helpers/nip19";
 import { LIST_KINDS, SET_KINDS } from "../../../helpers/nostr/lists";
 import { TORRENT_COMMENT_KIND, TORRENT_KIND } from "../../../helpers/nostr/torrents";
 import { FLARE_VIDEO_KIND } from "../../../helpers/nostr/video";
+import { SOFTWARE_APP_KIND } from "../../../helpers/nostr/software";
 import { WIKI_PAGE_KIND } from "../../../helpers/nostr/wiki";
 import useReplaceableEvent from "../../../hooks/use-replaceable-event";
 import useSingleEvent from "../../../hooks/use-single-event";
@@ -38,6 +39,7 @@ const EmbeddedFile = lazy(() => import("./embedded-file"));
 const EmbeddedNip71Video = lazy(() => import("./embedded-nip71-video"));
 const EmbeddedPoll = lazy(() => import("./embedded-poll"));
 const EmbeddedHighlight = lazy(() => import("./embedded-highlight"));
+const EmbeddedSoftware = lazy(() => import("./embedded-software"));
 
 export function EmbedEventCard({ event, ...cardProps }: Omit<CardProps, "children"> & { event: NostrEvent }) {
   const renderContent = () => {
@@ -84,6 +86,8 @@ export function EmbedEventCard({ event, ...cardProps }: Omit<CardProps, "childre
         return <EmbeddedPoll event={event} {...cardProps} />;
       case 9802:
         return <EmbeddedHighlight event={event} {...cardProps} />;
+      case SOFTWARE_APP_KIND:
+        return <EmbeddedSoftware app={event} {...cardProps} />;
       case kinds.Handlerinformation:
         // if its a content DVM
         if (event.tags.some((t) => t[0] === "k" && t[1] === String(DVM_CONTENT_DISCOVERY_JOB_KIND)))

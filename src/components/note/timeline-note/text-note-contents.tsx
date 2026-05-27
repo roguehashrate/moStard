@@ -36,31 +36,11 @@ import { CharkaMarkdown } from "../../markdown/markdown";
 
 const transformers = [...textNoteTransformers, galleries, nipDefinitions, bipDefinitions, moneroAddressLinks];
 
-const MARKDOWN_PATTERNS = [
-  /(^|\n)#{1,6}\s+/, // headings
-  /```/, // fenced code block
-  /(^|\n)[>\-*+]\s+/, // blockquotes & lists
-  /(^|\n)\d+\.\s+/, // ordered lists
-  /!\[.*?\]\(.*?\)/, // images
-  /\[.+?\]\(.+?\)/, // links
-  /\*\*[^\n]+?\*\*/, // bold
-  /__[^\n]+?__/, // bold underline style
-  /(^|[\s([{>])_[^_\n]+?_(?=([\s).,!?:;\]}]|$))/, // italic underscore
-  /(^|[\s([{>])\*[^*\n]+?\*(?=([\s).,!?:;\]}]|$))/, // italic asterisk
-  /~~[^~\n]+?~~/, // strikethrough
-  /`[^`\n]+?`/, // inline code
-];
-
 function hasMarkdownTag(tags?: (string | undefined)[][]): boolean {
   if (!Array.isArray(tags)) return false;
   return tags.some(
     (tag) => tag[0] === "content-type" && typeof tag[1] === "string" && tag[1].toLowerCase().includes("markdown"),
   );
-}
-
-function looksLikeMarkdown(content: string | undefined): boolean {
-  if (!content) return false;
-  return MARKDOWN_PATTERNS.some((pattern) => pattern.test(content));
 }
 
 export type TextNoteContentsProps = {
@@ -71,10 +51,7 @@ export type TextNoteContentsProps = {
 
 function isMarkdownContent(event: NostrEvent | EventTemplate | string): boolean {
   const tags = typeof event === "string" ? undefined : (event as EventTemplate).tags;
-  if (hasMarkdownTag(tags)) return true;
-
-  const content = typeof event === "string" ? event : (event.content ?? "");
-  return looksLikeMarkdown(content);
+  return hasMarkdownTag(tags);
 }
 
 const linkRenderers = [

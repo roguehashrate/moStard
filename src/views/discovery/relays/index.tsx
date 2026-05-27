@@ -94,7 +94,7 @@ export default function RelayDiscoveryView() {
           ) : (
             <RelayList w={{ base: "full", lg: "lg" }} flexShrink={0} events={eventsThrottle} />
           )}
-          {showMap && <RelayMap events={eventsThrottle} />}
+          {showMap && <RelayMap flex={1} events={eventsThrottle} />}
         </Flex>
       </SimpleView>
     </SelectedContext.Provider>

@@ -1,0 +1,19 @@
+repository: https://github.com/roguehashrate/moStard
+description: A Monero-first nostr client.
+summary: A Monero-first nostr client.
+tags:
+    - nostr
+    - client
+    - hashtag
+    - monero
+license: MIT
+website: https://github.com/roguehashrate/moStard
+images:
+    - https://blossom.ditto.pub/c33de28e71547b3de0897954e1df618caaebb1b91dccb21c1b8126f7c10d0675.jpeg
+    - https://blossom.primal.net/9d34bf23f110b10f2055c2b44a421dfcbc85e387723c4b2d831eaac412ced5a8.jpg
+supported_nips:
+    - "01"
+    - "02"
+metadata_sources:
+    - github
+pubkey: npub1hs5244d3vle3m5muvmvvjh2qp3jprkpjwhk393gy7cykt50eamrq8f5rx4

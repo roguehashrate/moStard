@@ -31,6 +31,7 @@ import Timestamp from "../../timestamp";
 import UserAvatarLink from "../../user/user-avatar-link";
 import UserLink from "../../user/user-link";
 import EventTipButton from "../../tip/event-tip-button";
+import EventZapButton from "../../zap/event-zap-button";
 import BookmarkEventButton from "../bookmark-button";
 import EventQuoteButton from "../event-quote-button";
 import NoteMenu from "../note-menu";
@@ -121,6 +122,7 @@ export function TimelineNote({
               <EventShareButton event={event} />
               <EventQuoteButton event={event} />
               <EventTipButton event={event} />
+              <EventZapButton event={event} />
             </ButtonGroup>
             {!showReactionsOnNewLine && reactionButtons}
             <Box flexGrow={1} />

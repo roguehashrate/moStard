@@ -7,6 +7,7 @@ import litecoinLogo from "../payto_logos/Litecoin.png";
 import dogecoinLogo from "../payto_logos/dogecoin-doge-logo.svg";
 import bitcoinCashLogo from "../payto_logos/bitcoin-cash-bch-logo.svg";
 import solanaLogo from "../payto_logos/solana.png";
+import zcashLogo from "../payto_logos/Zcash.png";
 import paypalLogo from "../payto_logos/paypal.webp";
 import venmoLogo from "../payto_logos/venmo.png";
 import cashappLogo from "../payto_logos/cashapp.webp";
@@ -22,6 +23,7 @@ const LOGO_MAP: Record<string, string> = {
   dogecoin: dogecoinLogo,
   "bitcoin-cash": bitcoinCashLogo,
   solana: solanaLogo,
+  zcash: zcashLogo,
   paypal: paypalLogo,
   venmo: venmoLogo,
   cashapp: cashappLogo,

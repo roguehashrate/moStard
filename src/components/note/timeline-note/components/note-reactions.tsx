@@ -3,6 +3,7 @@ import { NostrEvent } from "nostr-tools";
 
 import AddReactionButton from "./add-reaction-button";
 import EventReactionButtons from "../../../event-reactions/event-reactions";
+import ZapBadge from "../../../zap-badge";
 import { useBreakpointValue } from "../../../../providers/global/breakpoint-provider";
 import useEventReactions from "../../../../hooks/use-event-reactions";
 
@@ -13,6 +14,7 @@ export default function NoteReactions({ event, ...props }: Omit<ButtonGroupProps
   return (
     <ButtonGroup spacing="1" {...props}>
       <AddReactionButton event={event} />
+      <ZapBadge event={event} variant="ghost" size="sm" />
       {reactions.length > 0 && (
         <>
           <Divider orientation="vertical" h="1.5rem" />

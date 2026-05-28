@@ -95,6 +95,14 @@ export const PAYTO_TYPES: Record<string, PaytoType> = {
     coingeckoId: "solana",
     walletOpen: { scheme: "solana", walletApps: ["cakewallet", "ledger"] },
   },
+  zcash: {
+    label: "Zcash",
+    symbol: "ZEC",
+    category: "crypto",
+    uriScheme: "zcash:",
+    coingeckoId: "zcash",
+    walletOpen: { scheme: "zcash", walletApps: ["cakewallet", "ledger"] },
+  },
   paypal: { label: "PayPal", symbol: "PayPal", category: "fiat", uriScheme: "paypal:" },
   venmo: { label: "Venmo", symbol: "Venmo", category: "fiat", uriScheme: "venmo:" },
   cashapp: { label: "Cash App", symbol: "CashApp", category: "fiat", uriScheme: "cashapp:" },
@@ -114,6 +122,7 @@ const ALIAS_MAP: Record<string, string> = {
   doge: "dogecoin",
   bch: "bitcoin-cash",
   sol: "solana",
+  zec: "zcash",
   bip: "bitcoin",
   bip21: "bitcoin",
   bip47: "bitcoin",
@@ -149,6 +158,8 @@ const KIND0_CRYPTO_ADDRESSES: Record<string, string> = {
   silentpayment: "bitcoin",
   "silent-payment": "bitcoin",
   lnurl: "lightning",
+  zcash: "zcash",
+  zec: "zcash",
 };
 
 // Maps top-level kind-0 JSON keys → canonical payto types
@@ -168,6 +179,9 @@ const KIND0_ROOT_FIELDS: Record<string, string> = {
   silentpayment: "bitcoin",
   "silent-payment": "bitcoin",
   lnurl: "lightning",
+  lud06: "lightning",
+  lud16: "lightning",
+  zcash: "zcash",
 };
 
 export const PAYTO_URI_REGEX = /payto:\/\/([a-z0-9-]+)\/([^\s\]\)\<\"']+)/gi;

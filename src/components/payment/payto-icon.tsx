@@ -14,6 +14,7 @@ const iconMap: Record<string, typeof MoneroWhite> = {
   dogecoin: CurrencyBitcoinIcon,
   "bitcoin-cash": CurrencyBitcoinIcon,
   solana: CurrencyEthereumIcon,
+  zcash: CurrencyBitcoinIcon,
 };
 
 const symbolMap: Record<string, string> = {

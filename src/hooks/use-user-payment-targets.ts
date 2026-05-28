@@ -35,6 +35,8 @@ const KIND0_CRYPTO_ADDRESSES: Record<string, string> = {
   sol: "solana",
   "bitcoin-cash": "bitcoin-cash",
   bch: "bitcoin-cash",
+  zcash: "zcash",
+  zec: "zcash",
 };
 
 const ROOT_FIELDS: Record<string, string> = {
@@ -45,6 +47,7 @@ const ROOT_FIELDS: Record<string, string> = {
   dogecoin: "dogecoin",
   nano: "nano",
   solana: "solana",
+  zcash: "zcash",
   bip: "bitcoin",
   bip21: "bitcoin",
   bip47: "bitcoin",
@@ -52,6 +55,8 @@ const ROOT_FIELDS: Record<string, string> = {
   sp: "bitcoin",
   silentpayment: "bitcoin",
   "silent-payment": "bitcoin",
+  lud06: "lightning",
+  lud16: "lightning",
 };
 
 // ── About coin line parser ──

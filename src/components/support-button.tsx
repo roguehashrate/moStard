@@ -87,7 +87,6 @@ export default function SupportButton() {
         justifyContent="flex-start"
         colorScheme="primary"
         flexShrink={0}
-        backgroundColor={color}
         onClick={onOpen}
       >
         {label}

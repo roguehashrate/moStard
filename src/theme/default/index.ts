@@ -25,6 +25,7 @@ const defaultTheme = extendTheme({
       "chakra-body-bg": { _light: "white", _dark: "gray.900" },
       "chakra-subtle-bg": { _light: "gray.100", _dark: "gray.800" },
       "chakra-subtle-text": { _light: "gray.600", _dark: "gray.400" },
+      "chakra-border-color": { _light: "gray.200", _dark: "whiteAlpha.200" },
     },
   },
 } as DeepPartial<Theme>);

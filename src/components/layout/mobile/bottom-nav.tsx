@@ -1,6 +1,6 @@
 import { Avatar, Badge, Box, Flex, IconButton, useDisclosure } from "@chakra-ui/react";
 import { useActiveAccount } from "applesauce-react/hooks";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useLocation } from "react-router-dom";
 
 import { DirectMessagesIcon, NotesIcon, NotificationsIcon, PlusCircleIcon, SearchIcon } from "../../icons";
 import useRootPadding from "../../../hooks/use-root-padding";
@@ -8,6 +8,70 @@ import useRootPadding from "../../../hooks/use-root-padding";
 import useUnreadNotificationCount from "../../../hooks/use-unread-notification-count";
 import UserAvatar from "../../user/user-avatar";
 import NavDrawer from "./nav-drawer";
+
+function NavTab({
+  to,
+  icon,
+  label,
+  badge,
+}: {
+  to: string;
+  icon: React.ReactElement;
+  label: string;
+  badge?: number;
+}) {
+  const location = useLocation();
+  const isActive = location.pathname === to || location.pathname.startsWith(to + "/");
+
+  return (
+    <Box position="relative" flex="1" display="flex" justifyContent="center">
+      <Box
+        as={RouterLink}
+        to={to}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        p="2"
+        borderRadius="2xl"
+        bg={isActive ? "primary.50" : "transparent"}
+        _dark={{
+          bg: isActive ? "whiteAlpha.100" : "transparent",
+        }}
+        transition="all 0.15s"
+        _hover={{
+          bg: isActive ? undefined : "blackAlpha.50",
+          _dark: { bg: isActive ? undefined : "whiteAlpha.50" },
+        }}
+      >
+        <Box
+          as="span"
+          color={isActive ? "primary.500" : "chakra-subtle-text"}
+          _dark={{ color: isActive ? "primary.400" : "whiteAlpha.600" }}
+        >
+          {icon}
+        </Box>
+      </Box>
+      {!!badge && badge > 0 && (
+        <Badge
+          position="absolute"
+          top="0"
+          right="calc(50% - 16px)"
+          colorScheme="red"
+          borderRadius="full"
+          fontSize="2xs"
+          minW="4.5"
+          h="4.5"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          lineHeight="1"
+        >
+          {badge > 99 ? "99+" : badge}
+        </Badge>
+      )}
+    </Box>
+  );
+}
 
 export default function MobileBottomNav() {
   useRootPadding({ bottom: "var(--chakra-sizes-14)" });
@@ -18,77 +82,53 @@ export default function MobileBottomNav() {
   return (
     <>
       <Flex
-        gap="2"
+        gap="1"
         pt="2"
         px="2"
         pb="calc(var(--chakra-space-2) + var(--safe-bottom))"
         borderTopWidth={1}
+        borderTopColor="chakra-border-color"
         hideFrom="md"
-        bg="var(--chakra-colors-chakra-body-bg)"
+        bg="chakra-body-bg"
         position="fixed"
         bottom="0"
         left="0"
         right="0"
         zIndex="modal"
+        alignItems="center"
       >
-        {account ? (
-          <UserAvatar pubkey={account.pubkey} size="sm" onClick={drawer.onOpen} noProxy />
-        ) : (
-          <Avatar size="sm" src="/apple-touch-icon.png" onClick={drawer.onOpen} cursor="pointer" />
-        )}
-        <IconButton as={RouterLink} icon={<NotesIcon boxSize={6} />} aria-label="Home" flexGrow="1" size="md" to="/" />
-        <IconButton
-          as={RouterLink}
-          icon={<SearchIcon boxSize={6} />}
-          aria-label="Search"
-          flexGrow="1"
-          size="md"
-          to="/search"
+        <Box
+          position="absolute"
+          top="0"
+          left="0"
+          right="0"
+          bottom="0"
+          backdropFilter="blur(16px)"
+          pointerEvents="none"
+          css={{ WebkitBackdropFilter: "blur(16px)" }}
         />
-        <IconButton
-          as={RouterLink}
-          icon={<PlusCircleIcon boxSize={6} />}
-          aria-label="Create new"
-          title="Create new"
-          variant="solid"
-          colorScheme="primary"
-          to="/new"
-        />
-        <IconButton
-          as={RouterLink}
-          icon={<DirectMessagesIcon boxSize={6} />}
-          aria-label="Messages"
-          flexGrow="1"
-          size="md"
-          to="/messages"
-        />
-        <Box position="relative" flexGrow="1" display="flex">
+        <Box position="relative" zIndex={1} display="flex" alignItems="center" gap="1" w="full">
+          {account ? (
+            <UserAvatar pubkey={account.pubkey} size="sm" onClick={drawer.onOpen} noProxy />
+          ) : (
+            <Avatar size="sm" src="/apple-touch-icon.png" onClick={drawer.onOpen} cursor="pointer" />
+          )}
+          <NavTab to="/" icon={<NotesIcon boxSize={6} />} label="Home" />
+          <NavTab to="/search" icon={<SearchIcon boxSize={6} />} label="Search" />
           <IconButton
             as={RouterLink}
-            icon={<NotificationsIcon boxSize={6} />}
-            aria-label="Notifications"
-            flex="1"
+            icon={<PlusCircleIcon boxSize={6} />}
+            aria-label="Create new"
+            title="Create new"
+            variant="solid"
+            colorScheme="primary"
             size="md"
-            to="/notifications"
+            borderRadius="full"
+            to="/new"
+            boxShadow="0 0 16px var(--chakra-colors-primary-500)"
           />
-          {unreadCount > 0 && (
-            <Badge
-              position="absolute"
-              top="0"
-              right="0"
-              colorScheme="red"
-              borderRadius="full"
-              fontSize="xs"
-              minW="5"
-              h="5"
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              zIndex="1"
-            >
-              {unreadCount > 99 ? "99+" : unreadCount}
-            </Badge>
-          )}
+          <NavTab to="/messages" icon={<DirectMessagesIcon boxSize={5} />} label="Messages" />
+          <NavTab to="/notifications" icon={<NotificationsIcon boxSize={5} />} label="Notifications" badge={unreadCount} />
         </Box>
       </Flex>
       <NavDrawer isOpen={drawer.isOpen} onClose={drawer.onClose} />

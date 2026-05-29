@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ButtonGroup, Flex, type FlexProps, IconButton, Text, Image, Heading, LinkOverlay } from "@chakra-ui/react";
+import { ButtonGroup, Flex, type FlexProps, IconButton, Text, Image, Heading, LinkOverlay, Box, Divider } from "@chakra-ui/react";
 
 import { ChevronLeftIcon, ChevronRightIcon } from "../../icons";
 import NavItems from "../components";
@@ -22,13 +22,14 @@ export default function DesktopSideNav({ ...props }: Omit<FlexProps, "children">
     <CollapsedContext.Provider value={collapsed}>
       <Flex
         direction="column"
-        gap="2"
+        gap="1"
         px="2"
-        py="2"
+        py="3"
         shrink={0}
         borderRightWidth={1}
-        pt="calc(var(--chakra-space-2) + var(--safe-top))"
-        pb="calc(var(--chakra-space-2) + var(--safe-bottom))"
+        borderRightColor="chakra-border-color"
+        pt="calc(var(--chakra-space-3) + var(--safe-top))"
+        pb="calc(var(--chakra-space-3) + var(--safe-bottom))"
         w={collapsed ? "16" : "64"}
         position="fixed"
         left="0"
@@ -38,37 +39,39 @@ export default function DesktopSideNav({ ...props }: Omit<FlexProps, "children">
         overflowY="auto"
         overflowX="hidden"
         overscroll="none"
-        backgroundColor="var(--chakra-colors-whiteAlpha-200)"
-        _scrollbar={{
-          display: "none",
-        }}
-        css={{
-          "&::-webkit-scrollbar": {
-            width: "0px",
-          },
-        }}
+        bg="chakra-subtle-bg"
+        transition="width 0.2s ease"
+        _scrollbar={{ display: "none" }}
+        css={{ "&::-webkit-scrollbar": { width: "0px" } }}
         {...props}
       >
-        <Flex gap="2" px="2" alignItems="center" position="relative">
-          <Image src="/transparent.png" boxSize="64px" />
-
-          <Heading size="md">
-            <LinkOverlay as={RouterLink} to="/">
-              moStard
-            </LinkOverlay>
-          </Heading>
+        <Flex gap="3" px="3" alignItems="center" mb="2">
+          <Image src="/transparent.png" boxSize="48px" alt="moStard" borderRadius="full" />
+          {!collapsed && (
+            <Box>
+              <Heading size="sm" fontWeight="bold" lineHeight="1.2">moStard</Heading>
+              <Text fontSize="xs" color="chakra-subtle-text">monero-first nostr</Text>
+            </Box>
+          )}
         </Flex>
+
+        <Divider mb="1" borderColor="chakra-border-color" />
 
         <NavItems />
 
-        <AccountSwitcher />
+        <Box mt="auto">
+          <AccountSwitcher />
+        </Box>
 
-        <ButtonGroup variant="ghost">
+        <Divider my="1" borderColor="chakra-border-color" />
+
+        <ButtonGroup variant="ghost" size="sm" w="full" spacing={1}>
           <IconButton
-            aria-label={collapsed ? "Open" : "Close"}
-            title={collapsed ? "Open" : "Close"}
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
             onClick={() => setCollapsed(!collapsed)}
-            icon={collapsed ? <ChevronRightIcon boxSize={6} /> : <ChevronLeftIcon boxSize={6} />}
+            icon={collapsed ? <ChevronRightIcon boxSize={5} /> : <ChevronLeftIcon boxSize={5} />}
+            borderRadius="xl"
           />
           {!collapsed && (
             <>
@@ -78,9 +81,11 @@ export default function DesktopSideNav({ ...props }: Omit<FlexProps, "children">
           )}
         </ButtonGroup>
 
-        <SupportButton />
+        {!collapsed && <SupportButton />}
 
-        <Image src="/xmr-beeg-yoshi.png" />
+        {!collapsed && (
+          <Image src="/xmr-beeg-yoshi.png" mt="1" opacity="0.5" borderRadius="xl" />
+        )}
       </Flex>
     </CollapsedContext.Provider>
   );

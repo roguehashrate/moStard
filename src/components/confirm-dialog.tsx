@@ -33,16 +33,16 @@ export default function ConfirmDialog({
   const cancelRef = useRef<HTMLButtonElement>(null);
 
   return (
-    <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose} isCentered>
-      <AlertDialogOverlay />
-      <AlertDialogContent>
-        <AlertDialogHeader>{title}</AlertDialogHeader>
+    <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose} isCentered motionPreset="scale">
+      <AlertDialogOverlay bg="blackAlpha.700" backdropFilter="blur(8px)" />
+      <AlertDialogContent borderRadius="3xl">
+        <AlertDialogHeader fontSize="lg" fontWeight="bold">{title}</AlertDialogHeader>
         <AlertDialogBody>{description}</AlertDialogBody>
         <AlertDialogFooter gap="2">
-          <Button ref={cancelRef} onClick={onClose}>
+          <Button ref={cancelRef} onClick={onClose} variant="ghost">
             {cancelText}
           </Button>
-          <Button colorScheme={colorScheme} onClick={onConfirm}>
+          <Button colorScheme={colorScheme} onClick={onConfirm} borderRadius="full">
             {confirmText}
           </Button>
         </AlertDialogFooter>

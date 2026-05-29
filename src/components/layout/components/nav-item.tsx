@@ -39,22 +39,29 @@ export default function NavItem({
 }) {
   const collapsed = useContext(CollapsedContext);
   const location = useLocation();
+  const isActive = location.pathname === to || location.pathname.startsWith(to + "/");
 
   if (collapsed)
     return (
-      <Box position="relative" display="inline-block">
+      <Box position="relative" display="flex" justifyContent="center" px="1">
         <IconButton
           as={RouterLink}
           aria-label={label}
           title={label}
-          icon={<Icon boxSize={5} />}
+          icon={<Icon boxSize={5.5} />}
           fontSize="24"
-          variant={variant || "ghost"}
+          variant="ghost"
           to={to}
           flexShrink={0}
-          colorScheme={colorScheme || (location.pathname.startsWith(to) ? "primary" : undefined)}
+          color={isActive ? "primary.500" : "chakra-subtle-text"}
+          _dark={{
+            color: isActive ? "primary.400" : "whiteAlpha.600",
+            bg: isActive ? "whiteAlpha.100" : "transparent",
+          }}
+          bg={isActive ? "primary.50" : "transparent"}
+          borderRadius="xl"
         />
-        {badge && badge > 0 && (
+        {!!badge && badge > 0 && (
           <Badge
             position="absolute"
             top="0"
@@ -73,22 +80,33 @@ export default function NavItem({
         )}
       </Box>
     );
-  else
-    return (
+
+  return (
+    <Box px="1">
       <Button
         as={RouterLink}
         aria-label={label}
         title={label}
         leftIcon={<Icon boxSize={5} />}
-        variant={variant || "link"}
-        p="2"
+        variant="ghost"
+        p="2.5"
         justifyContent="flex-start"
-        colorScheme={colorScheme || (location.pathname.startsWith(to) ? "primary" : undefined)}
         to={to}
         flexShrink={0}
+        w="full"
+        fontSize="sm"
+        fontWeight={isActive ? "semibold" : "normal"}
+        color={isActive ? "primary.500" : "chakra-body-text"}
+        _dark={{
+          color: isActive ? "primary.400" : undefined,
+          bg: isActive ? "whiteAlpha.100" : "transparent",
+        }}
+        bg={isActive ? "primary.50" : "transparent"}
+        borderRadius="xl"
         rightIcon={badge && badge > 0 ? <BadgePill count={badge} /> : undefined}
       >
         {label}
       </Button>
-    );
+    </Box>
+  );
 }

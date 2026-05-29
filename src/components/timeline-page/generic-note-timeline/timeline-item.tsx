@@ -2,6 +2,7 @@ import { Box, Spinner } from "@chakra-ui/react";
 import { PICTURE_POST_KIND } from "applesauce-core/helpers";
 import { type NostrEvent, kinds } from "nostr-tools";
 import { type ReactNode, Suspense, lazy, memo } from "react";
+import { motion } from "framer-motion";
 
 import { isReply } from "../../../helpers/nostr/event";
 import { FLARE_VIDEO_KIND } from "../../../helpers/nostr/video";
@@ -72,7 +73,15 @@ function TimelineItem({ event, visible, minHeight }: { event: NostrEvent; visibl
   return (
     <ErrorBoundary event={event}>
       <Box minHeight={`${minHeight}px`} ref={ref}>
-        {visible && <Suspense fallback={<Spinner />}>{content}</Suspense>}
+        {visible && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+          >
+            <Suspense fallback={<Spinner />}>{content}</Suspense>
+          </motion.div>
+        )}
       </Box>
     </ErrorBoundary>
   );

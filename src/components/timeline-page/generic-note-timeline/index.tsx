@@ -10,6 +10,7 @@ import useCacheEntryHeight from "../../../hooks/timeline/use-cache-entry-height"
 import { useTimelineDates } from "../../../hooks/timeline/use-timeline-dates";
 import useTimelineLocationCacheKey from "../../../hooks/timeline/use-timeline-cache-key";
 import TimelineItem from "./timeline-item";
+import { TimelineSkeleton } from "../../note-skeleton";
 
 const INITIAL_NOTES = 10;
 const NOTE_BUFFER = 5;
@@ -17,6 +18,7 @@ const NOTE_BUFFER = 5;
 function GenericNoteTimeline({ timeline }: { timeline: NostrEvent[] }) {
   const [latest, setLatest] = useState(() => dayjs().unix());
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [initialLoad, setInitialLoad] = useState(true);
   const scrollContainerRef = useRef<HTMLElement | null>(null);
 
   const cacheKey = useTimelineLocationCacheKey();
@@ -75,6 +77,15 @@ function GenericNoteTimeline({ timeline }: { timeline: NostrEvent[] }) {
     };
   }, []);
 
+  useEffect(() => {
+    if (initialLoad && timeline.length > 0) setInitialLoad(false);
+  }, [timeline.length, initialLoad]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setInitialLoad(false), 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
   const newNotes: NostrEvent[] = [];
   const notes: NostrEvent[] = [];
   for (const note of timeline) {
@@ -97,6 +108,7 @@ function GenericNoteTimeline({ timeline }: { timeline: NostrEvent[] }) {
           </Button>
         </Box>
       )}
+      {initialLoad && notes.length === 0 && <TimelineSkeleton count={5} />}
       {notes.map((note) => (
         <TimelineItem
           key={note.id}

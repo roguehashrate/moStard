@@ -8,6 +8,7 @@ import {
   combineLatest,
   distinct,
   distinctUntilChanged,
+  EMPTY,
   filter,
   ignoreElements,
   map,
@@ -21,13 +22,14 @@ import {
 } from "rxjs";
 
 import { APP_SETTING_IDENTIFIER, APP_SETTINGS_KIND } from "../helpers/app-settings";
-import { MailboxesQuery } from "../models";
+import { AppSettingsQuery, MailboxesQuery } from "../models";
 import { DirectMessageRelays } from "../models/messages";
 import accounts from "./accounts";
 import authenticationSigner from "./authentication-signer";
 import { writeEvent } from "./event-cache";
 import { eventStore } from "./event-store";
 import { addressLoader } from "./loaders";
+import { nwcManager } from "./nwc-manager";
 import pool from "./pool";
 import localSettings from "./preferences";
 
@@ -153,3 +155,21 @@ export const legacyMessageSubscription = accounts.active$.pipe(
   // Ensure only one subscription is created and keep it alive for 30 seconds after last subscriber
   share({ resetOnRefCountZero: () => timer(30_000) }),
 );
+
+// Auto-connect NWC wallet when app settings are loaded
+accounts.active$
+  .pipe(
+    switchMap((account) =>
+      account
+        ? eventStore.model(AppSettingsQuery, account.pubkey).pipe(
+            map((settings) => settings.nwcConnectionString),
+            distinctUntilChanged(),
+          )
+        : EMPTY,
+    ),
+  )
+  .subscribe((nwcConnectionString) => {
+    if (nwcConnectionString && nwcManager.status === "disconnected") {
+      nwcManager.connect(nwcConnectionString);
+    }
+  });

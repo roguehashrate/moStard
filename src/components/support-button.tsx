@@ -25,7 +25,7 @@ export default function SupportButton() {
   const account = useActiveAccount();
 
   const isMobile = useBreakpointValue({ base: true, md: false });
-  const label = "Click to support the dev";
+  const label = "Support the dev";
   const [tabIndex, setTabIndex] = useState(0);
 
   const paymentDetailsRef = useRef(null);
@@ -95,8 +95,7 @@ export default function SupportButton() {
         {label}
       </Button>
 
-      {isOpen && (
-        <Modal isOpen={isOpen} onClose={onClose} size={isMobile ? "full" : "xl"}>
+      <Modal isOpen={isOpen} onClose={onClose} size={isMobile ? "full" : "xl"}>
           <ModalOverlay bg="blackAlpha.700" backdropFilter="blur(8px)" />
           <ModalContent borderRadius="3xl">
             <ModalCloseButton />
@@ -121,7 +120,6 @@ export default function SupportButton() {
             </Tabs>
           </ModalContent>
         </Modal>
-      )}
     </>
   );
 }

@@ -5,9 +5,14 @@ import { useMemo } from "react";
 import { LightningIconFilled } from "../../../icons";
 import UserAvatar from "../../../user/user-avatar";
 import useZapAmounts from "../../../../hooks/use-zap-amounts";
+import useAppSettings from "../../../../hooks/use-user-app-settings";
+import { nwcManager } from "../../../../services/nwc-manager";
 
 export default function ZapReactions({ event }: { event: NostrEvent }) {
   const { zaps } = useZapAmounts(event);
+  const { enableAlternativePayments, nwcEnabled } = useAppSettings();
+
+  if (!(enableAlternativePayments && nwcEnabled && nwcManager.status === "connected")) return null;
 
   const topZaps = useMemo(() => [...zaps].sort((a, b) => b.amount - a.amount).slice(0, 10), [zaps]);
 

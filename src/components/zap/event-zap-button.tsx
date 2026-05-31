@@ -7,6 +7,7 @@ import { map } from "rxjs/operators";
 
 import { LightningIcon, LightningIconFilled } from "../icons";
 import useZapAmounts from "../../hooks/use-zap-amounts";
+import useAppSettings from "../../hooks/use-user-app-settings";
 import { profileLoader } from "../../services/loaders";
 import { nwcManager } from "../../services/nwc-manager";
 import ZapModal from "../zap-modal";
@@ -23,6 +24,10 @@ export default function EventZapButton({ event }: EventZapButtonProps) {
   const [hasLightning, setHasLightning] = useState(false);
 
   const hasZapped = account ? zapperPubkeys.has(account.pubkey) : false;
+  const { enableAlternativePayments, nwcEnabled } = useAppSettings();
+  const showZap = enableAlternativePayments && nwcEnabled && nwcManager.status === "connected";
+
+  if (!showZap) return null;
 
   useEffect(() => {
     if (!eventStore.hasReplaceable(kinds.Metadata, event.pubkey)) {

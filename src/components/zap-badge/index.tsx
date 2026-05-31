@@ -1,12 +1,17 @@
 import { Button, IconButton, type ButtonProps } from "@chakra-ui/react";
 import type { NostrEvent } from "nostr-tools";
 import useZapAmounts from "../../hooks/use-zap-amounts";
+import useAppSettings from "../../hooks/use-user-app-settings";
+import { nwcManager } from "../../services/nwc-manager";
 
 export default function ZapBadge({
   event,
   ...props
 }: Omit<ButtonProps, "children"> & { event: NostrEvent }) {
   const { totalSats, count } = useZapAmounts(event);
+  const { enableAlternativePayments, nwcEnabled } = useAppSettings();
+
+  if (!(enableAlternativePayments && nwcEnabled && nwcManager.status === "connected")) return null;
 
   if (totalSats <= 0) return null;
 

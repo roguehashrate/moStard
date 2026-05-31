@@ -90,7 +90,10 @@ export default function SupportButton() {
         borderRadius="xl"
         transition="all 0.15s"
         _hover={{ transform: "translateY(-1px)", boxShadow: "lg" }}
-        onClick={onOpen}
+        onClick={(e) => {
+          e.stopPropagation();
+          onOpen();
+        }}
       >
         {label}
       </Button>

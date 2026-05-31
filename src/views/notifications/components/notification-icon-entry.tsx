@@ -67,11 +67,13 @@ const NotificationIconEntry = memo(
       return (
         <Flex
           direction="column"
-          bg={expanded ? "whiteAlpha.100" : undefined}
-          rounded="md"
+          bg={expanded ? "glass-bg" : undefined}
+          rounded="xl"
           flexGrow={1}
           overflow="hidden"
           ref={ref}
+          transition="all 0.15s"
+          _hover={{ bg: "glass-bg-hover" }}
         >
           <Flex
             gap="2"

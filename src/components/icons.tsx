@@ -13,6 +13,7 @@ import ChevronUp from "./icons/chevron-up";
 import ChevronLeft from "./icons/chevron-left";
 import ChevronRight from "./icons/chevron-right";
 import Zap from "./icons/zap";
+import ZapFilled from "./icons/zap-filled";
 import Target04 from "./icons/target-04";
 import Award01 from "./icons/award-01";
 import LayoutRight from "./icons/layout-right";
@@ -55,6 +56,7 @@ import UserX01 from "./icons/user-x-01";
 import Plus from "./icons/plus";
 import Bookmark from "./icons/bookmark";
 import BankNote01 from "./icons/bank-note-01";
+import CoinsHand from "./icons/coins-hand";
 import Download01 from "./icons/download-01";
 import Repeat01 from "./icons/repeat-01";
 import ReverseLeft from "./icons/reverse-left";
@@ -100,6 +102,7 @@ export const ChevronLeftIcon = ChevronLeft;
 export const ChevronRightIcon = ChevronRight;
 
 export const LightningIcon = Zap;
+export const LightningIconFilled = ZapFilled;
 export const RelayIcon = Modem02;
 export const MediaServerIcon = Database01;
 export const BroadcastEventIcon = Share07;
@@ -232,6 +235,7 @@ export const GhostIcon = createIcon({
 });
 
 export const CashIcon = BankNote01;
+export const TipIcon = CoinsHand;
 export const DownloadIcon = Download01;
 
 export const TranslateIcon = Translate01;

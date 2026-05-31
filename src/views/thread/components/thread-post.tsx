@@ -11,6 +11,8 @@ import EventQuoteButton from "../../../components/note/event-quote-button";
 import NoteMenu from "../../../components/note/note-menu";
 import NotePublishedUsing from "../../../components/note/note-published-using";
 import EventTipButton from "../../../components/tip/event-tip-button";
+import EventZapButton from "../../../components/zap/event-zap-button";
+import ZapReactions from "../../../components/note/timeline-note/components/zap-reactions";
 import EventShareButton from "../../../components/note/timeline-note/components/event-share-button";
 import NoteProxyLink from "../../../components/note/timeline-note/components/note-proxy-link";
 import NoteReactions from "../../../components/note/timeline-note/components/note-reactions";
@@ -122,6 +124,7 @@ function ThreadPost({ post, initShowReplies, focusId, level = -1 }: ThreadItemPr
         <EventShareButton event={post.event} />
         <EventQuoteButton event={post.event} />
         <EventTipButton event={post.event} />
+        <EventZapButton event={post.event} />
       </ButtonGroup>
       {!showReactionsOnNewLine && reactionButtons}
       <Spacer />
@@ -140,11 +143,12 @@ function ThreadPost({ post, initShowReplies, focusId, level = -1 }: ThreadItemPr
 
   return (
     <>
-      <Flex direction="column" gap="2" px="2" py="0" borderWidth="0 1px 0 .35rem" {...colorProps} ref={ref}>
+      <Flex direction="column" gap="2" px="2" py="2" borderWidth="0 1px 0 .35rem" rounded="2xl" bg="glass-bg" {...colorProps} ref={ref}>
         {header}
         {expanded.isOpen && (
           <>
             {renderContent()}
+            <ZapReactions event={post.event} />
             {showReactionsOnNewLine && reactionButtons}
             {footer}
           </>

@@ -40,6 +40,7 @@ import ShowMoreContainer from "../show-more-container";
 import EventShareButton from "./components/event-share-button";
 import NoteProxyLink from "./components/note-proxy-link";
 import NoteReactions from "./components/note-reactions";
+import ZapReactions from "./components/zap-reactions";
 import ReplyContext from "./components/reply-context";
 import NoteContentWithWarning from "./note-content-with-warning";
 
@@ -85,14 +86,14 @@ export function TimelineNote({
           borderWidth="1px"
           rounded="2xl"
           borderColor="chakra-border-color"
-          bg="chakra-subtle-bg"
+          bg="glass-bg"
           transition="all 0.2s"
           _hover={{
-            borderColor: "primary.400",
-            boxShadow: "0 0 0 1px var(--chakra-colors-primary-400)",
+            borderColor: "primary.300",
+            boxShadow: "0 0 0 1px var(--chakra-colors-primary-300)",
             _dark: {
-              borderColor: "primary.400",
-              boxShadow: "0 0 12px var(--chakra-colors-primary-400)",
+              borderColor: "primary.500",
+              boxShadow: "0 0 8px var(--chakra-colors-primary-500)",
             },
           }}
           {...props}
@@ -126,6 +127,7 @@ export function TimelineNote({
               {showReactionsOnNewLine && reactionButtons}
             </CardFooter>
           </Card>
+          <ZapReactions event={event} />
           <Flex gap="1" w="full" alignItems="center" pt="1" px="2.5" pb="2.5">
             <ButtonGroup size="sm" variant="ghost" spacing={0} zIndex={1}>
               {showReplyButton && (

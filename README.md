@@ -5,7 +5,7 @@
 <h1 align="center">moStard</h1>
 
 <p align="center">
-  <em>A Monero-first nostr client.</em>
+  <em>A moStard nostr client.</em>
 </p>
 
 <p align="center">

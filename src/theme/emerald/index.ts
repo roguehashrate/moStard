@@ -25,6 +25,10 @@ const emeraldTheme = extendTheme({
       "chakra-body-bg": { _light: "white", _dark: "#0a120e" },
       "chakra-subtle-bg": { _light: "gray.100", _dark: "#112217" },
       "chakra-subtle-text": { _light: "gray.600", _dark: "gray.400" },
+      "chakra-border-color": { _light: "gray.200", _dark: "#1a3a24" },
+      "glass-bg": { _light: "whiteAlpha.800", _dark: "blackAlpha.800" },
+      "glass-bg-subtle": { _light: "blackAlpha.50", _dark: "whiteAlpha.50" },
+      "glass-bg-hover": { _light: "blackAlpha.100", _dark: "whiteAlpha.100" },
     },
   },
 } as DeepPartial<Theme>);

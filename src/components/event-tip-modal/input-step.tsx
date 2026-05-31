@@ -66,6 +66,7 @@ const CURRENCIES = {
 };
 
 const CACHE_TIME = 5 * 60 * 1000;
+const REFRESH_INTERVAL = 60 * 1000;
 const useCoinPrice = (currency: string, isApiEnabled: boolean, coingeckoId?: string) => {
   const [price, setPrice] = useState(null);
   const cacheRef = useRef({});
@@ -79,28 +80,26 @@ const useCoinPrice = (currency: string, isApiEnabled: boolean, coingeckoId?: str
       const cache = cacheRef.current;
       const cacheKey = `${coinId}-${currency}`;
 
-      if (cache[cacheKey] && now - cache[cacheKey].timestamp < CACHE_TIME) {
-        setPrice(cache[cacheKey].price);
-      } else {
-        try {
-          const response = await fetch(
-            `https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=${currency}`,
-          );
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          const data = await response.json();
-          const coinData = data[coinId];
-          const newPrice = coinData ? coinData[currency] : undefined;
-          setPrice(newPrice);
-          cache[cacheKey] = { price: newPrice, timestamp: now };
-        } catch (error) {
-          console.error("Error fetching price:", error);
+      try {
+        const response = await fetch(
+          `https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=${currency}`,
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
+        const data = await response.json();
+        const coinData = data[coinId];
+        const newPrice = coinData ? coinData[currency] : undefined;
+        setPrice(newPrice);
+        cache[cacheKey] = { price: newPrice, timestamp: now };
+      } catch (error) {
+        console.error("Error fetching price:", error);
       }
     };
 
     fetchPrice();
+    const interval = setInterval(fetchPrice, REFRESH_INTERVAL);
+    return () => clearInterval(interval);
   }, [currency, isApiEnabled, coinId]);
 
   return price;
@@ -156,6 +155,7 @@ export default function InputStep({
   });
 
   const selectedCurrency = watch("currency");
+  const watchedCryptoAmount = watch("cryptoAmount");
   const price = useCoinPrice(selectedCurrency, isApiEnabled, coingeckoId);
 
   const useDebouncedCallback = (callback: (arg: number) => void, delay: number) => {
@@ -193,14 +193,13 @@ export default function InputStep({
   const debouncedUpdateCrypto = useDebouncedCallback(updateCrypto, DEBOUNCE_TIME);
 
   useEffect(() => {
-    if (!isApiEnabled) return;
+    if (!isApiEnabled || !price) return;
 
-    const cryptoAmount = watch("cryptoAmount");
-    if (price && cryptoAmount) {
-      const fiatAmount = Number((cryptoAmount * price).toFixed(2));
+    if (watchedCryptoAmount) {
+      const fiatAmount = Number((watchedCryptoAmount * price).toFixed(2));
       setValue("fiatAmount", fiatAmount);
     }
-  }, [price, watch, setValue, isApiEnabled]);
+  }, [price, watchedCryptoAmount, isApiEnabled, setValue]);
 
   const cryptoRegister = register("cryptoAmount", {
     valueAsNumber: true,
@@ -261,8 +260,24 @@ export default function InputStep({
 
           {coingeckoId && (
             <>
-              <Flex gap="2" alignItems="center">
-                <Checkbox isChecked={isApiEnabled} onChange={(e) => setIsApiEnabled(e.target.checked)}>
+              <Flex
+                gap="2"
+                alignItems="center"
+                bg="glass-bg"
+                borderRadius="xl"
+                px="4"
+                py="3"
+                borderWidth="1px"
+                borderColor="chakra-border-color"
+                transition="all 0.15s"
+                _hover={{ borderColor: "primary.400" }}
+              >
+                <Checkbox
+                  isChecked={isApiEnabled}
+                  onChange={(e) => setIsApiEnabled(e.target.checked)}
+                  size="lg"
+                  colorScheme="primary"
+                >
                   Enable CoinGecko API for fiat currency rates
                 </Checkbox>
               </Flex>

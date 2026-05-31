@@ -60,6 +60,10 @@ export default function NavItem({
           }}
           bg={isActive ? "primary.50" : "transparent"}
           borderRadius="xl"
+          transition="all 0.15s"
+          _hover={{
+            bg: isActive ? undefined : "glass-bg-hover",
+          }}
         />
         {!!badge && badge > 0 && (
           <Badge
@@ -103,6 +107,11 @@ export default function NavItem({
         }}
         bg={isActive ? "primary.50" : "transparent"}
         borderRadius="xl"
+        transition="all 0.15s"
+        _hover={{
+          bg: isActive ? undefined : "glass-bg-hover",
+          transform: "translateX(2px)",
+        }}
         rightIcon={badge && badge > 0 ? <BadgePill count={badge} /> : undefined}
       >
         {label}

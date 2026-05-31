@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import {
   Button,
   Flex,
@@ -17,9 +17,13 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import type { NostrEvent } from "nostr-tools";
+import { useActiveAccount } from "applesauce-react/hooks";
 import { useBreakpointValue } from "../../providers/global/breakpoint-provider";
 import useAppSettings from "../../hooks/use-user-app-settings";
 import useZap from "../../hooks/use-zap";
+import UserAvatarLink from "../user/user-avatar-link";
+import UserName from "../user/user-name";
+import { LightningIcon } from "../icons";
 
 const ZapStateMessages: Record<string, string> = {
   idle: "",
@@ -31,13 +35,13 @@ const ZapStateMessages: Record<string, string> = {
   error: "",
 };
 
+const PRESET_AMOUNTS = [21, 42, 210, 420, 1000, 2100, 4200, 10000, 21000, 42000, 100000, 210000];
+
 export type ZapModalProps = Omit<ModalProps, "children"> & {
   recipientPubkey: string;
   event?: NostrEvent;
   payInvoice: (invoice: string) => Promise<any>;
 };
-
-const DEFAULT_ZAP_AMOUNTS = "21,50,100,500,1000";
 
 export default function ZapModal({
   recipientPubkey,
@@ -50,17 +54,14 @@ export default function ZapModal({
   const { zapAmounts } = useAppSettings();
   const { state, error, sendZap } = useZap();
   const toast = useToast();
+  const account = useActiveAccount();
 
-  const amountsStr = (zapAmounts || DEFAULT_ZAP_AMOUNTS) as string;
-  const [amount, setAmount] = useState<number>(
-    Number.parseFloat(amountsStr.split(",")[0]) || 21,
-  );
+  const amountsStr = (zapAmounts || "21,50,100,500,1000") as string;
+  const defaultAmount = Number.parseFloat(amountsStr.split(",")[0]) || 21;
+  const [amount, setAmount] = useState<number>(defaultAmount);
   const [comment, setComment] = useState("");
 
-  const presetAmounts = amountsStr
-    .split(",")
-    .map((v) => Number.parseFloat(v))
-    .filter((v) => !Number.isNaN(v) && v > 0);
+  const isSelfZap = useMemo(() => account?.pubkey === recipientPubkey, [account?.pubkey, recipientPubkey]);
 
   const handleZap = useCallback(async () => {
     if (amount <= 0) return;
@@ -88,48 +89,63 @@ export default function ZapModal({
 
   return (
     <Modal onClose={onClose} size={isMobile ? "full" : "md"} {...props}>
-      <ModalOverlay />
-      <ModalContent>
+      <ModalOverlay bg="blackAlpha.700" backdropFilter="blur(8px)" />
+      <ModalContent borderRadius="3xl">
         <ModalCloseButton />
         <ModalHeader>
           <Flex gap="2" alignItems="center">
-            <span>⚡</span> Send Zap
+            <LightningIcon />
+            Zap to
+            <UserAvatarLink pubkey={recipientPubkey} size="xs" />
+            <UserName pubkey={recipientPubkey} />
           </Flex>
         </ModalHeader>
         <ModalBody p="4">
           <Flex direction="column" gap="4">
-            <Text fontSize="sm" color="chakra-subtle-text">
-              Send a Lightning zap to the author of this note.
-            </Text>
-
             <FormControl>
-              <FormLabel>Amount (sats)</FormLabel>
-              <Flex gap="2" wrap="wrap">
-                {presetAmounts.map((preset) => (
-                  <Button
-                    key={preset}
-                    size="sm"
-                    variant={amount === preset ? "solid" : "outline"}
-                    colorScheme={amount === preset ? "primary" : "gray"}
-                    onClick={() => setAmount(preset)}
-                  >
-                    {preset} sats
-                  </Button>
-                ))}
+              <Flex direction="column" align="center" gap="2">
+                <Input
+                  type="number"
+                  step={1}
+                  min={1}
+                  value={amount}
+                  onChange={(e) => setAmount(Number(e.target.value))}
+                  isDisabled={isSending}
+                  textAlign="center"
+                  fontSize="4xl"
+                  fontWeight="bold"
+                  border="none"
+                  p="0"
+                  _focus={{ boxShadow: "none" }}
+                  h="auto"
+                />
+                <FormLabel mb="0" fontSize="sm" color="chakra-subtle-text">
+                  Sats
+                </FormLabel>
               </Flex>
             </FormControl>
 
-            <FormControl>
-              <FormLabel>Custom amount (sats)</FormLabel>
-              <Input
-                type="number"
-                step={1}
-                min={1}
-                value={amount}
-                onChange={(e) => setAmount(Number(e.target.value))}
-                isDisabled={isSending}
-              />
-            </FormControl>
+            {isSelfZap && (
+              <Text fontSize="sm" color="yellow.400" textAlign="center">
+                You are about to zap yourself
+              </Text>
+            )}
+
+            <Flex gap="2" wrap="wrap" justify="center">
+              {PRESET_AMOUNTS.map((preset) => (
+                <Button
+                  key={preset}
+                  size="sm"
+                  variant={amount === preset ? "solid" : "outline"}
+                  colorScheme={amount === preset ? "primary" : "gray"}
+                  onClick={() => setAmount(preset)}
+                  borderRadius="xl"
+                  transition="all 0.15s"
+                >
+                  {preset >= 1000 ? `${(preset / 1000).toFixed(0)}k` : preset}
+                </Button>
+              ))}
+            </Flex>
 
             <FormControl>
               <FormLabel>Message (optional)</FormLabel>
@@ -163,7 +179,10 @@ export default function ZapModal({
               isLoading={isSending}
               loadingText={ZapStateMessages[state] || "Sending..."}
               isDisabled={amount <= 0 || isSending}
-              leftIcon={<span>⚡</span>}
+              leftIcon={<LightningIcon />}
+              borderRadius="full"
+              transition="all 0.15s"
+              _hover={{ transform: "translateY(-1px)", boxShadow: "lg" }}
             >
               Zap {amount} sats
             </Button>

@@ -87,6 +87,9 @@ export default function SupportButton() {
         justifyContent="flex-start"
         colorScheme="primary"
         flexShrink={0}
+        borderRadius="xl"
+        transition="all 0.15s"
+        _hover={{ transform: "translateY(-1px)", boxShadow: "lg" }}
         onClick={onOpen}
       >
         {label}
@@ -94,8 +97,8 @@ export default function SupportButton() {
 
       {isOpen && (
         <Modal isOpen={isOpen} onClose={onClose} size={isMobile ? "full" : "xl"}>
-          <ModalOverlay />
-          <ModalContent>
+          <ModalOverlay bg="blackAlpha.700" backdropFilter="blur(8px)" />
+          <ModalContent borderRadius="3xl">
             <ModalCloseButton />
             <TipModalHeader pubkey="bc28aad5b167f31dd37c66d8c95d400c6411d83275ed12c504f60965d1f9eec6" />
 

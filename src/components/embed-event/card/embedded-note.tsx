@@ -26,7 +26,7 @@ export default function EmbeddedNote({ event, ...props }: Omit<CardProps, "child
 
   return (
     <ContentSettingsProvider event={event}>
-      <Card as={LinkBox} {...props}>
+      <Card as={LinkBox} borderRadius="xl" bg="chakra-subtle-bg" borderColor="chakra-border-color" transition="all 0.15s" _hover={{ borderColor: "primary.400" }} {...props}>
         <Flex p="2" gap="2" alignItems="center">
           <UserAvatarLink pubkey={event.pubkey} size="sm" />
           <UserLink pubkey={event.pubkey} fontWeight="bold" isTruncated fontSize="lg" />

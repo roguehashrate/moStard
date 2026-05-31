@@ -10,7 +10,7 @@ export type UserCardProps = { pubkey: string; relay?: string } & Omit<FlexProps,
 
 export const UserCard = memo(({ pubkey, relay, ...props }: UserCardProps) => {
   return (
-    <Flex p="1" overflow="hidden" gap="4" alignItems="center" {...props}>
+    <Flex p="2" overflow="hidden" gap="4" alignItems="center" borderRadius="xl" transition="all 0.15s" _hover={{ bg: "glass-bg-hover" }} {...props}>
       <UserAvatarLink pubkey={pubkey} />
       <Flex direction="column" flex={1} overflow="hidden">
         <UserLink pubkey={pubkey} fontWeight="bold" />

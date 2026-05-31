@@ -8,6 +8,13 @@ import { useObservableMemo } from "applesauce-react/hooks";
 import { resolveLnurlp, createZapRequestTemplate, getZapInvoice } from "../helpers/zap";
 import useAppSettings from "./use-user-app-settings";
 
+function makeFakeId() {
+  const chars = "0123456789abcdef";
+  let id = "";
+  for (let i = 0; i < 64; i++) id += chars[Math.floor(Math.random() * 16)];
+  return id;
+}
+
 export type ZapState = "idle" | "resolving" | "creating" | "fetching-invoice" | "paying" | "done" | "error";
 
 export interface UseZapReturn {
@@ -105,6 +112,25 @@ export default function useZap(): UseZapReturn {
         setState("paying");
 
         await payInvoice(invoice);
+
+        if (event) {
+          const fakeReceipt: NostrEvent = {
+            kind: 9735,
+            pubkey: recipientPubkey,
+            tags: [
+              ["e", event.id],
+              ["P", account.pubkey],
+              ["bolt11", invoice],
+              ["description", JSON.stringify(zapEvent)],
+            ],
+            content: "",
+            created_at: Math.floor(Date.now() / 1000),
+            id: makeFakeId(),
+            sig: "",
+          };
+          (fakeReceipt as any)[Symbol.for("from-cache")] = true;
+          eventStore.add(fakeReceipt);
+        }
 
         setState("done");
         return true;

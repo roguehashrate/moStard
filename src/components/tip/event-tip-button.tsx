@@ -1,46 +1,38 @@
-import { type ButtonProps, Button, useDisclosure } from "@chakra-ui/react";
+import { IconButton, useDisclosure } from "@chakra-ui/react";
 
 import TipModal from "../event-tip-modal";
 
 import type { NostrEvent } from "nostr-tools";
 import useEventPaymentTargets from "~/hooks/use-event-payment-targets";
-import PaytoIcon from "../payment/payto-icon";
+import { TipIcon } from "../icons";
 
-export type NoteTipButtonProps = Omit<ButtonProps, "children"> & {
+export type NoteTipButtonProps = {
   event: NostrEvent;
   allowComment?: boolean;
   showEventPreview?: boolean;
 };
 
-export default function EventTipButton({ event, allowComment, showEventPreview, ...props }: NoteTipButtonProps) {
+export default function EventTipButton({ event, allowComment, showEventPreview }: NoteTipButtonProps) {
   const targets = useEventPaymentTargets(event);
-  const primaryTarget = targets[0];
+  const nonLightningTargets = targets.filter((t) => t.type !== "lightning");
+  const primaryTarget = nonLightningTargets[0];
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const title = primaryTarget ? "Tip User" : "Tip Note";
+  if (!primaryTarget) return null;
 
   return (
     <>
-      <Button
-        m={0}
-        rightIcon={primaryTarget ? <PaytoIcon type={primaryTarget.type} /> : undefined}
-        aria-label={title}
-        title={title}
-        {...props}
+      <IconButton
+        icon={<TipIcon />}
+        aria-label="Tip"
+        title="Tip"
         onClick={onOpen}
-        isDisabled={!primaryTarget}
-        sx={
-          primaryTarget
-            ? {}
-            : {
-                "& .chakra-button__icon": {
-                  margin: "0 !important",
-                },
-              }
-        }
-      >
-        {primaryTarget ? "Tip" : ""}
-      </Button>
+        variant="ghost"
+        size="sm"
+        borderRadius="xl"
+        transition="all 0.15s"
+        _hover={{ bg: "glass-bg-hover" }}
+      />
 
       {isOpen && (
         <TipModal
@@ -49,7 +41,7 @@ export default function EventTipButton({ event, allowComment, showEventPreview, 
           event={event}
           allowComment={allowComment}
           showEmbed={showEventPreview}
-          paymentTargets={targets}
+          paymentTargets={nonLightningTargets}
         />
       )}
     </>

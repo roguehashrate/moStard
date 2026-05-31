@@ -172,6 +172,7 @@ const MagicInput = forwardRef<HTMLInputElement, InputProps & { instanceRef?: Leg
         minChar={0}
         trigger={triggers}
         innerRef={ref && (typeof ref === "function" ? ref : (el) => (ref.current = el))}
+        focusBorderColor="primary.500"
         aria-label={props["aria-label"] || "Input with autocomplete"}
         role="combobox"
         aria-autocomplete="list"
@@ -195,6 +196,7 @@ const MagicTextArea = forwardRef<HTMLTextAreaElement, TextareaProps & { instance
         minChar={0}
         trigger={triggers}
         innerRef={ref && (typeof ref === "function" ? ref : (el) => (ref.current = el))}
+        focusBorderColor="primary.500"
         aria-label={props["aria-label"] || "Textarea with autocomplete"}
         role="combobox"
         aria-autocomplete="list"

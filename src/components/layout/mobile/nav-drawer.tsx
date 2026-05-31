@@ -32,7 +32,7 @@ export default function NavDrawer({ onClose, ...props }: Omit<DrawerProps, "chil
   return (
     <Drawer placement="left" onClose={onClose} {...props}>
       <DrawerOverlay />
-      <DrawerContent>
+      <DrawerContent borderRadius="2xl" mx="2" my="2" className="glass-blur-strong">
         <CollapsedContext.Provider value={false}>
           <DrawerBody
             display="flex"
@@ -44,23 +44,20 @@ export default function NavDrawer({ onClose, ...props }: Omit<DrawerProps, "chil
             gap="2"
             onClick={handleClickItem}
           >
-            {!account && (
-              <Flex gap="2" my="2" alignItems="center">
-                <Avatar src="/apple-touch-icon.png" size="md" />
-                <Text m={0}>moStard</Text>
-              </Flex>
-            )}
+            <Flex gap="3" px="1" alignItems="center" mb="2">
+              <Avatar src="/apple-touch-icon.png" size="md" borderRadius="2xl" />
+              {!account && (
+                <Text fontWeight="bold" fontSize="lg">moStard</Text>
+              )}
+            </Flex>
             <AccountSwitcher />
             <NavItems />
             <ButtonGroup variant="ghost" onClick={onClose}>
-              <RelayConnectionButton w="full" />
+              <RelayConnectionButton w="full" borderRadius="xl" />
               <PublishLogButton flexShrink={0} />
             </ButtonGroup>
-          </DrawerBody>
-
-          <Flex flexDirection="column" px="4" pt="4" overflowY="auto" overflowX="hidden" gap="2">
             <SupportButton />
-          </Flex>
+          </DrawerBody>
         </CollapsedContext.Provider>
       </DrawerContent>
     </Drawer>

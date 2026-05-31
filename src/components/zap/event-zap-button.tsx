@@ -1,24 +1,28 @@
-import { useEffect } from "react";
-import { Button, type ButtonProps, useDisclosure } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { Button, useDisclosure } from "@chakra-ui/react";
 import type { NostrEvent } from "nostr-tools";
 import { kinds } from "nostr-tools";
-import { useEventStore } from "applesauce-react/hooks";
-import { useObservableMemo } from "applesauce-react/hooks";
+import { useActiveAccount, useEventStore, useObservableMemo } from "applesauce-react/hooks";
 import { map } from "rxjs/operators";
 
-import useAppSettings from "../../hooks/use-user-app-settings";
-import { nwcManager } from "../../services/nwc-manager";
+import { LightningIcon, LightningIconFilled } from "../icons";
+import useZapAmounts from "../../hooks/use-zap-amounts";
 import { profileLoader } from "../../services/loaders";
+import { nwcManager } from "../../services/nwc-manager";
 import ZapModal from "../zap-modal";
 
-export type EventZapButtonProps = Omit<ButtonProps, "children"> & {
+export type EventZapButtonProps = {
   event: NostrEvent;
 };
 
-export default function EventZapButton({ event, ...props }: EventZapButtonProps) {
-  const settings = useAppSettings();
+export default function EventZapButton({ event }: EventZapButtonProps) {
   const eventStore = useEventStore();
+  const account = useActiveAccount();
+  const { totalSats, zapperPubkeys } = useZapAmounts(event);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [hasLightning, setHasLightning] = useState(false);
+
+  const hasZapped = account ? zapperPubkeys.has(account.pubkey) : false;
 
   useEffect(() => {
     if (!eventStore.hasReplaceable(kinds.Metadata, event.pubkey)) {
@@ -31,41 +35,39 @@ export default function EventZapButton({ event, ...props }: EventZapButtonProps)
     [event.pubkey, eventStore],
   );
 
-  const hasLightning = (() => {
-    if (!authorMeta) return false;
+  useEffect(() => {
+    if (!authorMeta) {
+      setHasLightning(false);
+      return;
+    }
     try {
       const content = JSON.parse(authorMeta.content);
-      return typeof content.lud06 === "string" || typeof content.lud16 === "string";
+      setHasLightning(typeof content.lud06 === "string" || typeof content.lud16 === "string");
     } catch {
-      return false;
+      setHasLightning(false);
     }
-  })();
-
-  const enableAlternativePayments =
-    "enableAlternativePayments" in settings ? (settings as any).enableAlternativePayments : false;
-  const nwcEnabled = "nwcEnabled" in settings ? (settings as any).nwcEnabled : false;
-  const isActive =
-    enableAlternativePayments && nwcEnabled && nwcManager.status === "connected" && hasLightning;
-
-  if (!isActive) return null;
+  }, [authorMeta]);
 
   return (
     <>
       <Button
-        m={0}
-        leftIcon={<span>⚡</span>}
+        leftIcon={hasZapped ? <LightningIconFilled /> : <LightningIcon />}
         aria-label="Zap"
         title="Send Lightning Zap"
         onClick={(e) => {
           e.stopPropagation();
           onOpen();
         }}
+        isDisabled={!hasLightning}
         variant="ghost"
         size="sm"
-        {...props}
+        borderRadius="xl"
+        transition="all 0.15s"
+        _hover={hasLightning ? { bg: "glass-bg-hover" } : undefined}
       >
-        Zap
+        {totalSats > 0 ? totalSats : null}
       </Button>
+
       {isOpen && (
         <ZapModal
           isOpen={isOpen}

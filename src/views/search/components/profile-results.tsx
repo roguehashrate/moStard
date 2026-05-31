@@ -21,11 +21,14 @@ function ProfileResult({ profile }: { profile: NostrEvent }) {
       overflow="hidden"
       direction="column"
       borderWidth={1}
-      rounded="md"
-      p="2"
+      rounded="xl"
+      p="3"
       flexShrink={0}
       maxW="xs"
       minW="48"
+      bg="glass-bg"
+      transition="all 0.15s"
+      _hover={{ borderColor: "primary.400" }}
     >
       <Flex gap="2" overflow="hidden">
         <UserAvatar pubkey={profile.pubkey} float="left" />

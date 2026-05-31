@@ -70,6 +70,9 @@ export function InvoiceModalContent({ address, amount, onPaid, paymentType = "" 
           flex={1}
           variant="solid"
           size="md"
+          borderRadius="full"
+          transition="all 0.15s"
+          _hover={{ transform: "translateY(-1px)", boxShadow: "lg" }}
           isLoading={payingApp}
         >
           Pay in Wallet
@@ -90,8 +93,8 @@ export default function InvoiceModal({
   const isMobile = useBreakpointValue({ base: true, md: false });
   return (
     <Modal onClose={onClose} size={isMobile ? "full" : "xl"} {...props}>
-      <ModalOverlay />
-      <ModalContent>
+      <ModalOverlay bg="blackAlpha.700" backdropFilter="blur(8px)" />
+      <ModalContent borderRadius="3xl">
         <ModalBody padding="4">
           <InvoiceModalContent
             address={address}

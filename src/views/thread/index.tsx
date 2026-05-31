@@ -38,8 +38,11 @@ function ParentNote({ note, level = 0 }: { note: NostrEvent; level?: number }) {
       p="2"
       flexShrink={0}
       borderWidth="0 2px 0 2px"
-      rounded="none"
+      rounded="xl"
       borderColor="var(--chakra-colors-chakra-border-color)"
+      bg="glass-bg"
+      mx="2"
+      my="1"
       ref={ref}
       role="article"
     >

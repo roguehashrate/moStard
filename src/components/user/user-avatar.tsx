@@ -89,7 +89,7 @@ export type MetadataAvatarProps = Omit<AvatarProps, "src"> & {
   square?: boolean;
 };
 export const MetadataAvatar = forwardRef<HTMLDivElement, MetadataAvatarProps>(
-  ({ pubkey, metadata, noProxy, children, square = true, ...props }, ref) => {
+  ({ pubkey, metadata, noProxy, children, square = false, ...props }, ref) => {
     const { imageProxy, showPubkeyColor } = useAppSettings();
     const hideUsernames = useObservableEagerState(localSettings.hideUsernames);
     const account = useActiveAccount();

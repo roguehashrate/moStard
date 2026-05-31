@@ -4,11 +4,11 @@ import { DeepPartial, Theme, extendTheme } from "@chakra-ui/react";
 import { cardTheme } from "../default/components/card";
 import { pallet } from "../helpers";
 import { buttonTheme } from "../default/components/button";
-import { drawerTheme } from "../default/components/drawer";
+import { drawerTheme } from "../drawer";
 import { modalTheme } from "../default/components/modal";
 import { menuTheme } from "../default/components/menu";
 
-const sapphireTheme = extendTheme({
+const midnightTheme = extendTheme({
   colors: {
     gray: pallet(chroma.scale(["#b8c6e6", "#0a0e1a"]).colors(10)),
   },
@@ -33,4 +33,4 @@ const sapphireTheme = extendTheme({
   },
 } as DeepPartial<Theme>);
 
-export default sapphireTheme;
+export default midnightTheme;

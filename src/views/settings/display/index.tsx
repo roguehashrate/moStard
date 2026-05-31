@@ -49,10 +49,14 @@ export default function DisplaySettings() {
           Theme
         </FormLabel>
         <Select id="theme" {...register("theme")} maxW="sm">
-          <option value="default">Default</option>
-          <option value="sapphire">Sapphire</option>
-          <option value="emerald">Emerald</option>
-          <option value="chakraui">ChakraUI</option>
+          <option value="default">moStard — Signature Orange</option>
+          <option value="sapphire">Sapphire — Blue</option>
+          <option value="emerald">Emerald — Green</option>
+          <option value="galaxy">Galaxy — Deep Purple</option>
+          <option value="ocean">Ocean — Teal</option>
+          <option value="kawaii">Kawaii — Pastel Pink</option>
+          <option value="midnight">Midnight — Dark Blue</option>
+          <option value="forest">Forest — Rich Green</option>
         </Select>
       </FormControl>
       <FormControl>

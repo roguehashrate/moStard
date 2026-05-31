@@ -25,6 +25,9 @@ export default function UserZapButton({ pubkey, ...props }: { pubkey: string } &
           aria-label="Tip User"
           title="Tip User"
           icon={<PaytoIcon type={primary.type} />}
+          borderRadius="xl"
+          transition="all 0.15s"
+          _hover={{ bg: "glass-bg-hover" }}
           {...props}
         />
         {showZap && (
@@ -35,6 +38,9 @@ export default function UserZapButton({ pubkey, ...props }: { pubkey: string } &
             title="Send Lightning Zap"
             variant="outline"
             size="sm"
+            borderRadius="xl"
+            transition="all 0.15s"
+            _hover={{ bg: "glass-bg-hover" }}
           >
             Zap
           </Button>

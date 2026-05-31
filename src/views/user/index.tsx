@@ -64,11 +64,12 @@ export default function UserView() {
         index={activeTab}
         onChange={(v) => navigate(tabs[v].path, { replace: true })}
         colorScheme="primary"
+        variant="soft-rounded"
         h="full"
       >
-        <TabList overflowX="auto" overflowY="hidden" flexShrink={0}>
+        <TabList overflowX="auto" overflowY="hidden" flexShrink={0} px="2" py="1" gap="1">
           {tabs.map(({ label }) => (
-            <Tab key={label} whiteSpace="pre">
+            <Tab key={label} whiteSpace="pre" borderRadius="full" fontSize="sm" px="3">
               {label}
             </Tab>
           ))}

@@ -1,6 +1,6 @@
 repository: https://github.com/roguehashrate/moStard
-description: A Monero-first nostr client.
-summary: A Monero-first nostr client.
+description: A moStard nostr client.
+summary: A moStard nostr client.
 tags:
     - nostr
     - client

@@ -40,22 +40,24 @@ export default function DesktopSideNav({ ...props }: Omit<FlexProps, "children">
         overflowX="hidden"
         overscroll="none"
         bg="chakra-subtle-bg"
+        bgOpacity="0.92"
         transition="width 0.2s ease"
+        className="glass-blur-strong"
         _scrollbar={{ display: "none" }}
         css={{ "&::-webkit-scrollbar": { width: "0px" } }}
         {...props}
       >
         <Flex gap="3" px="3" alignItems="center" mb="2">
-          <Image src="/transparent.png" boxSize="48px" alt="moStard" borderRadius="full" />
+          <Image src="/transparent.png" boxSize="48px" alt="moStard" borderRadius="2xl" />
           {!collapsed && (
             <Box>
               <Heading size="sm" fontWeight="bold" lineHeight="1.2">moStard</Heading>
-              <Text fontSize="xs" color="chakra-subtle-text">monero-first nostr</Text>
+              <Text fontSize="xs" color="chakra-subtle-text">moStard</Text>
             </Box>
           )}
         </Flex>
 
-        <Divider mb="1" borderColor="chakra-border-color" />
+        <Divider mb="1" borderColor="chakra-border-color" opacity={0.5} />
 
         <NavItems />
 

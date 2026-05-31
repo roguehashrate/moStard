@@ -24,6 +24,9 @@ export default function CustomTipAmountOptions({
             leftIcon={<PaytoIcon type={paymentType} />}
             variant="solid"
             size="sm"
+            borderRadius="xl"
+            transition="all 0.15s"
+            _hover={{ transform: "translateY(-1px)", boxShadow: "md" }}
             isDisabled={false}
           >
             {amount}

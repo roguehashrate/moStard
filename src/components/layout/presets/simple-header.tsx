@@ -21,7 +21,9 @@ export default function SimpleHeader({
       position="sticky"
       top="0"
       backgroundColor="var(--chakra-colors-chakra-body-bg)"
+      bgOpacity="0.85"
       zIndex="modal"
+      className="glass-blur"
       {...props}
     >
       <BackIconButton hideFrom="xl" />

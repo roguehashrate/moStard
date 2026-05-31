@@ -19,7 +19,7 @@ export default function AccountSwitcher() {
   return (
     <>
       {account ? (
-        <Flex gap="2" alignItems="center" flexShrink={0} overflow="hidden">
+        <Flex gap="2" alignItems="center" flexShrink={0} overflow="hidden" px="1" py="1" borderRadius="xl" _hover={{ bg: "glass-bg-hover" }} transition="all 0.15s">
           <UserAvatarLink pubkey={account.pubkey} noProxy size="md" />
           {!collapsed && (
             <>

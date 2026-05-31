@@ -32,7 +32,7 @@ const variantOutline = definePartsStyle({
   container: {
     borderWidth: "1px",
     borderColor: "chakra-border-color",
-    bg: "chakra-subtle-bg",
+    bg: "glass-bg",
   },
 });
 

@@ -4,6 +4,11 @@ import chroma from "chroma-js";
 import defaultTheme from "./default";
 import sapphireTheme from "./sapphire";
 import emeraldTheme from "./emerald";
+import galaxyTheme from "./galaxy";
+import oceanTheme from "./ocean";
+import kawaiiTheme from "./kawaii";
+import midnightTheme from "./midnight";
+import forestTheme from "./forest";
 import { drawerTheme } from "./drawer";
 import { containerTheme } from "./container";
 
@@ -18,6 +23,11 @@ const themeConfigs: Record<string, { primary: string; theme?: object }> = {
   default: { primary: "#ff6600", theme: defaultTheme },
   sapphire: { primary: "#2b7be8", theme: sapphireTheme },
   emerald: { primary: "#24a35a", theme: emeraldTheme },
+  galaxy: { primary: "#7c4dff", theme: galaxyTheme },
+  ocean: { primary: "#0ea5e9", theme: oceanTheme },
+  kawaii: { primary: "#ec4899", theme: kawaiiTheme },
+  midnight: { primary: "#3b82f6", theme: midnightTheme },
+  forest: { primary: "#22c55e", theme: forestTheme },
 };
 
 function getTheme(name: string) {

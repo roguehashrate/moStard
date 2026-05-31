@@ -157,8 +157,8 @@ export default function TipModal({
   const isMobile = useBreakpointValue({ base: true, md: false });
   return (
     <Modal onClose={onClose} size={isMobile ? "full" : "xl"} {...props}>
-      <ModalOverlay />
-      <ModalContent>
+      <ModalOverlay bg="blackAlpha.700" backdropFilter="blur(8px)" />
+      <ModalContent borderRadius="3xl">
         <ModalCloseButton />
 
         <TipModalHeader />

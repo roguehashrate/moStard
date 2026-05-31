@@ -39,8 +39,7 @@ function NavTab({
         }}
         transition="all 0.15s"
         _hover={{
-          bg: isActive ? undefined : "blackAlpha.50",
-          _dark: { bg: isActive ? undefined : "whiteAlpha.50" },
+          bg: isActive ? undefined : "glass-bg-hover",
         }}
       >
         <Box
@@ -54,7 +53,7 @@ function NavTab({
       {!!badge && badge > 0 && (
         <Badge
           position="absolute"
-          top="0"
+          top="1.5"
           right="calc(50% - 16px)"
           colorScheme="red"
           borderRadius="full"
@@ -66,7 +65,7 @@ function NavTab({
           justifyContent="center"
           lineHeight="1"
         >
-          {badge > 99 ? "99+" : badge}
+          {badge >= 10 ? "9+" : badge}
         </Badge>
       )}
     </Box>
@@ -81,56 +80,48 @@ export default function MobileBottomNav() {
 
   return (
     <>
-      <Flex
-        gap="1"
-        pt="2"
-        px="2"
-        pb="calc(var(--chakra-space-2) + var(--safe-bottom))"
-        borderTopWidth={1}
-        borderTopColor="chakra-border-color"
-        hideFrom="md"
-        bg="chakra-body-bg"
+      <Box
         position="fixed"
         bottom="0"
         left="0"
         right="0"
         zIndex="modal"
-        alignItems="center"
+        hideFrom="md"
       >
-        <Box
-          position="absolute"
-          top="0"
-          left="0"
-          right="0"
-          bottom="0"
-          backdropFilter="blur(16px)"
-          pointerEvents="none"
-          css={{ WebkitBackdropFilter: "blur(16px)" }}
-        />
-        <Box position="relative" zIndex={1} display="flex" alignItems="center" gap="1" w="full">
+        <Flex
+          gap="1"
+          pt="2"
+          px="2"
+          pb="calc(var(--chakra-space-2) + var(--safe-bottom))"
+          position="relative"
+          alignItems="center"
+          bg="chakra-body-bg"
+          borderTopWidth="1px"
+          borderTopColor="chakra-border-color"
+        >
           {account ? (
-            <UserAvatar pubkey={account.pubkey} size="sm" onClick={drawer.onOpen} noProxy />
-          ) : (
-            <Avatar size="sm" src="/apple-touch-icon.png" onClick={drawer.onOpen} cursor="pointer" />
-          )}
-          <NavTab to="/" icon={<NotesIcon boxSize={6} />} label="Home" />
-          <NavTab to="/search" icon={<SearchIcon boxSize={6} />} label="Search" />
-          <IconButton
-            as={RouterLink}
-            icon={<PlusCircleIcon boxSize={6} />}
-            aria-label="Create new"
-            title="Create new"
-            variant="solid"
-            colorScheme="primary"
-            size="md"
-            borderRadius="full"
-            to="/new"
-            boxShadow="0 0 16px var(--chakra-colors-primary-500)"
-          />
-          <NavTab to="/messages" icon={<DirectMessagesIcon boxSize={5} />} label="Messages" />
-          <NavTab to="/notifications" icon={<NotificationsIcon boxSize={5} />} label="Notifications" badge={unreadCount} />
-        </Box>
-      </Flex>
+              <UserAvatar pubkey={account.pubkey} size="sm" onClick={drawer.onOpen} noProxy />
+            ) : (
+              <Avatar size="sm" src="/apple-touch-icon.png" onClick={drawer.onOpen} cursor="pointer" />
+            )}
+            <NavTab to="/" icon={<NotesIcon boxSize={6} />} label="Home" />
+            <NavTab to="/search" icon={<SearchIcon boxSize={6} />} label="Search" />
+            <IconButton
+              as={RouterLink}
+              icon={<PlusCircleIcon boxSize={6} />}
+              aria-label="Create new"
+              title="Create new"
+              variant="solid"
+              colorScheme="primary"
+              size="md"
+              borderRadius="full"
+              to="/new"
+              boxShadow="0 0 16px var(--chakra-colors-primary-500)"
+            />
+            <NavTab to="/messages" icon={<DirectMessagesIcon boxSize={5} />} label="Messages" />
+            <NavTab to="/notifications" icon={<NotificationsIcon boxSize={5} />} label="Notifications" badge={unreadCount} />
+        </Flex>
+      </Box>
       <NavDrawer isOpen={drawer.isOpen} onClose={drawer.onClose} />
     </>
   );

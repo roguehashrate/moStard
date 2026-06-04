@@ -8,7 +8,6 @@ import useEventIntersectionRef from "../../../hooks/use-event-intersection-ref";
 import { ContentSettingsProvider } from "../../../providers/local/content-settings";
 import { CategorizedEvent, NotificationType, NotificationTypeSymbol } from "../../../services/notifications";
 import MentionNotification from "./mention-notification";
-import MessageNotification from "./message-notification";
 import QuoteNotification from "./quote-notification";
 import ReactionNotification from "./reaction-notification";
 import ReplyNotification from "./reply-notification";
@@ -60,9 +59,6 @@ const NotificationItem = ({
         break;
       case NotificationType.Repost:
         content = <RepostNotification event={event} onClick={onClick && handleClick} />;
-        break;
-      case NotificationType.Message:
-        content = <MessageNotification event={event} onClick={onClick && handleClick} />;
         break;
       default:
         content = <UnknownNotification event={event} onClick={onClick && handleClick} />;

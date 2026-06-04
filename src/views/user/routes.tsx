@@ -17,7 +17,6 @@ const UserEmojiPacksTab = lazy(() => import("./emoji-packs"));
 const UserRelaysTab = lazy(() => import("./relays"));
 const UserReportsTab = lazy(() => import("./reports"));
 const UserMutedByTab = lazy(() => import("./muted-by"));
-const UserMessagesTab = lazy(() => import("./messages"));
 const UserTorrentsTab = lazy(() => import("./torrents"));
 
 export default [
@@ -39,7 +38,6 @@ export default [
       { path: "relays", Component: UserRelaysTab },
       { path: "reports", Component: UserReportsTab },
       { path: "muted-by", Component: UserMutedByTab },
-      { path: "dms", Component: UserMessagesTab },
       { path: "torrents", Component: UserTorrentsTab },
     ],
   },

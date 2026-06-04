@@ -7,7 +7,6 @@ import { ReadonlySigner } from "applesauce-signers";
 
 import { DotsMenuButton, MenuIconButtonProps } from "../../../components/menu/dots-menu-button";
 import {
-  DirectMessagesIcon,
   CopyToClipboardIcon,
   CodeIcon,
   ExternalLinkIcon,
@@ -59,13 +58,6 @@ export const UserProfileMenu = ({
             {isMuted ? "Unmute User" : "Mute User"}
           </MenuItem>
         )}
-        <MenuItem
-          icon={<DirectMessagesIcon fontSize="1.5em" />}
-          as={RouterLink}
-          to={`/messages/${nip19.npubEncode(pubkey)}`}
-        >
-          Direct messages
-        </MenuItem>
         <MenuItem
           icon={<Telescope fontSize="1.5em" />}
           as={RouterLink}

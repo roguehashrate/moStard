@@ -104,7 +104,11 @@ class ReadStatusService {
 
 const readStatusService = new ReadStatusService();
 
-setInterval(readStatusService.prune.bind(readStatusService), 30_000);
+setInterval(() => {
+  readStatusService.prune().catch((err) => {
+    readStatusService.log("Failed to prune read status", err);
+  });
+}, 30_000);
 
 if (import.meta.env.DEV) {
   // @ts-expect-error debug

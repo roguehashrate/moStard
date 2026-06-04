@@ -35,7 +35,6 @@ import toolsRoutes from "./views/tools/routes";
 import discoveryRoutes from "./views/discovery/routes";
 import wikiRoutes from "./views/wiki/routes";
 import filesRoutes from "./views/files/routes";
-import messagesRoutes from "./views/messages/routes";
 import listsRoutes from "./views/lists/routes";
 import bookmarksRoutes from "./views/bookmarks/routes";
 import articlesRoutes from "./views/articles/routes";
@@ -84,7 +83,6 @@ const router = createBrowserRouter(
         { index: true, Component: HomeView },
         { path: "notes", Component: HomeView },
         { path: "new", children: newRoutes },
-        { path: "messages", children: messagesRoutes },
         { path: "user/:pubkey", children: userRoutes },
         { path: "u/:pubkey", children: userRoutes },
         { path: "note/:id", Component: ThreadView },

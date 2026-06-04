@@ -26,7 +26,9 @@ setInterval(() => {
   const days = localSettings.wasmPersistForDays.value;
   if (days) {
     log(`Removing all events older than ${days} days in WASM relay`);
-    worker.delete(["REQ", "prune", { until: dayjs().subtract(days, "days").unix() }]);
+    worker.delete(["REQ", "prune", { until: dayjs().subtract(days, "days").unix() }]).catch((err) => {
+      log("Failed to prune WASM relay", err);
+    });
   }
 }, 60_000);
 

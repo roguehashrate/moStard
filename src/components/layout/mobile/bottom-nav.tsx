@@ -2,7 +2,7 @@ import { Avatar, Badge, Box, Flex, IconButton, useDisclosure } from "@chakra-ui/
 import { useActiveAccount } from "applesauce-react/hooks";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 
-import { DirectMessagesIcon, NotesIcon, NotificationsIcon, PlusCircleIcon, SearchIcon } from "../../icons";
+import { AppsIcon, NotesIcon, NotificationsIcon, PlusCircleIcon, SearchIcon } from "../../icons";
 import useRootPadding from "../../../hooks/use-root-padding";
 
 import useUnreadNotificationCount from "../../../hooks/use-unread-notification-count";
@@ -118,7 +118,7 @@ export default function MobileBottomNav() {
               to="/new"
               boxShadow="0 0 16px var(--chakra-colors-primary-500)"
             />
-            <NavTab to="/messages" icon={<DirectMessagesIcon boxSize={5} />} label="Messages" />
+            <NavTab to="/other-stuff" icon={<AppsIcon boxSize={5} />} label="Apps" />
             <NavTab to="/notifications" icon={<NotificationsIcon boxSize={5} />} label="Notifications" badge={unreadCount} />
         </Flex>
       </Box>

@@ -4,7 +4,6 @@ import {
   ArticleIcon,
   BadgeIcon,
   BookmarkIcon,
-  DirectMessagesIcon,
   EmojiPacksIcon,
   LiveStreamIcon,
   MapIcon,
@@ -56,13 +55,6 @@ export const internalApps: App[] = [
     icon: NotificationsIcon,
     id: "notifications",
     to: "/notifications",
-  },
-  {
-    title: "Messages",
-    description: "Direct Messages",
-    icon: DirectMessagesIcon,
-    id: "messages",
-    to: "/messages",
   },
   {
     title: "Search",
@@ -305,6 +297,6 @@ export const externalTools: App[] = [
 ];
 
 export const defaultAnonFavoriteApps = ["notes", "discover", "search", "articles"];
-export const defaultUserFavoriteApps = ["notes", "discover", "notifications", "messages", "search"];
+export const defaultUserFavoriteApps = ["notes", "discover", "notifications", "search"];
 
 export const allApps = [...internalApps, ...internalTools, ...externalTools];

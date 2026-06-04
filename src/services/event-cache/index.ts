@@ -81,7 +81,9 @@ const writeEvent$ = new Subject<NostrEvent>();
 writeEvent$.pipe(bufferTime(1000, undefined, 500)).subscribe((events) => {
   const cache = eventCache$.value;
   if (!cache) return;
-  return cache.write(events);
+  cache.write(events).catch((err) => {
+    log("Failed to write events to cache", err);
+  });
 });
 
 export function writeEvent(events: NostrEvent | NostrEvent[]): void {

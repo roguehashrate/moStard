@@ -174,6 +174,7 @@ export const ListsIcon = List;
 export const LiveStreamIcon = VideoRecorder;
 
 export const ImageGridTimelineIcon = Grid01;
+export const AppsIcon = Grid01;
 
 export const TimelineHealthIcon = Microscope;
 

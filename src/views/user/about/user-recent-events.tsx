@@ -6,7 +6,6 @@ import {
   ArticleIcon,
   BookmarkIcon,
   ChannelsIcon,
-  DirectMessagesIcon,
   EmojiPacksIcon,
   ListsIcon,
   NotesIcon,
@@ -81,13 +80,6 @@ const KnownKinds: KnownKind[] = [
     name: "Pictures",
     icon: Camera01,
     link: (_, p) => `/u/${npubEncode(p)}/pictures`,
-  },
-
-  {
-    kind: kinds.EncryptedDirectMessage,
-    name: "Legacy DMs",
-    icon: DirectMessagesIcon,
-    link: (_e, p) => `/u/${nip19.npubEncode(p)}/dms`,
   },
 
   {

@@ -211,11 +211,15 @@ class RelayScoreboardService {
 const relayScoreboardService = new RelayScoreboardService();
 
 setTimeout(() => {
-  relayScoreboardService.loadStats();
+  relayScoreboardService.loadStats().catch((err) => {
+    console.error("Failed to load relay scoreboard stats", err);
+  });
 }, 0);
 
 setInterval(() => {
-  relayScoreboardService.saveStats();
+  relayScoreboardService.saveStats().catch((err) => {
+    console.error("Failed to save relay scoreboard stats", err);
+  });
 }, 1000 * 30);
 
 if (import.meta.env.DEV) {

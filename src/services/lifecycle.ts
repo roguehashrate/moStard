@@ -1,7 +1,6 @@
 import { IAccount } from "applesauce-accounts";
 import { isFromCache } from "applesauce-core/helpers";
-import { defined, mapEventsToStore } from "applesauce-core/observable";
-import { onlyEvents } from "applesauce-relay";
+import { defined } from "applesauce-core/observable";
 import { USER_BLOSSOM_SERVER_LIST_KIND } from "blossom-client-sdk";
 import { kinds, nip42 } from "nostr-tools";
 import {
@@ -10,20 +9,16 @@ import {
   distinctUntilChanged,
   EMPTY,
   filter,
-  ignoreElements,
   map,
   merge,
   NEVER,
   of,
-  share,
   switchMap,
   tap,
-  timer,
 } from "rxjs";
 
 import { APP_SETTING_IDENTIFIER, APP_SETTINGS_KIND } from "../helpers/app-settings";
 import { AppSettingsQuery, MailboxesQuery } from "../models";
-import { DirectMessageRelays } from "../models/messages";
 import accounts from "./accounts";
 import authenticationSigner from "./authentication-signer";
 import { writeEvent } from "./event-cache";
@@ -114,47 +109,9 @@ pool.relays$
   )
   .subscribe();
 
-// Observable to subscribe to NIP-65 inboxes for wrapped messages (NIP-17)
-export const wrappedMessageSubscription = accounts.active$.pipe(
-  switchMap((account) => {
-    if (!account) return NEVER;
-    const inboxes = eventStore.model(DirectMessageRelays, account.pubkey).pipe(defined());
-    return combineLatest([of(account), inboxes]);
-  }),
-  // Open a subscription to all relays for incoming messages
-  switchMap(([account, inboxes]) =>
-    pool
-      .subscription(inboxes, { kinds: [kinds.GiftWrap], "#p": [account.pubkey] })
-      .pipe(onlyEvents(), mapEventsToStore(eventStore)),
-  ),
-  // Ingore all updates since subscribes will get the events from the store
-  ignoreElements(),
-  // Ensure only one subscription is created and keep it alive for 30 seconds after last subscriber
-  share({ resetOnRefCountZero: () => timer(30_000) }),
-);
-
-// Observable to subscribe to legacy DM relays for backward compatibility
-export const legacyMessageSubscription = accounts.active$.pipe(
-  switchMap((account) => {
-    if (!account) return NEVER;
-    const dmRelays = eventStore.model(DirectMessageRelays, account.pubkey).pipe(defined());
-    const inboxes = eventStore.model(MailboxesQuery, account.pubkey).pipe(
-      defined(),
-      map((m) => m?.inboxes),
-    );
-    return combineLatest([of(account), dmRelays, inboxes]);
-  }),
-  switchMap(([account, dmRelays, inboxes]) => {
-    const targets = dmRelays && dmRelays.length > 0 ? dmRelays : inboxes;
-    return pool
-      .subscription(targets, { kinds: [kinds.EncryptedDirectMessage], "#p": [account.pubkey] })
-      .pipe(onlyEvents(), mapEventsToStore(eventStore));
-  }),
-  // Ingore all updates since subscribes will get the events from the store
-  ignoreElements(),
-  // Ensure only one subscription is created and keep it alive for 30 seconds after last subscriber
-  share({ resetOnRefCountZero: () => timer(30_000) }),
-);
+// DM subscriptions are disabled
+export const wrappedMessageSubscription = NEVER;
+export const legacyMessageSubscription = NEVER;
 
 // Auto-connect NWC wallet when app settings are loaded
 accounts.active$

@@ -1,5 +1,5 @@
 import { IAccount } from "applesauce-accounts";
-import { isFromCache } from "applesauce-core/helpers";
+import { isFromCache, mergeRelaySets } from "applesauce-core/helpers";
 import { defined } from "applesauce-core/observable";
 import { USER_BLOSSOM_SERVER_LIST_KIND } from "blossom-client-sdk";
 import { kinds, nip42 } from "nostr-tools";
@@ -18,6 +18,7 @@ import {
 } from "rxjs";
 
 import { APP_SETTING_IDENTIFIER, APP_SETTINGS_KIND } from "../helpers/app-settings";
+import { RECOMMENDED_RELAYS } from "../const";
 import { AppSettingsQuery, MailboxesQuery } from "../models";
 import accounts from "./accounts";
 import authenticationSigner from "./authentication-signer";
@@ -47,6 +48,19 @@ combineLatest([
     switchMap(([account, relays]) =>
       combineLatest([of(account), eventStore.model(MailboxesQuery, { pubkey: account.pubkey, relays })] as const),
     ),
+    tap(([account, mailboxes]) => {
+      // Auto-populate write relays from NIP-65 outbox on login
+      if (mailboxes?.outboxes?.length) {
+        const merged = mergeRelaySets(localSettings.writeRelays.value, mailboxes.outboxes);
+        if (merged.length !== localSettings.writeRelays.value.length) {
+          localSettings.writeRelays.next(merged);
+        }
+      } else if (localSettings.writeRelays.value.length === 0) {
+        // No NIP-65 relay list and no write relays configured; use defaults
+        localSettings.writeRelays.next([...RECOMMENDED_RELAYS]);
+        localSettings.readRelays.next(mergeRelaySets(localSettings.readRelays.value, RECOMMENDED_RELAYS));
+      }
+    }),
     switchMap(([account, mailboxes]) => {
       if (!mailboxes?.outboxes) return NEVER;
 

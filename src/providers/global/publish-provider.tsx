@@ -7,6 +7,7 @@ import { EventTemplate, NostrEvent, UnsignedEvent } from "nostr-tools";
 import { createContext, PropsWithChildren, useCallback, useContext, useMemo, useState } from "react";
 import { BehaviorSubject, map, Observable, share } from "rxjs";
 
+import { RECOMMENDED_RELAYS } from "../../const";
 import { scanToArray } from "../../helpers/observable";
 import { useWriteRelays } from "../../hooks/use-client-relays";
 import { useUserOutbox } from "../../hooks/use-user-mailboxes";
@@ -122,6 +123,9 @@ export default function PublishProvider({ children }: PropsWithChildren) {
         let relays;
         if (onlyAdditionalRelays) relays = mergeRelaySets(additionalRelays ?? []);
         else relays = mergeRelaySets(writeRelays, outbox, additionalRelays);
+
+        // fall back to recommended relays if none configured
+        if (relays.length === 0) relays = [...RECOMMENDED_RELAYS];
 
         // add pubkey to event
         if (!Reflect.has(event, "pubkey")) event = await finalizeDraft(event);

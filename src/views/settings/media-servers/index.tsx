@@ -116,16 +116,8 @@ function AddServerForm() {
     if (servers?.some((s) => areServersEqual(s, url)))
       return toast({ status: "error", description: "Server already in list" });
 
-    try {
-      // test server
-      const res = await fetch(url);
-      if (!res.ok) throw new Error("Failed to connect to server");
-
-      await addServer.run(url);
-      reset();
-    } catch (error) {
-      toast({ status: "error", description: "Cant reach server" });
-    }
+    const result = await addServer.run(url);
+    if (result !== undefined) reset();
   });
 
   return (

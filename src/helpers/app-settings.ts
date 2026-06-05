@@ -130,7 +130,7 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   // performance
   showReactions: true,
 
-  mediaUploadService: "nostr.build",
+  mediaUploadService: "blossom",
 
   // lightning
   autoPayWithWebLN: true,

@@ -1,7 +1,7 @@
 // copied from github https://github.com/nostr-protocol/nips28
 export const KindNames: Record<number, string> = {
   0: "Metadata",
-  1: "Text Note",
+  1: "Post",
   2: "Recommend Relay",
   3: "Follows",
   4: "Encrypted Direct Messages",

@@ -29,11 +29,19 @@ export async function saveEvents(events: NostrEvent[]) {
   }
 }
 
+const CACHE_LOOKBACK_SECONDS = 48 * 3600; // 48 hours
+
 const indexeddbCache: EventCache = {
   type: "nostr-idb",
   read: (filters) => {
     if (!filters || filters.length === 0) return EMPTY;
-    return from(getEventsForFilters(database, filters, indexes)).pipe(
+    // Cap unbounded queries (no since, no until, no ids) to prevent flooding the
+    // timeline with very old cached events before fresh relay data arrives.
+    const bounded = filters.map((f) => {
+      if (f.ids || f.since !== undefined || f.until !== undefined) return f;
+      return { ...f, since: Math.floor(Date.now() / 1000) - CACHE_LOOKBACK_SECONDS };
+    });
+    return from(getEventsForFilters(database, bounded, indexes)).pipe(
       mergeMap((events) => from(events)),
       tap((e) => markFromCache(e)),
     );

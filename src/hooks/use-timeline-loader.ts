@@ -23,7 +23,7 @@ export default function useTimelineLoader(
 
   const loader = useMemo(() => {
     if (filters) return timelineCacheService.createTimeline(key, relays, Array.isArray(filters) ? filters : [filters]);
-  }, [key, sum(filters), relays.join(",")]);
+  }, [key, sum(filters), sum(relays)]);
 
   const timeline = useEventModel(TimelineModel, filters && [filters]) ?? [];
   let throttled = useThrottle(timeline, 50);

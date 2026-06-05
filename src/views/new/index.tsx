@@ -6,8 +6,8 @@ import HoverLinkOverlay from "../../components/hover-link-overlay";
 import SimpleView from "../../components/layout/presets/simple-view";
 
 const NEW_TYPES: { title: string; path: string; summary?: string; icon: ComponentWithAs<"svg", IconProps> }[] = [
-  { title: "Text Note", path: "/new/note", summary: "A short text post with media", icon: NotesIcon },
-  { title: "Media Post", path: "/new/media", summary: "Image and video posts", icon: MediaIcon },
+  { title: "Post", path: "/new/note", summary: "A quick message with optional images, video, and polls", icon: NotesIcon },
+  { title: "Image Gallery", path: "/new/media", summary: "A multi-image album with descriptions", icon: MediaIcon },
 ];
 
 export default function NewView() {

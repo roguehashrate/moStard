@@ -17,12 +17,14 @@ export type PeopleListContextType = {
   people: Person[] | undefined;
   setSelected: (list: ListId) => void;
   filter: Filter | undefined;
+  isLoading: boolean;
 };
 const PeopleListContext = createContext<PeopleListContextType>({
   setSelected: () => {},
   people: undefined,
   selected: "global",
   filter: undefined,
+  isLoading: false,
 });
 
 export function usePeopleListContext() {
@@ -48,16 +50,22 @@ export function usePeopleListSelect(selected: ListId, onChange: (list: ListId) =
 
   const people = useMemo(() => listEvent && getProfilePointersFromList(listEvent), [listEvent]);
 
-  const filter = useMemo<Filter | undefined>(() => {
-    if (selected === "global") return {};
+  const [isLoading, filter] = useMemo(() => {
+    if (selected === "global") return [false, {} as Filter | undefined];
     if (selected === "self") {
-      if (account) return { authors: [account.pubkey] };
-      else return undefined;
+      if (account) return [false, { authors: [account.pubkey] } as Filter | undefined];
+      else return [false, undefined];
     }
-    if (!people || people.length === 0) return undefined;
 
-    return { authors: people.map((p) => p.pubkey) };
-  }, [people, selected, account]);
+    // "following" mode: isLoading while contact list hasn't resolved
+    if (!people) {
+      if (listEvent === undefined && account) return [true, undefined];
+      // people resolved to empty or event failed to load
+      return [false, undefined];
+    }
+
+    return [false, { authors: people.map((p) => p.pubkey) } as Filter | undefined];
+  }, [people, listEvent, selected, account]);
 
   return {
     people,
@@ -66,6 +74,7 @@ export function usePeopleListSelect(selected: ListId, onChange: (list: ListId) =
     listEvent,
     setSelected: onChange,
     filter,
+    isLoading,
   };
 }
 

@@ -2,7 +2,7 @@ import { Heading, Input, SimpleGrid, Tab, TabList, TabPanel, TabPanels, Tabs } f
 import { useState } from "react";
 
 import { allApps, App, externalTools, internalTools } from "../../components/navigation/apps";
-import VerticalPageLayout from "../../components/vertical-page-layout";
+import SimpleView from "../../components/layout/presets/simple-view";
 import useRecentIds from "../../hooks/use-recent-ids";
 import useRouteSearchValue from "../../hooks/use-route-search-value";
 import { useBreakpointValue } from "../../providers/global/breakpoint-provider";
@@ -103,7 +103,7 @@ export default function OtherStuffView() {
   };
 
   return (
-    <VerticalPageLayout>
+    <SimpleView title="Apps & Tools" flush>
       <Heading size="lg" my="2">
         Tools and other stuff
       </Heading>
@@ -118,6 +118,6 @@ export default function OtherStuffView() {
       />
 
       {renderContent()}
-    </VerticalPageLayout>
+    </SimpleView>
   );
 }

@@ -11,7 +11,7 @@ import HoverLinkOverlay from "../../components/hover-link-overlay";
 import { RelayIcon } from "../../components/icons";
 import Telescope from "../../components/icons/telescope";
 import RequireActiveAccount from "../../components/router/require-active-account";
-import VerticalPageLayout from "../../components/vertical-page-layout";
+import SimpleView from "../../components/layout/presets/simple-view";
 import { DVM_CONTENT_DISCOVERY_JOB_KIND } from "../../helpers/nostr/dvm";
 import { isEventInList } from "../../helpers/nostr/lists";
 import useAddressableEvent from "../../hooks/use-addressable-event";
@@ -128,7 +128,7 @@ function FavoriteRelays() {
 
 function DiscoveryHomePage() {
   return (
-    <VerticalPageLayout>
+    <SimpleView title="Discover" flush>
       <SimpleGrid columns={{ base: 1, md: 1, lg: 2, xl: 3, "2xl": 4 }} spacing="2">
         <Card as={LinkBox} display="block" p="4">
           <Telescope boxSize={16} float="left" ml="2" my="2" mr="6" />
@@ -155,7 +155,7 @@ function DiscoveryHomePage() {
       </SimpleGrid>
       <FavoriteRelays />
       <DVMFeeds />
-    </VerticalPageLayout>
+    </SimpleView>
   );
 }
 

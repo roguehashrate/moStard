@@ -64,7 +64,7 @@ export function TimelineNote({
   const showReactionsOnNewLine = useBreakpointValue({ base: true, lg: false });
 
   const reactionButtons = showReactions && (
-    <NoteReactions event={event} flexWrap="wrap" variant="ghost" size="xs" />
+    <NoteReactions event={event} flexWrap="wrap" variant="ghost" size="sm" />
   );
 
   return (
@@ -115,10 +115,10 @@ export function TimelineNote({
             <Box mb="1">{reactionButtons}</Box>
           )}
           <ZapReactions event={event} />
-          <Flex gap="1" alignItems="center" pt="1">
-            <ButtonGroup size="xs" variant="ghost" spacing={0}>
+          <Flex gap="2" alignItems="center" pt="1" wrap="wrap">
+            <ButtonGroup size="sm" variant="ghost" spacing={0}>
               {showReplyButton && (
-                <IconButton icon={<ReplyIcon />} aria-label="Reply" title="Reply" onClick={replyForm.onOpen} />
+                <IconButton icon={<ReplyIcon />} aria-label="Reply" title="Reply" onClick={replyForm.onOpen} minW="36px" minH="36px" />
               )}
               <EventShareButton event={event} />
               <EventQuoteButton event={event} />
@@ -127,7 +127,7 @@ export function TimelineNote({
             </ButtonGroup>
             {!showReactionsOnNewLine && reactionButtons}
             <Box flexGrow={1} />
-            <ButtonGroup size="xs" variant="ghost" spacing={0}>
+            <ButtonGroup size="sm" variant="ghost" spacing={0}>
               <NoteProxyLink event={event} />
               <BookmarkEventButton event={event} aria-label="Bookmark note" />
             </ButtonGroup>

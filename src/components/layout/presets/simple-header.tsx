@@ -13,11 +13,11 @@ export default function SimpleHeader({
     <Flex
       px="2"
       pb="2"
-      pt="calc(var(--chakra-space-2) + var(--safe-top))"
+      pt={{ base: "var(--chakra-space-2)", md: "calc(var(--chakra-space-2) + var(--safe-top))" }}
       borderBottom="0.5px solid var(--chakra-colors-chakra-border-color)"
       alignItems="center"
       gap="2"
-      minH="calc(var(--chakra-sizes-12) + var(--safe-top))"
+      minH={{ base: "var(--chakra-sizes-12)", md: "calc(var(--chakra-sizes-12) + var(--safe-top))" }}
       position="sticky"
       top="0"
       bg="chakra-body-bg"

@@ -10,17 +10,13 @@ const VerticalPageLayout: ComponentWithAs<"div", FlexProps> = ({ children, ...pr
       overflowY="auto"
       h="full"
       w="full"
-      mt="var(--safe-top)"
       ref={ref}
       tabIndex={0}
       aria-label="Main content"
     >
       <Flex
         direction="column"
-        pt="2"
         pb="calc(var(--safe-bottom-nav) + var(--chakra-space-4))"
-        gap="2"
-        px="2"
         w="full"
         role="main"
         aria-live="polite"

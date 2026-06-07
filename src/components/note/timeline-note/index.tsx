@@ -1,15 +1,9 @@
 import {
   Box,
   ButtonGroup,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  type CardProps,
   Flex,
   IconButton,
   Link,
-  LinkBox,
   useDisclosure,
 } from "@chakra-ui/react";
 import type { NostrEvent } from "nostr-tools";
@@ -24,7 +18,6 @@ import { ExpandProvider } from "../../../providers/local/expanded";
 import { ContentSettingsProvider } from "../../../providers/local/content-settings";
 import { getSharableEventAddress } from "../../../services/relay-hints";
 import ReplyForm from "../../../views/thread/components/reply-form";
-import HoverLinkOverlay from "../../hover-link-overlay";
 import { ReplyIcon } from "../../icons";
 import POWIcon from "../../pow/pow-icon";
 import Timestamp from "../../timestamp";
@@ -44,9 +37,9 @@ import ZapReactions from "./components/zap-reactions";
 import ReplyContext from "./components/reply-context";
 import NoteContentWithWarning from "./note-content-with-warning";
 
-export type TimelineNoteProps = Omit<CardProps, "children"> & {
+export type TimelineNoteProps = {
   event: NostrEvent;
-  variant?: CardProps["variant"];
+  variant?: string;
   showReplyButton?: boolean;
   showReplyLine?: boolean;
   hideDrawerButton?: boolean;
@@ -57,15 +50,11 @@ export type TimelineNoteProps = Omit<CardProps, "children"> & {
 };
 export function TimelineNote({
   event,
-  variant = "unstyled",
   showReplyButton,
   showReplyLine = true,
-  hideDrawerButton,
   registerIntersectionEntity = true,
-  clickable = true,
   body,
   showMore = true,
-  ...props
 }: TimelineNoteProps) {
   const { showReactions } = useAppSettings();
   const replyForm = useDisclosure();
@@ -75,7 +64,7 @@ export function TimelineNote({
   const showReactionsOnNewLine = useBreakpointValue({ base: true, lg: false });
 
   const reactionButtons = showReactions && (
-    <NoteReactions event={event} flexWrap="wrap" variant="ghost" size="sm" zIndex={1} />
+    <NoteReactions event={event} flexWrap="wrap" variant="ghost" size="xs" />
   );
 
   return (
@@ -83,53 +72,51 @@ export function TimelineNote({
       <ExpandProvider>
         <Flex
           direction="column"
-          borderWidth="1px"
-          rounded="2xl"
-          borderColor="chakra-border-color"
-          bg="glass-bg"
-          transition="all 0.2s"
-          _hover={{
-            borderColor: "primary.300",
-            boxShadow: "0 0 0 1px var(--chakra-colors-primary-300)",
-            _dark: {
-              borderColor: "primary.500",
-              boxShadow: "0 0 8px var(--chakra-colors-primary-500)",
-            },
-          }}
-          {...props}
+          px="4"
+          pt="3"
+          pb="2"
+          borderBottomWidth="0.5px"
+          borderBottomColor="chakra-border-color"
+          ref={registerIntersectionEntity ? ref : undefined}
+          data-event-id={event.id}
         >
-          <Card
-            as={LinkBox}
-            variant={variant}
-            bg="transparent"
-            borderWidth={0}
-            ref={registerIntersectionEntity ? ref : undefined}
-            data-event-id={event.id}
-          >
-            {clickable && <HoverLinkOverlay as={RouterLink} to={`/n/${getSharableEventAddress(event)}`} />}
-            <CardHeader p="3" pb="1">
-              <Flex flex="1" gap="2.5" alignItems="center">
-                <UserAvatarLink pubkey={event.pubkey} size="xs" />
-                <UserLink pubkey={event.pubkey} isTruncated fontWeight="bold" fontSize="sm" />
-                <Link as={RouterLink} whiteSpace="nowrap" color="chakra-subtle-text" fontSize="xs" to={`/n/${getSharableEventAddress(event)}`}>
+          <Flex gap="3" alignItems="center" mb="1">
+            <UserAvatarLink pubkey={event.pubkey} size="md" />
+            <Box flex="1" minW="0">
+              <Flex alignItems="center" gap="2">
+                <UserLink pubkey={event.pubkey} isTruncated fontWeight="semibold" fontSize="sm" />
+                <Link
+                  as={RouterLink}
+                  whiteSpace="nowrap"
+                  color="chakra-subtle-text"
+                  fontSize="xs"
+                  to={`/n/${getSharableEventAddress(event)}`}
+                  flexShrink={0}
+                >
                   <Timestamp timestamp={event.created_at} />
                 </Link>
-                <POWIcon event={event} boxSize={3.5} />
-                <NotePublishedUsing event={event} />
-                <Flex grow={1} />
               </Flex>
               {showReplyLine && <ReplyContext event={event} />}
-            </CardHeader>
-            <CardBody as={showMore ? ShowMoreContainer : undefined} px="3" py="1.5">
-              {body ?? <NoteContentWithWarning event={event} />}
-            </CardBody>
-            <CardFooter p="3" pt="1" display="flex" gap="2" flexDirection="column" alignItems="flex-start">
-              {showReactionsOnNewLine && reactionButtons}
-            </CardFooter>
-          </Card>
+            </Box>
+            <POWIcon event={event} boxSize={3.5} />
+            <NotePublishedUsing event={event} />
+            <NoteMenu event={event} aria-label="More options" />
+          </Flex>
+          <Box pl="0" mb="1">
+            {showMore ? (
+              <ShowMoreContainer>
+                {body ?? <NoteContentWithWarning event={event} />}
+              </ShowMoreContainer>
+            ) : (
+              body ?? <NoteContentWithWarning event={event} />
+            )}
+          </Box>
+          {showReactionsOnNewLine && reactionButtons && (
+            <Box mb="1">{reactionButtons}</Box>
+          )}
           <ZapReactions event={event} />
-          <Flex gap="1" w="full" alignItems="center" pt="1" px="2.5" pb="2.5">
-            <ButtonGroup size="sm" variant="ghost" spacing={0} zIndex={1}>
+          <Flex gap="1" alignItems="center" pt="1">
+            <ButtonGroup size="xs" variant="ghost" spacing={0}>
               {showReplyButton && (
                 <IconButton icon={<ReplyIcon />} aria-label="Reply" title="Reply" onClick={replyForm.onOpen} />
               )}
@@ -140,10 +127,9 @@ export function TimelineNote({
             </ButtonGroup>
             {!showReactionsOnNewLine && reactionButtons}
             <Box flexGrow={1} />
-            <ButtonGroup size="sm" variant="ghost" spacing={0} zIndex={1}>
+            <ButtonGroup size="xs" variant="ghost" spacing={0}>
               <NoteProxyLink event={event} />
               <BookmarkEventButton event={event} aria-label="Bookmark note" />
-              <NoteMenu event={event} aria-label="More Options" />
             </ButtonGroup>
           </Flex>
         </Flex>

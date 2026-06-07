@@ -125,7 +125,7 @@ function GenericNoteTimeline({ timeline }: { timeline: NostrEvent[] }) {
           position="fixed"
           bottom="calc(var(--safe-bottom-nav) + var(--chakra-space-4))"
           right="4"
-          zIndex="modal"
+          zIndex="banner"
           size="lg"
           isRound
           colorScheme="primary"

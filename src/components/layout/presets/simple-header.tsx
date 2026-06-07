@@ -14,16 +14,14 @@ export default function SimpleHeader({
       px="2"
       pb="2"
       pt="calc(var(--chakra-space-2) + var(--safe-top))"
-      borderBottom="1px solid var(--chakra-colors-chakra-border-color)"
+      borderBottom="0.5px solid var(--chakra-colors-chakra-border-color)"
       alignItems="center"
       gap="2"
-      minH="calc(var(--chakra-sizes-14) + var(--safe-top))"
+      minH="calc(var(--chakra-sizes-12) + var(--safe-top))"
       position="sticky"
       top="0"
-      backgroundColor="var(--chakra-colors-chakra-body-bg)"
-      bgOpacity="0.85"
-      zIndex="modal"
-      className="glass-blur"
+      bg="chakra-body-bg"
+      zIndex="docked"
       {...props}
     >
       <BackIconButton hideFrom="xl" />

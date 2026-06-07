@@ -37,15 +37,6 @@ const styles = css`
     background: transparent;
   }
 
-  .glass-blur {
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-  }
-
-  .glass-blur-strong {
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-  }
 `;
 
 export default function GlobalStyles() {

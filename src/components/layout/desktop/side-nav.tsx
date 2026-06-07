@@ -42,7 +42,6 @@ export default function DesktopSideNav({ ...props }: Omit<FlexProps, "children">
         bg="chakra-subtle-bg"
         bgOpacity="0.92"
         transition="width 0.2s ease"
-        className="glass-blur-strong"
         _scrollbar={{ display: "none" }}
         css={{ "&::-webkit-scrollbar": { width: "0px" } }}
         {...props}

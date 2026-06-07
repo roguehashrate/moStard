@@ -1,10 +1,9 @@
-import { Avatar, Badge, Box, Flex, IconButton, useDisclosure } from "@chakra-ui/react";
+import { Avatar, Box, Flex, IconButton, useDisclosure } from "@chakra-ui/react";
 import { useActiveAccount } from "applesauce-react/hooks";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 
-import { AppsIcon, NotesIcon, NotificationsIcon, PlusCircleIcon, SearchIcon } from "../../icons";
+import { NotesIcon, SearchIcon, PlusCircleIcon, NotificationsIcon, ProfileIcon } from "../../icons";
 import useRootPadding from "../../../hooks/use-root-padding";
-
 import useUnreadNotificationCount from "../../../hooks/use-unread-notification-count";
 import UserAvatar from "../../user/user-avatar";
 import NavDrawer from "./nav-drawer";
@@ -12,61 +11,40 @@ import NavDrawer from "./nav-drawer";
 function NavTab({
   to,
   icon,
-  label,
   badge,
 }: {
   to: string;
   icon: React.ReactElement;
-  label: string;
   badge?: number;
 }) {
   const location = useLocation();
   const isActive = location.pathname === to || location.pathname.startsWith(to + "/");
 
   return (
-    <Box position="relative" flex="1" display="flex" justifyContent="center">
+    <Box position="relative" flex="1" display="flex" justifyContent="center" alignItems="center">
       <Box
         as={RouterLink}
         to={to}
         display="flex"
         alignItems="center"
         justifyContent="center"
-        p="2"
-        borderRadius="2xl"
-        bg={isActive ? "primary.50" : "transparent"}
-        _dark={{
-          bg: isActive ? "whiteAlpha.100" : "transparent",
-        }}
-        transition="all 0.15s"
-        _hover={{
-          bg: isActive ? undefined : "glass-bg-hover",
-        }}
+        minW="44px"
+        minH="44px"
+        color={isActive ? "primary.500" : "chakra-subtle-text"}
+        _dark={{ color: isActive ? "primary.400" : "#5C5C5E" }}
       >
-        <Box
-          as="span"
-          color={isActive ? "primary.500" : "chakra-subtle-text"}
-          _dark={{ color: isActive ? "primary.400" : "whiteAlpha.600" }}
-        >
-          {icon}
-        </Box>
+        {icon}
       </Box>
-      {!!badge && badge > 0 && (
-        <Badge
+      {badge !== undefined && badge > 0 && (
+        <Box
           position="absolute"
-          top="1.5"
-          right="calc(50% - 16px)"
-          colorScheme="red"
+          top="6px"
+          right="calc(50% - 14px)"
+          w="8px"
+          h="8px"
           borderRadius="full"
-          fontSize="2xs"
-          minW="4.5"
-          h="4.5"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          lineHeight="1"
-        >
-          {badge >= 10 ? "9+" : badge}
-        </Badge>
+          bg="#FF3B30"
+        />
       )}
     </Box>
   );
@@ -85,41 +63,65 @@ export default function MobileBottomNav() {
         bottom="0"
         left="0"
         right="0"
-        zIndex="modal"
+        zIndex="banner"
         hideFrom="md"
+        bg="chakra-body-bg"
       >
         <Flex
-          gap="1"
-          pt="2"
+          h="56px"
           px="2"
-          pb="calc(var(--chakra-space-2) + var(--safe-bottom))"
-          position="relative"
+          pb="var(--safe-bottom)"
           alignItems="center"
-          bg="chakra-body-bg"
-          borderTopWidth="1px"
-          borderTopColor="chakra-border-color"
+          justifyContent="space-around"
         >
-          {account ? (
-              <UserAvatar pubkey={account.pubkey} size="sm" onClick={drawer.onOpen} noProxy />
+          <NavTab to="/" icon={<NotesIcon boxSize={6} />} />
+          <NavTab to="/search" icon={<SearchIcon boxSize={6} />} />
+
+          <IconButton
+            as={RouterLink}
+            icon={<PlusCircleIcon boxSize={7} />}
+            aria-label="New post"
+            title="New post"
+            variant="ghost"
+            colorScheme="primary"
+            size="lg"
+            borderRadius="full"
+            to="/new"
+            minW="48px"
+            minH="48px"
+            mt="-12px"
+            bg="chakra-body-bg"
+            boxShadow="lg"
+            zIndex="1"
+          />
+
+          <NavTab to="/notifications" icon={<NotificationsIcon boxSize={5} />} badge={unreadCount} />
+
+          <Box flex="1" display="flex" justifyContent="center" alignItems="center" minW="44px" minH="44px">
+            {account ? (
+              <UserAvatar
+                pubkey={account.pubkey}
+                size="sm"
+                onClick={drawer.onOpen}
+                noProxy
+                cursor="pointer"
+              />
             ) : (
-              <Avatar size="sm" src="/apple-touch-icon.png" onClick={drawer.onOpen} cursor="pointer" />
+              <Box
+                as={RouterLink}
+                to="/settings"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                minW="44px"
+                minH="44px"
+                color="chakra-subtle-text"
+                _dark={{ color: "#5C5C5E" }}
+              >
+                <ProfileIcon boxSize={6} />
+              </Box>
             )}
-            <NavTab to="/" icon={<NotesIcon boxSize={6} />} label="Home" />
-            <NavTab to="/search" icon={<SearchIcon boxSize={6} />} label="Search" />
-            <IconButton
-              as={RouterLink}
-              icon={<PlusCircleIcon boxSize={6} />}
-              aria-label="Create new"
-              title="Create new"
-              variant="solid"
-              colorScheme="primary"
-              size="md"
-              borderRadius="full"
-              to="/new"
-              boxShadow="0 0 16px var(--chakra-colors-primary-500)"
-            />
-            <NavTab to="/other-stuff" icon={<AppsIcon boxSize={5} />} label="Apps" />
-            <NavTab to="/notifications" icon={<NotificationsIcon boxSize={5} />} label="Notifications" badge={unreadCount} />
+          </Box>
         </Flex>
       </Box>
       <NavDrawer isOpen={drawer.isOpen} onClose={drawer.onClose} />

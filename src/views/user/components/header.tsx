@@ -20,7 +20,7 @@ export default function Header({ pubkey }: { pubkey: string }) {
   const showExtraButtons = useBreakpointValue({ base: false, sm: true });
 
   return (
-    <Flex direction="column" gap="2" px="2" pt="calc(var(--safe-top) + var(--chakra-space-2))" className="glass-blur" position="sticky" top="0" zIndex="10" bg="glass-bg">
+    <Flex direction="column" gap="2" px="2" pt="calc(var(--safe-top) + var(--chakra-space-2))" position="sticky" top="0" zIndex="10" bg="chakra-body-bg">
       <Flex gap="2" alignItems="center">
         <UserAvatar pubkey={pubkey} size="sm" noProxy mr="2" />
         <Heading size="md" isTruncated>

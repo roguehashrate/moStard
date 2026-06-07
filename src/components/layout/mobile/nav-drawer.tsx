@@ -32,7 +32,7 @@ export default function NavDrawer({ onClose, ...props }: Omit<DrawerProps, "chil
   return (
     <Drawer placement="left" onClose={onClose} {...props}>
       <DrawerOverlay />
-      <DrawerContent borderRadius="2xl" mx="2" my="2" className="glass-blur-strong">
+      <DrawerContent borderRadius="2xl" mx="2" my="2">
         <CollapsedContext.Provider value={false}>
           <DrawerBody
             display="flex"

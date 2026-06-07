@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
-import { Box, Spinner } from "@chakra-ui/react";
+import { Box, Flex, Spinner } from "@chakra-ui/react";
 
 import MobileBottomNav from "./bottom-nav";
 import MobileTopBar from "./top-bar";
@@ -9,17 +9,10 @@ import SupportPaywall from "../components/support-paywall";
 
 export default function MobileLayout() {
   return (
-    <>
+    <Flex direction="column" h="full" w="full" hideFrom="md">
       <SupportPaywall />
       <MobileTopBar />
-      <Box
-        sx={{
-          "@media (max-width: 47.99em)": {
-            mt: "calc(-1 * var(--safe-top, 0px) - 2.5rem)",
-            pt: "calc(var(--safe-top, 0px) + 2.5rem)",
-          },
-        }}
-      >
+      <Box flex="1" w="full" overflow="hidden">
         <Suspense fallback={<Spinner />}>
           <ErrorBoundary>
             <Outlet />
@@ -27,6 +20,6 @@ export default function MobileLayout() {
         </Suspense>
       </Box>
       <MobileBottomNav />
-    </>
+    </Flex>
   );
 }
